@@ -38,10 +38,6 @@ namespace Graph.ConcurrentCollections
             }
         }
 
-        [Pure]
-        [JsonIgnore]
-        public bool IsReadOnly => ((ICollection<T>)this.items).IsReadOnly;
-
         public ConcurrentHashSet() { }
 
         private ConcurrentHashSet(ConcurrentHashSet<T> other)

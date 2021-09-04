@@ -35,7 +35,7 @@ namespace Graph.Elements
         private Node([DisallowNull] Node other)
             : base(other)
         {
-            this.neighbors = new ConcurrentHashSet<Guid>(other.neighbors);
+            this.neighbors = other.neighbors.Clone() as ConcurrentHashSet<Guid>;
         }
 
         [Pure]
@@ -90,12 +90,12 @@ namespace Graph.Elements
                 {
                     edge = new Edge(this, target);
                     _ = this.edges.TryAdd(target.Id, edge.Id);
-                    this.IndexNode(target);
+                    // this.IndexNode(target);
 
                     if (!isDirected && target.neighbors.Add(target.Id))
                     {
                         _ = target.edges.TryAdd(this.Id, edge.Id);
-                        target.IndexNode(this);
+                        //target.IndexNode(this);
                     }
 
                     return edge;
@@ -161,12 +161,6 @@ namespace Graph.Elements
         public int GetHashCode([DisallowNull] Node obj)
         {
             return obj.GetHashCode();
-        }
-
-        [Pure]
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(this.Id);
         }
 
         [Pure]

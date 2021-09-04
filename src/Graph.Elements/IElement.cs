@@ -10,6 +10,8 @@ namespace Graph.Elements
         [Key]
         Guid Id { get; }
 
+        IEnumerable<string> Labels { get; }
+
         /// <summary>
         /// Assigns a label to the element.
         /// </summary>

@@ -12,7 +12,7 @@ namespace Graph.Elements
 
         public void IndexNode(Node target)
         {
-            foreach (var label in target.GetLabels())
+            foreach (var label in target.Labels)
             {
                 var nodes = this.index.GetOrAdd(label, new ConcurrentHashSet<Guid>());
                 nodes.Add(target.Id);

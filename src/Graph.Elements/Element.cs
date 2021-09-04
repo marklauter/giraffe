@@ -11,8 +11,9 @@ using System.Diagnostics.Contracts;
 namespace Graph.Elements
 {
     [DebuggerDisplay("{Id}")]
-    public abstract class Element
+    public class Element
         : IElement
+        , IEquatable<Element>
     {
         [JsonProperty("attributes")]
         private readonly ConcurrentDictionary<string, string> attributes = new();
@@ -20,13 +21,13 @@ namespace Graph.Elements
         [JsonProperty("labels")]
         private readonly ConcurrentHashSet<string> labels = new();
 
-        protected Element() { }
+        public Element() { }
 
         protected Element([DisallowNull] Element other)
         {
             this.Id = other.Id;
             this.attributes = new(other.attributes);
-            this.labels = new(other.labels);
+            this.labels = other.labels.Clone() as ConcurrentHashSet<string>;
         }
 
         /// <inheritdoc/>
@@ -34,6 +35,8 @@ namespace Graph.Elements
         [Required]
         [JsonProperty("id")]
         public Guid Id { get; } = Guid.NewGuid();
+
+        public IEnumerable<string> Labels => this.labels;
 
         /// <inheritdoc/>
         public IElement Classify(string label)
@@ -51,13 +54,38 @@ namespace Graph.Elements
 
         /// <inheritdoc/>
         [Pure]
-        public abstract object Clone();
+        public virtual object Clone()
+        {
+            return new Element(this);
+        }
 
         /// <inheritdoc/>
         public IElement Declassify(string label)
         {
             this.labels.Remove(label);
             return this;
+        }
+
+        /// <inheritdoc/>
+        [Pure]
+        public bool Equals(Element other)
+        {
+            return other != null
+                && other.Id == this.Id;
+        }
+        
+        /// <inheritdoc/>
+        [Pure]
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Element);
+        }
+
+        /// <inheritdoc/>
+        [Pure]
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.Id);
         }
 
         /// <inheritdoc/>
@@ -77,7 +105,7 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public IElement Qualify(string name, string value)
         {
-            this.attributes[name] = value;
+            this.attributes.AddOrUpdate(name, value, (key, oldvalue) => value);
             return this;
         }
 
@@ -86,7 +114,7 @@ namespace Graph.Elements
         {
             foreach (var kvp in attributes)
             {
-                this.attributes[kvp.Key] = kvp.Value;
+                this.Qualify(kvp.Key, kvp.Value);
             }
 
             return this;
@@ -97,11 +125,6 @@ namespace Graph.Elements
         public bool TryGetAttribute(string name, out string value)
         {
             return this.attributes.TryGetValue(name, out value);
-        }
-
-        internal IEnumerable<string> GetLabels()
-        {
-            return this.labels;
         }
     }
 }
