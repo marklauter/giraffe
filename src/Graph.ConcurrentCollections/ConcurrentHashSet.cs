@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Threading;
 
 namespace Graph.ConcurrentCollections
@@ -11,17 +13,40 @@ namespace Graph.ConcurrentCollections
     [JsonObject("hashSet")]
     public sealed class ConcurrentHashSet<T>
         : IEnumerable<T>
+        , ICloneable
     {
         [JsonProperty("items")]
         private readonly HashSet<T> items = new();
 
         private readonly ReaderWriterLockSlim gate = new();
 
+        [Pure]
+        [JsonIgnore]
+        public int Count
+        {
+            get
+            {
+                this.gate.EnterReadLock();
+                try
+                {
+                    return this.items.Count;
+                }
+                finally
+                {
+                    this.gate.ExitReadLock();
+                }
+            }
+        }
+
+        [Pure]
+        [JsonIgnore]
+        public bool IsReadOnly => ((ICollection<T>)this.items).IsReadOnly;
+
         public ConcurrentHashSet() { }
 
-        public ConcurrentHashSet(ConcurrentHashSet<T> other)
+        private ConcurrentHashSet(ConcurrentHashSet<T> other)
         {
-            this.items.UnionWith(other.items);
+            this.items.UnionWith(other.ToArray());
         }
 
         public bool Add(T item)
@@ -50,6 +75,13 @@ namespace Graph.ConcurrentCollections
             }
         }
 
+        [Pure]
+        public object Clone()
+        {
+            return new ConcurrentHashSet<T>(this);
+        }
+
+        [Pure]
         public bool Contains(T item)
         {
             this.gate.EnterReadLock();
@@ -60,22 +92,6 @@ namespace Graph.ConcurrentCollections
             finally
             {
                 this.gate.ExitReadLock();
-            }
-        }
-
-        public int Count
-        {
-            get
-            {
-                this.gate.EnterReadLock();
-                try
-                {
-                    return this.items.Count;
-                }
-                finally
-                {
-                    this.gate.ExitReadLock();
-                }
             }
         }
 
@@ -118,6 +134,7 @@ namespace Graph.ConcurrentCollections
             }
         }
 
+        [Pure]
         public bool IsSubsetOf(IEnumerable<T> other)
         {
             this.gate.EnterReadLock();
@@ -131,6 +148,7 @@ namespace Graph.ConcurrentCollections
             }
         }
 
+        [Pure]
         public bool IsSupersetOf(IEnumerable<T> other)
         {
             this.gate.EnterReadLock();
@@ -144,6 +162,7 @@ namespace Graph.ConcurrentCollections
             }
         }
 
+        [Pure]
         public bool Overlaps(IEnumerable<T> other)
         {
             this.gate.EnterReadLock();
@@ -170,12 +189,35 @@ namespace Graph.ConcurrentCollections
             }
         }
 
+        [Pure]
         public bool SetEquals(IEnumerable<T> other)
         {
             this.gate.EnterReadLock();
             try
             {
                 return this.items.SetEquals(other);
+            }
+            finally
+            {
+                this.gate.ExitReadLock();
+            }
+        }
+
+        [Pure]
+        public T[] ToArray()
+        {
+            var array = new T[this.Count];
+            this.gate.EnterReadLock();
+            try
+            {
+                var i = 0;
+                foreach (var item in this.items)
+                {
+                    array[i] = item;
+                    ++i;
+                }
+
+                return array;
             }
             finally
             {
@@ -196,8 +238,7 @@ namespace Graph.ConcurrentCollections
             }
         }
 
-        public bool IsReadOnly => ((ICollection<T>)this.items).IsReadOnly;
-
+        [Pure]
         public IEnumerator<T> GetEnumerator()
         {
             this.gate.EnterReadLock();
@@ -214,6 +255,7 @@ namespace Graph.ConcurrentCollections
             }
         }
 
+        [Pure]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();

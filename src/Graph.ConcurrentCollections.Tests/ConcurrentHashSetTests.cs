@@ -27,6 +27,28 @@ namespace Graph.ConcurrentCollections.Tests
         }
 
         [Fact]
+        public void ConcurrentHashSet_Clone()
+        {
+            var hashset = new ConcurrentHashSet<int>();
+            Assert.True(hashset.Add(1));
+            Assert.True(hashset.Add(2));
+
+            Assert.True(hashset.Contains(1));
+            Assert.True(hashset.Contains(2));
+
+
+            var other = hashset.Clone() as ConcurrentHashSet<int>;
+
+            // cloning doesn't mutate hashset
+            Assert.True(hashset.Contains(1));
+            Assert.True(hashset.Contains(2));
+
+            // other is a shallow copy of hashset
+            Assert.True(other.Contains(1));
+            Assert.True(other.Contains(2));
+        }
+
+        [Fact]
         public void ConcurrentHashSet_Contains()
         {
             var hashset = new ConcurrentHashSet<int>();
@@ -171,6 +193,18 @@ namespace Graph.ConcurrentCollections.Tests
         }
 
         [Fact]
+        public void ConcurrentHashSet_ToArray()
+        {
+            var hashset = new ConcurrentHashSet<int>();
+            Assert.True(hashset.Add(1));
+            Assert.True(hashset.Add(2));
+
+            var array = hashset.ToArray();
+            Assert.Contains(1, array);
+            Assert.Contains(2, array);
+        }
+
+        [Fact]
         public void ConcurrentHashSet_UnionWith()
         {
             var hashset = new ConcurrentHashSet<int>();
@@ -194,8 +228,7 @@ namespace Graph.ConcurrentCollections.Tests
             var json = JsonConvert.SerializeObject(hashset);
             var other = JsonConvert.DeserializeObject<ConcurrentHashSet<int>>(json);
 
-            Assert.True(hashset.SetEquals(other));
-            
+            Assert.True(hashset.SetEquals(other));            
         }
     }
 }
