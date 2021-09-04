@@ -11,9 +11,8 @@ using System.Diagnostics.Contracts;
 namespace Graph.Elements
 {
     [DebuggerDisplay("{Id}")]
-    public class Element
+    public abstract class Element
         : IElement
-        , IEquatable<Element>
     {
         [JsonProperty("attributes")]
         private readonly ConcurrentDictionary<string, string> attributes = new();
@@ -21,7 +20,7 @@ namespace Graph.Elements
         [JsonProperty("labels")]
         private readonly ConcurrentHashSet<string> labels = new();
 
-        public Element() { }
+        protected Element() { }
 
         protected Element([DisallowNull] Element other)
         {
@@ -30,62 +29,62 @@ namespace Graph.Elements
             this.labels = other.labels.Clone() as ConcurrentHashSet<string>;
         }
 
+        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
+
         /// <inheritdoc/>
         [Key]
         [Required]
         [JsonProperty("id")]
         public Guid Id { get; } = Guid.NewGuid();
 
+        [JsonIgnore]
         public IEnumerable<string> Labels => this.labels;
 
         /// <inheritdoc/>
         public IElement Classify(string label)
         {
-            this.labels.Add(label);
+            if (String.IsNullOrWhiteSpace(label))
+            {
+                throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
+            }
+
+            if (this.labels.Add(label))
+            {
+                this.OnClassificationChanged(label);
+            }
+
             return this;
         }
 
         /// <inheritdoc/>
         public IElement Classify([DisallowNull] IEnumerable<string> labels)
         {
-            this.labels.UnionWith(labels);
+            foreach (var label in labels)
+            {
+                _ = this.Classify(label);
+            }
+
             return this;
         }
 
         /// <inheritdoc/>
         [Pure]
-        public virtual object Clone()
-        {
-            return new Element(this);
-        }
+        public abstract object Clone();
 
         /// <inheritdoc/>
         public IElement Declassify(string label)
         {
-            this.labels.Remove(label);
+            if (String.IsNullOrWhiteSpace(label))
+            {
+                throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
+            }
+
+            if (this.labels.Remove(label))
+            {
+                this.OnClassificationChanged(label);
+            }
+
             return this;
-        }
-
-        /// <inheritdoc/>
-        [Pure]
-        public bool Equals(Element other)
-        {
-            return other != null
-                && other.Id == this.Id;
-        }
-        
-        /// <inheritdoc/>
-        [Pure]
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj as Element);
-        }
-
-        /// <inheritdoc/>
-        [Pure]
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(this.Id);
         }
 
         /// <inheritdoc/>
@@ -105,7 +104,7 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public IElement Qualify(string name, string value)
         {
-            this.attributes.AddOrUpdate(name, value, (key, oldvalue) => value);
+            _ = this.attributes.AddOrUpdate(name, value, (key, oldvalue) => value);
             return this;
         }
 
@@ -125,6 +124,11 @@ namespace Graph.Elements
         public bool TryGetAttribute(string name, out string value)
         {
             return this.attributes.TryGetValue(name, out value);
+        }
+
+        private void OnClassificationChanged(string label)
+        {
+            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(label));
         }
     }
 }

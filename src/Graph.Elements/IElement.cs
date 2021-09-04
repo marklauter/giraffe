@@ -7,6 +7,8 @@ namespace Graph.Elements
     public interface IElement
         : ICloneable
     {
+        event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
+
         [Key]
         Guid Id { get; }
 

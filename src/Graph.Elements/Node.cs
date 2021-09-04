@@ -157,6 +157,11 @@ namespace Graph.Elements
             return this.Equals(obj as Node);
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.Id);
+        }
+
         [Pure]
         public int GetHashCode([DisallowNull] Node obj)
         {
