@@ -1,20 +1,24 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace Graph.ConcurrentCollections
 {
+    [JsonObject("hashSet")]
     public sealed class ConcurrentHashSet<T>
         : IEnumerable<T>
     {
-        private readonly HashSet<T> hashset = new();
+        [JsonProperty("items")]
+        private readonly HashSet<T> items = new();
+
         private readonly ReaderWriterLockSlim gate = new();
 
         public ConcurrentHashSet() { }
 
         public ConcurrentHashSet(ConcurrentHashSet<T> other)
         {
-            this.hashset.UnionWith(other.hashset);
+            this.items.UnionWith(other.items);
         }
 
         public bool Add(T item)
@@ -22,7 +26,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterWriteLock();
             try
             {
-                return this.hashset.Add(item);
+                return this.items.Add(item);
             }
             finally
             {
@@ -35,7 +39,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterWriteLock();
             try
             {
-                this.hashset.Clear();
+                this.items.Clear();
             }
             finally
             {
@@ -48,7 +52,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterReadLock();
             try
             {
-                return this.hashset.Contains(item);
+                return this.items.Contains(item);
             }
             finally
             {
@@ -63,7 +67,7 @@ namespace Graph.ConcurrentCollections
                 this.gate.EnterReadLock();
                 try
                 {
-                    return this.hashset.Count;
+                    return this.items.Count;
                 }
                 finally
                 {
@@ -77,7 +81,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterWriteLock();
             try
             {
-                return this.hashset.EnsureCapacity(capacity);
+                return this.items.EnsureCapacity(capacity);
             }
             finally
             {
@@ -90,7 +94,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterReadLock();
             try
             {
-                this.hashset.ExceptWith(other);
+                this.items.ExceptWith(other);
             }
             finally
             {
@@ -103,7 +107,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterReadLock();
             try
             {
-                this.hashset.IntersectWith(other);
+                this.items.IntersectWith(other);
             }
             finally
             {
@@ -116,7 +120,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterReadLock();
             try
             {
-                return this.hashset.IsSubsetOf(other);
+                return this.items.IsSubsetOf(other);
             }
             finally
             {
@@ -129,7 +133,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterReadLock();
             try
             {
-                return this.hashset.IsSupersetOf(other);
+                return this.items.IsSupersetOf(other);
             }
             finally
             {
@@ -142,7 +146,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterReadLock();
             try
             {
-                return this.hashset.Overlaps(other);
+                return this.items.Overlaps(other);
             }
             finally
             {
@@ -155,7 +159,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterWriteLock();
             try
             {
-                return this.hashset.Remove(item);
+                return this.items.Remove(item);
             }
             finally
             {
@@ -168,7 +172,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterReadLock();
             try
             {
-                return this.hashset.SetEquals(other);
+                return this.items.SetEquals(other);
             }
             finally
             {
@@ -181,7 +185,7 @@ namespace Graph.ConcurrentCollections
             this.gate.EnterWriteLock();
             try
             {
-                this.hashset.UnionWith(other);
+                this.items.UnionWith(other);
             }
             finally
             {
@@ -189,14 +193,14 @@ namespace Graph.ConcurrentCollections
             }
         }
 
-        public bool IsReadOnly => ((ICollection<T>)this.hashset).IsReadOnly;
+        public bool IsReadOnly => ((ICollection<T>)this.items).IsReadOnly;
 
         public IEnumerator<T> GetEnumerator()
         {
             this.gate.EnterReadLock();
             try
             {
-                foreach (var item in this.hashset)
+                foreach (var item in this.items)
                 {
                     yield return item;
                 }

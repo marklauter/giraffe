@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Graph.ConcurrentCollections.Tests
@@ -182,6 +183,19 @@ namespace Graph.ConcurrentCollections.Tests
             hashset.UnionWith(other);
             Assert.True(hashset.Contains(2));
             Assert.False(other.Contains(1));
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_Serialization()
+        {
+            var hashset = new ConcurrentHashSet<int>();
+            Assert.True(hashset.Add(1));
+
+            var json = JsonConvert.SerializeObject(hashset);
+            var other = JsonConvert.DeserializeObject<ConcurrentHashSet<int>>(json);
+
+            Assert.True(hashset.SetEquals(other));
+            
         }
     }
 }

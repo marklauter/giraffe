@@ -99,7 +99,7 @@ namespace Graph.Elements
             return this.attributes.TryGetValue(name, out value);
         }
 
-        protected IEnumerable<string> GetLabels()
+        internal IEnumerable<string> GetLabels()
         {
             return this.labels;
         }

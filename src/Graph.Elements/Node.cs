@@ -24,7 +24,7 @@ namespace Graph.Elements
         private readonly ConcurrentHashSet<Guid> neighbors = new();
 
         [JsonProperty]
-        private readonly ConcurrentDictionary<string, ConcurrentHashSet<Guid>> index = new();
+        private readonly NodeIndex index = new();
 
         // indexed by target node
         [JsonProperty]
@@ -183,23 +183,6 @@ namespace Graph.Elements
             finally
             {
                 this.gate.ExitReadLock();
-            }
-        }
-
-        private void IndexNode(Node target)
-        {
-            this.gate.EnterWriteLock();
-            try
-            {
-                foreach (var label in target.GetLabels())
-                {
-                    var nodes = this.index.GetOrAdd(label, new ConcurrentHashSet<Guid>());
-                    nodes.Add(target.Id);
-                }
-            }
-            finally
-            {
-                this.gate.ExitWriteLock();
             }
         }
 
