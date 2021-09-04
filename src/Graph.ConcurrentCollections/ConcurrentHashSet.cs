@@ -5,6 +5,9 @@ using System.Threading;
 
 namespace Graph.ConcurrentCollections
 {
+    // todo: look at how ConcurrentDictionary uses Monitor and AquireAllLocks to lock elements in the array. That's better / faster / more targeted locking than using lock-slim.
+    // todo: see: https://referencesource.microsoft.com/#mscorlib/system/Collections/Concurrent/ConcurrentDictionary.cs,5175a7680b0f7188
+
     [JsonObject("hashSet")]
     public sealed class ConcurrentHashSet<T>
         : IEnumerable<T>
