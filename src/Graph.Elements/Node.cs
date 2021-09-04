@@ -24,7 +24,7 @@ namespace Graph.Elements
         private readonly ConcurrentHashSet<Guid> neighbors = new();
 
         [JsonProperty]
-        private readonly NodeIndex index = new();
+        private readonly ElementIndex index = new();
 
         // indexed by target node
         [JsonProperty]
@@ -154,7 +154,7 @@ namespace Graph.Elements
         [Pure]
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as Node);
+            return obj is Node node && this.Equals(node);
         }
 
         public override int GetHashCode()

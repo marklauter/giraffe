@@ -82,7 +82,7 @@ namespace Graph.ConcurrentCollections.Tests
             var hashset = new ConcurrentHashSet<int>();
             Assert.True(hashset.Add(1));
             Assert.True(hashset.Add(2));
-            foreach(var item in hashset)
+            foreach (var item in hashset)
             {
                 Assert.InRange(item, 0, 3);
             }
@@ -228,7 +228,7 @@ namespace Graph.ConcurrentCollections.Tests
             var json = JsonConvert.SerializeObject(hashset);
             var other = JsonConvert.DeserializeObject<ConcurrentHashSet<int>>(json);
 
-            Assert.True(hashset.SetEquals(other));            
+            Assert.True(hashset.SetEquals(other));
         }
     }
 }

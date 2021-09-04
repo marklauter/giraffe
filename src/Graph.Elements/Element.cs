@@ -50,7 +50,7 @@ namespace Graph.Elements
 
             if (this.labels.Add(label))
             {
-                this.OnClassificationChanged(label);
+                this.OnClassificationChanged(label, ClassificationChangeType.Classifiy);
             }
 
             return this;
@@ -81,7 +81,7 @@ namespace Graph.Elements
 
             if (this.labels.Remove(label))
             {
-                this.OnClassificationChanged(label);
+                this.OnClassificationChanged(label, ClassificationChangeType.Declassify);
             }
 
             return this;
@@ -126,9 +126,9 @@ namespace Graph.Elements
             return this.attributes.TryGetValue(name, out value);
         }
 
-        private void OnClassificationChanged(string label)
+        private void OnClassificationChanged(string label, ClassificationChangeType type)
         {
-            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(label));
+            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(label, type));
         }
     }
 }

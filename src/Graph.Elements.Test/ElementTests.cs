@@ -230,16 +230,16 @@ namespace Graph.Elements.Test
         public void ClassificationChangedEventArgs_Constructor()
         {
             var label = "x";
-            Assert.NotNull(new ClassificationChangedEventArgs(label));
+            Assert.NotNull(new ClassificationChangedEventArgs(label, ClassificationChangeType.Classifiy));
 
             label = null;
-            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label));
+            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ClassificationChangeType.Classifiy));
 
             label = String.Empty;
-            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label));
+            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ClassificationChangeType.Classifiy));
 
             label = " ";
-            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label));
+            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ClassificationChangeType.Classifiy));
         }
 
         [Fact]

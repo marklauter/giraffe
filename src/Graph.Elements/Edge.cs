@@ -82,7 +82,7 @@ namespace Graph.Elements
         [Pure]
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as Edge);
+            return obj is Edge edge && this.Equals(edge);
         }
 
         [Pure]
