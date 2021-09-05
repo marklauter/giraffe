@@ -7,48 +7,8 @@ namespace Graph.Elements
     public interface IElement
         : ICloneable
     {
-        event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
-
         [Key]
         Guid Id { get; }
-
-        IEnumerable<string> Labels { get; }
-
-        /// <summary>
-        /// Assigns a label to the element.
-        /// </summary>
-        /// <param name="label"></param>
-        /// <returns><see cref="IElement"/> for fluent access.</returns>
-        /// <remarks>
-        /// <seealso cref="Classify(IEnumerable{String})"/>
-        /// <seealso cref="Declassify(String)"/>
-        /// <seealso cref="Is(String)"/>
-        /// </remarks>
-        IElement Classify(string label);
-
-        /// <summary>
-        /// Assigns a set of labels to the element.
-        /// </summary>
-        /// <param name="label"></param>
-        /// <returns><see cref="IElement"/> for fluent access.</returns>
-        /// <remarks>
-        /// <see cref="Classify(String)"/>
-        /// <seealso cref="Declassify(String)"/>
-        /// <seealso cref="Is(String)"/>
-        /// </remarks>
-        IElement Classify(IEnumerable<string> labels);
-
-        /// <summary>
-        /// Unassign a label from the element.
-        /// </summary>
-        /// <param name="label"></param>
-        /// <returns><see cref="IElement"/> for fluent access.</returns>
-        /// <remarks>
-        /// <seealso cref="Classify(String)"/>
-        /// <seealso cref="Classify(IEnumerable{String})"/>
-        /// <seealso cref="Is(String)"/>
-        /// </remarks>
-        IElement Declassify(string label);
 
         /// <summary>
         /// Checks the map of attribute name-value pairs for a matching name.
@@ -62,19 +22,6 @@ namespace Graph.Elements
         /// HasA
         /// </remarks>
         bool HasAttribute(string name);
-
-        /// <summary>
-        /// Checks the element for a classification matching the label.
-        /// </summary>
-        /// <param name="label"></param>
-        /// <returns>True if the element contains a classification that matches the label.</returns>
-        /// <remarks>
-        /// <seealso cref="Classify(String)"/>
-        /// <seealso cref="Classify(IEnumerable{String})"/>
-        /// <seealso cref="Declassify(String)"/>
-        /// IsA
-        /// </remarks>
-        bool Is(string label);
 
         /// <summary>
         /// Sets adds an attribute, in the form of a name-value pair, to the element.

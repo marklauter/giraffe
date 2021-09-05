@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -15,77 +16,30 @@ namespace Graph.Elements
         : IElement
     {
         [JsonProperty("attributes")]
-        private readonly ConcurrentDictionary<string, string> attributes = new();
-
-        [JsonProperty("labels")]
-        private readonly ConcurrentHashSet<string> labels = new();
+        private ImmutableDictionary<string, string> attributes = ImmutableDictionary<string, string>.Empty;
 
         protected Element() { }
+
+        protected Element(Guid id)
+        {
+            this.Id = id;
+        }
 
         protected Element([DisallowNull] Element other)
         {
             this.Id = other.Id;
-            this.attributes = new(other.attributes);
-            this.labels = other.labels.Clone() as ConcurrentHashSet<string>;
+            this.attributes = other.attributes;
         }
-
-        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
         /// <inheritdoc/>
         [Key]
         [Required]
         [JsonProperty("id")]
-        public Guid Id { get; } = Guid.NewGuid();
-
-        [JsonIgnore]
-        public IEnumerable<string> Labels => this.labels;
-
-        /// <inheritdoc/>
-        public IElement Classify(string label)
-        {
-            if (String.IsNullOrWhiteSpace(label))
-            {
-                throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
-            }
-
-            if (this.labels.Add(label))
-            {
-                this.OnClassificationChanged(label, ClassificationChangeType.Classifiy);
-            }
-
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement Classify([DisallowNull] IEnumerable<string> labels)
-        {
-            foreach (var label in labels)
-            {
-                _ = this.Classify(label);
-            }
-
-            return this;
-        }
+        public Guid Id { get; } 
 
         /// <inheritdoc/>
         [Pure]
         public abstract object Clone();
-
-        /// <inheritdoc/>
-        public IElement Declassify(string label)
-        {
-            if (String.IsNullOrWhiteSpace(label))
-            {
-                throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
-            }
-
-            if (this.labels.Remove(label))
-            {
-                this.OnClassificationChanged(label, ClassificationChangeType.Declassify);
-            }
-
-            return this;
-        }
 
         /// <inheritdoc/>
         [Pure]
@@ -95,26 +49,19 @@ namespace Graph.Elements
         }
 
         /// <inheritdoc/>
-        [Pure]
-        public bool Is(string label)
-        {
-            return this.labels.Contains(label);
-        }
-
-        /// <inheritdoc/>
         public IElement Qualify(string name, string value)
         {
-            _ = this.attributes.AddOrUpdate(name, value, (key, oldvalue) => value);
+
+            this.attributes = this.attributes
+                .SetItem(name, value);
             return this;
         }
 
         /// <inheritdoc/>
         public IElement Qualify([DisallowNull] IEnumerable<KeyValuePair<string, string>> attributes)
         {
-            foreach (var kvp in attributes)
-            {
-                this.Qualify(kvp.Key, kvp.Value);
-            }
+            this.attributes = this.attributes
+                .AddRange(attributes);
 
             return this;
         }
@@ -124,11 +71,6 @@ namespace Graph.Elements
         public bool TryGetAttribute(string name, out string value)
         {
             return this.attributes.TryGetValue(name, out value);
-        }
-
-        private void OnClassificationChanged(string label, ClassificationChangeType type)
-        {
-            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(label, type));
         }
     }
 }
