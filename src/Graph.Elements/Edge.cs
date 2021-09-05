@@ -17,6 +17,16 @@ namespace Graph.Elements
         , IEqualityComparer<Edge>
         , IEnumerable<Guid>
     {
+        public static Edge New(Guid sourceId, Guid targetId)
+        {
+            return new(Guid.NewGuid(), sourceId, targetId);
+        }
+
+        public static Edge New(Guid sourceId, Guid targetId, bool isDirected)
+        {
+            return new(Guid.NewGuid(), sourceId, targetId, isDirected);
+        }
+
         [Required]
         [JsonProperty("directed")]
         public bool IsDirected { get; }
@@ -31,31 +41,25 @@ namespace Graph.Elements
 
         private Edge() : base() { }
 
-        private Edge([DisallowNull] Edge other)
-            : base(other)
+        private Edge(Guid id, Guid sourceId, Guid targetId)
+            : this(id, sourceId, targetId, false)
         {
-            this.SourceId = other.SourceId;
-            this.TargetId = other.TargetId;
-            this.IsDirected = other.IsDirected;
         }
 
-        [JsonConstructor]
-        private Edge(Guid sourceId, Guid targetId, bool isDirected)
-            : base()
+        private Edge(Guid id, Guid sourceId, Guid targetId, bool isDirected)
+            : base(id)
         {
             this.SourceId = sourceId;
             this.TargetId = targetId;
             this.IsDirected = isDirected;
         }
 
-        public Edge([DisallowNull] Node source, [DisallowNull] Node target)
-            : this(source.Id, target.Id, true)
+        private Edge([DisallowNull] Edge other)
+            : base(other)
         {
-        }
-
-        public Edge([DisallowNull] Node source, [DisallowNull] Node target, bool isDirected)
-            : this(source.Id, target.Id, isDirected)
-        {
+            this.SourceId = other.SourceId;
+            this.TargetId = other.TargetId;
+            this.IsDirected = other.IsDirected;
         }
 
         [Pure]
@@ -68,6 +72,7 @@ namespace Graph.Elements
         public bool Equals(Edge other)
         {
             return other != null
+                && this.Id == other.Id
                 && this.SourceId == other.SourceId
                 && this.TargetId == other.TargetId
                 && this.IsDirected == other.IsDirected;
@@ -95,6 +100,7 @@ namespace Graph.Elements
         public override int GetHashCode()
         {
             return HashCode.Combine(
+                this.Id,
                 this.SourceId,
                 this.TargetId,
                 this.IsDirected);
