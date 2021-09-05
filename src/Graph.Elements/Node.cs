@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
-using System.Threading;
 
 namespace Graph.Elements
 {
@@ -18,13 +17,11 @@ namespace Graph.Elements
         , IEquatable<Node>
         , IEqualityComparer<Node>
     {
-        private readonly ReaderWriterLockSlim gate = new();
-
         [JsonProperty]
         private readonly ConcurrentHashSet<Guid> neighbors = new();
 
         [JsonProperty]
-        private readonly ElementIndex index = ElementIndex.Empty;
+        private readonly ElementIndex nodeIndex = ElementIndex.Empty;
 
         // indexed by target node
         [JsonProperty]
@@ -36,106 +33,66 @@ namespace Graph.Elements
             : base(other)
         {
             this.neighbors = other.neighbors.Clone() as ConcurrentHashSet<Guid>;
+            this.edges = new ConcurrentDictionary<Guid, Guid>(other.edges);
+            this.nodeIndex = other.nodeIndex.Clone() as ElementIndex;
         }
 
         [Pure]
         public bool IsAdjacent(Guid targetId)
         {
-            this.gate.EnterReadLock();
-            try
-            {
-                return this.neighbors.Contains(targetId);
-            }
-            finally
-            {
-                this.gate.ExitReadLock();
-            }
+            return this.neighbors.Contains(targetId);
         }
 
         [Pure]
         public bool IsAdjacent(Node target)
         {
-            this.gate.EnterReadLock();
-            try
-            {
-                return this.IsAdjacent(target.Id);
-            }
-            finally
-            {
-                this.gate.ExitReadLock();
-            }
+            return this.IsAdjacent(target.Id);
         }
 
         [Pure]
         public override object Clone()
         {
-            this.gate.EnterReadLock();
-            try
-            {
-                return new Node(this);
-            }
-            finally
-            {
-                this.gate.ExitReadLock();
-            }
+            return new Node(this);
         }
 
-        public Edge Couple([DisallowNull] Node target, bool isDirected)
+        public bool TryCouple([DisallowNull] Node target, bool isDirected, out Edge edge)
         {
-            this.gate.EnterWriteLock();
-            try
+            if (target is null)
             {
-                Edge edge = null;
-                if (this.neighbors.Add(target.Id))
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            edge = null;
+            if (this.neighbors.Add(target.Id))
+            {
+                edge = new Edge(this, target);
+                _ = this.edges.TryAdd(target.Id, edge.Id);
+
+                if (!isDirected && target.neighbors.Add(target.Id))
                 {
-                    edge = new Edge(this, target);
-                    _ = this.edges.TryAdd(target.Id, edge.Id);
-                    // this.IndexNode(target);
-
-                    if (!isDirected && target.neighbors.Add(target.Id))
-                    {
-                        _ = target.edges.TryAdd(this.Id, edge.Id);
-                        //target.IndexNode(this);
-                    }
-
-                    return edge;
+                    _ = target.edges.TryAdd(this.Id, edge.Id);
                 }
 
-                return edge;
+                return true;
             }
-            finally
-            {
-                this.gate.ExitWriteLock();
-            }
+
+            return false;
         }
 
         public bool TryDecouple([DisallowNull] Node target)
         {
-            this.gate.EnterWriteLock();
-            try
+            if (target is null)
             {
-                // todo: need to find the edge and delete it too
-                // todo: need to deindex
-                return this.neighbors.Remove(target.Id);
+                throw new ArgumentNullException(nameof(target));
             }
-            finally
-            {
-                this.gate.ExitWriteLock();
-            }
+
+            return this.neighbors.Remove(target.Id);
         }
 
         [Pure]
         public int Degree()
         {
-            this.gate.EnterReadLock();
-            try
-            {
-                return this.neighbors.Count;
-            }
-            finally
-            {
-                this.gate.ExitReadLock();
-            }
+            return this.neighbors.Count;
         }
 
         [Pure]
@@ -157,6 +114,7 @@ namespace Graph.Elements
             return obj is Node node && this.Equals(node);
         }
 
+        [Pure]
         public override int GetHashCode()
         {
             return HashCode.Combine(this.Id);
@@ -171,24 +129,10 @@ namespace Graph.Elements
         [Pure]
         public IEnumerable<Guid> Neighbors()
         {
-            this.gate.EnterReadLock();
-            try
+            foreach (var neighbor in this.neighbors)
             {
-                foreach (var neighbor in this.neighbors)
-                {
-                    yield return neighbor;
-                }
+                yield return neighbor;
             }
-            finally
-            {
-                this.gate.ExitReadLock();
-            }
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -102,5 +102,46 @@ namespace Graph.Elements.Test
                 ElementIndex.Empty.Add(null);
             });
         }
+
+        [Fact]
+        public void TryGetElements_Throws_On_Null_Empty_and_WhiteSpace()
+        {
+            var label = String.Empty;
+            Assert.Throws<ArgumentException>(() =>
+            {
+                ElementIndex.Empty.TryGetElements(label, out var _);
+            });
+
+            label = null;
+            Assert.Throws<ArgumentException>(() =>
+            {
+                ElementIndex.Empty.TryGetElements(label, out var _);
+            });
+
+            label = " ";
+            Assert.Throws<ArgumentException>(() =>
+            {
+                ElementIndex.Empty.TryGetElements(label, out var _);
+            });
+        }
+
+        [Fact]
+        public void TryGetElements_Returns_False_When_No_Match()
+        {
+            var label = "one";
+            Assert.False(ElementIndex.Empty.TryGetElements(label, out var _));
+        }
+
+        [Fact]
+        public void TryGetElements_Returns_True_When_Match()
+        {
+            var label = "one";
+            var element = new ConcreteElement()
+                .Classify(label);
+            var index = ElementIndex.Empty;
+            index.Add(element);
+            Assert.True(index.TryGetElements(label, out var elements));
+            Assert.Contains(element.Id, elements);
+        }
     }
 }

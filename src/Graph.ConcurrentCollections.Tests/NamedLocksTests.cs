@@ -84,6 +84,5 @@ namespace Graph.ConcurrentCollections.Tests
             locks.Unlock(name);
             Assert.Equal(0, locks.LocksHeld(name));
         }
-
     }
 }
