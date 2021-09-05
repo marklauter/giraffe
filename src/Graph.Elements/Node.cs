@@ -24,7 +24,7 @@ namespace Graph.Elements
         private readonly ConcurrentHashSet<Guid> neighbors = new();
 
         [JsonProperty]
-        private readonly ElementIndex index = new();
+        private readonly ElementIndex index = ElementIndex.Empty;
 
         // indexed by target node
         [JsonProperty]

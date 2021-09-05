@@ -254,7 +254,7 @@ namespace Graph.Elements.Test
                 {
                     element.Classify(label);
                 });
-            
+
             Assert.Raises<ClassificationChangedEventArgs>(
                 handler => element.ClassificationChanged += handler,
                 handler => element.ClassificationChanged -= handler,
