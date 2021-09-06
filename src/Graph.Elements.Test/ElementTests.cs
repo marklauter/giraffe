@@ -230,16 +230,16 @@ namespace Graph.Elements.Test
         public void ClassificationChangedEventArgs_Constructor()
         {
             var label = "x";
-            Assert.NotNull(new ClassificationChangedEventArgs(label, ClassificationChangeType.Classifiy));
+            Assert.NotNull(new ClassificationChangedEventArgs(label, ChangeType.Classifiy));
 
             label = null;
-            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ClassificationChangeType.Classifiy));
+            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ChangeType.Classifiy));
 
             label = String.Empty;
-            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ClassificationChangeType.Classifiy));
+            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ChangeType.Classifiy));
 
             label = " ";
-            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ClassificationChangeType.Classifiy));
+            Assert.Throws<ArgumentException>(() => new ClassificationChangedEventArgs(label, ChangeType.Classifiy));
         }
 
         [Fact]
@@ -247,7 +247,7 @@ namespace Graph.Elements.Test
         {
             var label = "x";
             var element = new ConcreteElement();
-            Assert.Raises<ClassificationChangedEventArgs>(
+            Assert.Raises<ItemsDeclassifiedEventArgs>(
                 handler => element.ClassificationChanged += handler,
                 handler => element.ClassificationChanged -= handler,
                 () =>
@@ -255,7 +255,7 @@ namespace Graph.Elements.Test
                     element.Classify(label);
                 });
 
-            Assert.Raises<ClassificationChangedEventArgs>(
+            Assert.Raises<ItemsDeclassifiedEventArgs>(
                 handler => element.ClassificationChanged += handler,
                 handler => element.ClassificationChanged -= handler,
                 () =>
