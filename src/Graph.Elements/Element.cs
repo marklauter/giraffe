@@ -27,6 +27,7 @@ namespace Graph.Elements
 
         protected Element([DisallowNull, Pure] Element other)
         {
+            Convert
             this.Id = other.Id;
             this.attributes = other.attributes;
         }
