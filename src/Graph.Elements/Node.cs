@@ -1,12 +1,10 @@
-﻿using Graph.ConcurrentCollections;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Runtime.Serialization;
 
 namespace Graph.Elements
 {
@@ -18,35 +16,33 @@ namespace Graph.Elements
         , IEqualityComparer<Node>
     {
         [JsonProperty]
-        private readonly ConcurrentHashSet<Guid> neighbors = new();
+        private ImmutableHashSet<Guid> neighbors = ImmutableHashSet<Guid>.Empty;
 
-        [JsonProperty]
-        private readonly ElementIndex nodeIndex = ElementIndex.Empty;
-
-        // indexed by target node
-        [JsonProperty]
-        private readonly ConcurrentDictionary<Guid, Guid> edges = new();
+        public static Node New()
+        {
+            return new(Guid.NewGuid());
+        }
 
         private Node() : base() { }
 
-        private Node([DisallowNull] Node other)
+        private Node(Guid id) : base(id) { }
+
+        private Node([DisallowNull, Pure] Node other)
             : base(other)
         {
-            this.neighbors = other.neighbors.Clone() as ConcurrentHashSet<Guid>;
-            this.edges = new ConcurrentDictionary<Guid, Guid>(other.edges);
-            this.nodeIndex = other.nodeIndex.Clone() as ElementIndex;
+            this.neighbors = other.neighbors;
         }
 
         [Pure]
-        public bool IsAdjacent(Guid targetId)
+        public bool IsAdjacent(Guid nodeId)
         {
-            return this.neighbors.Contains(targetId);
+            return this.neighbors.Contains(nodeId);
         }
 
         [Pure]
-        public bool IsAdjacent(Node target)
+        public bool IsAdjacent([DisallowNull, Pure] Node node)
         {
-            return this.IsAdjacent(target.Id);
+            return this.IsAdjacent(node.Id);
         }
 
         [Pure]
@@ -55,23 +51,12 @@ namespace Graph.Elements
             return new Node(this);
         }
 
-        public bool TryCouple([DisallowNull] Node target, bool isDirected, out Edge edge)
+        public bool TryCouple([DisallowNull, Pure] Node node)
         {
-            if (target is null)
+            if (!this.neighbors.Contains(node.Id))
             {
-                throw new ArgumentNullException(nameof(target));
-            }
-
-            edge = null;
-            if (this.neighbors.Add(target.Id))
-            {
-                edge = new Edge(this, target);
-                _ = this.edges.TryAdd(target.Id, edge.Id);
-
-                if (!isDirected && target.neighbors.Add(target.Id))
-                {
-                    _ = target.edges.TryAdd(this.Id, edge.Id);
-                }
+                this.neighbors = this.neighbors
+                    .Add(node.Id);
 
                 return true;
             }
@@ -79,14 +64,17 @@ namespace Graph.Elements
             return false;
         }
 
-        public bool TryDecouple([DisallowNull] Node target)
+        public bool TryDecouple([DisallowNull, Pure] Node node)
         {
-            if (target is null)
+            if (this.neighbors.Contains(node.Id))
             {
-                throw new ArgumentNullException(nameof(target));
+                this.neighbors = this.neighbors
+                    .Remove(node.Id);
+
+                return true;
             }
 
-            return this.neighbors.Remove(target.Id);
+            return false;
         }
 
         [Pure]
@@ -96,7 +84,7 @@ namespace Graph.Elements
         }
 
         [Pure]
-        public bool Equals(Node other)
+        public bool Equals([Pure] Node other)
         {
             return other != null
                 && other.Id == this.Id;
@@ -121,7 +109,7 @@ namespace Graph.Elements
         }
 
         [Pure]
-        public int GetHashCode([DisallowNull] Node obj)
+        public int GetHashCode([DisallowNull, Pure] Node obj)
         {
             return obj.GetHashCode();
         }
