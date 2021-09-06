@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 
 namespace Graph.Elements
 {
@@ -20,7 +22,7 @@ namespace Graph.Elements
 
         private Classifier() { }
 
-        private Classifier(Classifier<T> other)
+        private Classifier([DisallowNull, Pure] Classifier<T> other)
         {
             this.classes = other.classes;
         }
@@ -61,6 +63,7 @@ namespace Graph.Elements
         }
 
         /// <inheritdoc/>
+        [Pure]
         public object Clone()
         {
             return new Classifier<T>(this);
@@ -97,18 +100,21 @@ namespace Graph.Elements
         }
 
         /// <inheritdoc/>
+        [Pure]
         public bool Exists(string label)
         {
             return this.classes.ContainsKey(label);
         }
 
         /// <inheritdoc/>
+        [Pure]
         public ImmutableHashSet<T> Members(string label)
         {
             return this.classes.GetValueOrDefault(label, ImmutableHashSet<T>.Empty);
         }
 
         /// <inheritdoc/>
+        [Pure]
         public bool Is(string label, T item)
         {
             return this.classes
