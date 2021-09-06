@@ -15,7 +15,7 @@ namespace Graph.Elements
         , IEquatable<Node>
         , IEqualityComparer<Node>
     {
-        [JsonProperty]
+        [JsonProperty("neigbors")]
         private ImmutableHashSet<Guid> neighbors = ImmutableHashSet<Guid>.Empty;
 
         public static Node New()
