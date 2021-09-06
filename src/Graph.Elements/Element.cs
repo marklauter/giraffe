@@ -25,7 +25,7 @@ namespace Graph.Elements
             this.Id = id;
         }
 
-        protected Element([DisallowNull] Element other)
+        protected Element([DisallowNull, Pure] Element other)
         {
             this.Id = other.Id;
             this.attributes = other.attributes;
