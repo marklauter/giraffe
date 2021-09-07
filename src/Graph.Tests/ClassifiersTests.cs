@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Graph.Tests
 {
-    public class ClassifiersTests
+    public sealed class ClassifiersTests
     {
         [Fact]
         public void ClassifiedEventArgs_Constructor_Throws_ArgumentException()

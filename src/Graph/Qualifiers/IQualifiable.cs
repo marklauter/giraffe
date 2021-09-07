@@ -5,8 +5,8 @@ namespace Graph.Qualifiers
     public interface IQualifiable
         : ICloneable
     {
-        event EventHandler<QualificationChangedEventArgs> QualificationChanged;
-        event EventHandler<QualificationRejectedEventArgs> QualificationRejected;
+        event EventHandler<QualifiedEventArgs> Qualified;
+        event EventHandler<DisqualifiedEventArgs> Disqualified;
 
         /// <summary>
         /// Removes a quality attribute.
@@ -16,7 +16,7 @@ namespace Graph.Qualifiers
         /// <remarks>
         /// <seealso cref="Qualify(String, String)"/>
         /// </remarks>
-        IQualifiable Reject(string name);
+        IQualifiable Disqualify(string name);
 
         /// <summary>
         /// Returns true if the instance contains the named quality.
@@ -35,7 +35,7 @@ namespace Graph.Qualifiers
         /// <param name="value">Value of the quality.</param>
         /// <returns><see cref="IQualifiable"/></returns>
         /// <remarks>
-        /// <seealso cref="Reject(String)"/>
+        /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
         IQualifiable Qualify(string name, string value);
 

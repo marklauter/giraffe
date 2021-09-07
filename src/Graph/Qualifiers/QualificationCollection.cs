@@ -15,10 +15,10 @@ namespace Graph.Qualifiers
         , IEnumerable<KeyValuePair<string, string>>
     {
         /// <inheritdoc/>
-        public event EventHandler<QualificationChangedEventArgs> QualificationChanged;
+        public event EventHandler<QualifiedEventArgs> Qualified;
 
         /// <inheritdoc/>
-        public event EventHandler<QualificationRejectedEventArgs> QualificationRejected;
+        public event EventHandler<DisqualifiedEventArgs> Disqualified;
 
         private ImmutableDictionary<string, string> qualifications = ImmutableDictionary<string, string>.Empty;
 
@@ -46,17 +46,45 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
+        public IQualifiable Disqualify(string name)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.qualifications = this.qualifications.Remove(name);
+            Disqualified?.Invoke(this, new DisqualifiedEventArgs(name));
+            return this;
+        }
+
+        /// <inheritdoc/>
         [Pure]
         public bool HasQuality(string name)
         {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
             return this.qualifications.ContainsKey(name);
         }
 
         /// <inheritdoc/>
         public IQualifiable Qualify(string name, string value)
         {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException($"'{nameof(value)}' cannot be null or whitespace.", nameof(value));
+            }
+
             this.qualifications = this.qualifications.SetItem(name, value);
-            QualificationChanged?.Invoke(this, new QualificationChangedEventArgs(name, value));
+            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
 
@@ -64,17 +92,14 @@ namespace Graph.Qualifiers
         [Pure]
         public string Quality(string name)
         {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
             return this.qualifications.TryGetValue(name, out var value)
                 ? value
                 : null;
-        }
-
-        /// <inheritdoc/>
-        public IQualifiable Reject(string name)
-        {
-            this.qualifications = this.qualifications.Remove(name);
-            QualificationRejected?.Invoke(this, new QualificationRejectedEventArgs(name));
-            return this;
         }
 
         /// <inheritdoc/>

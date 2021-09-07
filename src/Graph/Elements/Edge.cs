@@ -37,8 +37,6 @@ namespace Graph.Elements
         [JsonProperty("target")]
         public Guid TargetId { get; }
 
-        private Edge() : base() { }
-
         private Edge(Guid id, Guid sourceId, Guid targetId)
             : this(id, sourceId, targetId, false)
         {
@@ -80,7 +78,7 @@ namespace Graph.Elements
         [Pure]
         public bool Equals(Edge x, Edge y)
         {
-            return x != null && x.Equals(y) || y == null;
+            return x != null && x.Equals(y);
         }
 
         [Pure]
@@ -92,7 +90,9 @@ namespace Graph.Elements
         [Pure]
         public int GetHashCode([DisallowNull] Edge obj)
         {
-            return obj.GetHashCode();
+            return obj is null 
+                ? throw new ArgumentNullException(nameof(obj)) 
+                : obj.GetHashCode();
         }
 
         [Pure]

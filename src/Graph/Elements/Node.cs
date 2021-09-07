@@ -98,7 +98,7 @@ namespace Graph.Elements
         [Pure]
         public bool Equals(Node x, Node y)
         {
-            return x != null && x.Equals(y) || y == null;
+            return x != null && x.Equals(y);
         }
 
         [Pure]

@@ -2,10 +2,10 @@
 
 namespace Graph.Qualifiers
 {
-    public sealed class QualificationChangedEventArgs
+    public sealed class QualifiedEventArgs
         : EventArgs
     {
-        public QualificationChangedEventArgs(string name, string value)
+        public QualifiedEventArgs(string name, string value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {

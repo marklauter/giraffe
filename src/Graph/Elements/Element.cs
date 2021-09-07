@@ -100,30 +100,30 @@ namespace Graph.Elements
         }
 
         /// <inheritdoc/>
-        public event EventHandler<QualificationChangedEventArgs> QualificationChanged
+        public event EventHandler<QualifiedEventArgs> Qualified
         {
             add
             {
-                ((IQualifiable)this.qualifications).QualificationChanged += value;
+                ((IQualifiable)this.qualifications).Qualified += value;
             }
 
             remove
             {
-                ((IQualifiable)this.qualifications).QualificationChanged -= value;
+                ((IQualifiable)this.qualifications).Qualified -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler<QualificationRejectedEventArgs> QualificationRejected
+        public event EventHandler<DisqualifiedEventArgs> Disqualified
         {
             add
             {
-                ((IQualifiable)this.qualifications).QualificationRejected += value;
+                ((IQualifiable)this.qualifications).Disqualified += value;
             }
 
             remove
             {
-                ((IQualifiable)this.qualifications).QualificationRejected -= value;
+                ((IQualifiable)this.qualifications).Disqualified -= value;
             }
         }
 
@@ -205,9 +205,9 @@ namespace Graph.Elements
         }
 
         /// <inheritdoc/>
-        public IQualifiable Reject(string name)
+        public IQualifiable Disqualify(string name)
         {
-            return ((IQualifiable)this.qualifications).Reject(name);
+            return ((IQualifiable)this.qualifications).Disqualify(name);
         }
 
         /// <inheritdoc/>
