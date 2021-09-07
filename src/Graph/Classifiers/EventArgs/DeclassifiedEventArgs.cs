@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 
 namespace Graph.Classifiers
 {
     public sealed class DeclassifiedEventArgs
         : EventArgs
     {
-        public DeclassifiedEventArgs([DisallowNull, Pure] string label)
+        public DeclassifiedEventArgs([DisallowNull] string label)
         {
             if (String.IsNullOrWhiteSpace(label))
             {

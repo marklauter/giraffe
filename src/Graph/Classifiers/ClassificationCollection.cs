@@ -77,6 +77,11 @@ namespace Graph.Classifiers
         [Pure]
         public bool Is(string label)
         {
+            if (String.IsNullOrWhiteSpace(label))
+            {
+                throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
+            }
+
             return this.classes.Contains(label);
         }
 
