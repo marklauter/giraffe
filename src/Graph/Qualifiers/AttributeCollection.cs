@@ -10,7 +10,7 @@ namespace Graph.Qualifiers
 {
     /// <inheritdoc/>
     [JsonArray]
-    internal sealed class QualificationCollection
+    internal sealed class AttributeCollection
         : IQualifiable
         , IEnumerable<(string Key, object Value)>
     {
@@ -22,18 +22,18 @@ namespace Graph.Qualifiers
 
         private ImmutableDictionary<string, SerializableValue> qualifications = ImmutableDictionary<string, SerializableValue>.Empty;
 
-        public static QualificationCollection Empty => new();
+        public static AttributeCollection Empty => new();
 
-        private QualificationCollection() { }
+        private AttributeCollection() { }
 
-        private QualificationCollection([DisallowNull, Pure] QualificationCollection other)
+        private AttributeCollection([DisallowNull, Pure] AttributeCollection other)
         {
             this.qualifications = other.qualifications;
         }
 
         [JsonConstructor]
         [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used for serialization.")]
-        private QualificationCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, SerializableValue>> qualifications)
+        private AttributeCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, SerializableValue>> qualifications)
         {
             this.qualifications = this.qualifications.AddRange(qualifications);
         }
@@ -42,7 +42,7 @@ namespace Graph.Qualifiers
         [Pure]
         public object Clone()
         {
-            return new QualificationCollection(this);
+            return new AttributeCollection(this);
         }
 
         /// <inheritdoc/>
@@ -62,12 +62,9 @@ namespace Graph.Qualifiers
         [Pure]
         public bool HasQuality(string name)
         {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            return this.qualifications.ContainsKey(name);
+            return String.IsNullOrWhiteSpace(name)
+                ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
+                : this.qualifications.ContainsKey(name);
         }
 
         /// <inheritdoc/>
@@ -173,16 +170,21 @@ namespace Graph.Qualifiers
 
         /// <inheritdoc/>
         [Pure]
-        public object Value(string name)
+        public bool TryGetValue(string name, out object value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            return this.qualifications.TryGetValue(name, out var value)
-                ? value
-                : null;
+            value = false;
+            if  (this.qualifications.TryGetValue(name, out var serializableValue))
+            {
+                value = serializableValue.Value;
+                return true;
+            }
+
+            return false;
         }
 
         private IQualifiable SetQualification(string name, object value)

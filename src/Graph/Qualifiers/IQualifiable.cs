@@ -190,6 +190,6 @@ namespace Graph.Qualifiers
         /// <remarks>
         /// <seealso cref="HasQuality(String)"/>
         /// </remarks>
-        object Value(string name);
+        bool TryGetValue(string name, out object value);
     }
 }

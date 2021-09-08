@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Graph.Tests
 {
-    public sealed class QuantityTests
+    public sealed class SerializableValueTests
     {
         [Fact]
         public void Quantity_Equals_With_Null()

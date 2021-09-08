@@ -100,7 +100,7 @@ namespace Graph.Elements
         /// <remarks>
         /// <seealso cref="HasQuality(String)"/>
         /// </remarks>
-        object Property(string name);
+        bool TryGetProperty(string name, out object value);
 
         /// <summary>
         /// Adds a quality attribute.

@@ -1,6 +1,5 @@
 ﻿using Graph.Classifiers;
 using Graph.Qualifiers;
-using Graph.Quantifiers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace Graph.Elements
         private readonly ClassificationCollection classifications = ClassificationCollection.Empty;
 
         [JsonProperty]
-        private readonly QuantityCollection attributes = QuantityCollection.Empty;
+        private readonly AttributeCollection attributes = AttributeCollection.Empty;
 
         protected Element() { }
 
@@ -57,34 +56,25 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public event EventHandler<QualifiedEventArgs> Qualified
         {
-            add { this.qualifications.Qualified += value; }
-            remove { this.qualifications.Qualified -= value; }
+            add { this.attributes.Qualified += value; }
+            remove { this.attributes.Qualified -= value; }
         }
 
         /// <inheritdoc/>
         public event EventHandler<DisqualifiedEventArgs> Disqualified
         {
-            add { this.qualifications.Disqualified += value; }
-            remove { this.qualifications.Disqualified -= value; }
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<QuantifiedEventArgs> Quantified
-        {
-            add { this.attributes.Quantified += value; }
-            remove { this.attributes.Quantified -= value; }
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<QuantityRemovedEventArgs> QuantityRemoved
-        {
-            add { this.attributes.QuantityRemoved += value; }
-            remove { this.attributes.QuantityRemoved -= value; }
+            add { this.attributes.Disqualified += value; }
+            remove { this.attributes.Disqualified -= value; }
         }
 
         /// <inheritdoc/>
         public IElement<TId> Classify(string label)
         {
+            if (String.IsNullOrWhiteSpace(label))
+            {
+                throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
+            }
+
             _ = this.classifications.Classify(label);
             return this;
         }
@@ -96,6 +86,11 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public IElement<TId> Declassify(string label)
         {
+            if (String.IsNullOrWhiteSpace(label))
+            {
+                throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
+            }
+
             _ = this.classifications.Declassify(label);
             return this;
         }
@@ -103,59 +98,216 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public IElement<TId> Disqualify(string name)
         {
-            _ = this.qualifications.Disqualify(name);
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Disqualify(name);
             return this;
         }
 
         /// <inheritdoc/>
+        [Pure]
         public bool HasProperty(string name)
         {
-            return this.qualifications.HasQuality(name)
-                || this.attributes.HasQuantity(name);
+            return String.IsNullOrWhiteSpace(name)
+                ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
+                : this.attributes.HasQuality(name);
         }
 
         /// <inheritdoc/>
+        [Pure]
         public bool Is(string label)
         {
-            return this.classifications.Is(label);
+            return String.IsNullOrWhiteSpace(label)
+                ? throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label))
+                : this.classifications.Is(label);
         }
 
         /// <inheritdoc/>
+        [Pure]
         public bool Is(IEnumerable<string> labels)
         {
-            return this.classifications.Is(labels);
+            return labels is null
+                ? throw new ArgumentNullException(nameof(labels))
+                : this.classifications.Is(labels);
+        }
+
+        /// <inheritdoc/>
+        [Pure]
+        public bool TryGetProperty(string name, out object value)
+        {
+            return String.IsNullOrWhiteSpace(name)
+                ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
+                : this.attributes.TryGetValue(name, out value);
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, bool value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, sbyte value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, byte value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, short value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, ushort value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, int value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, uint value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, long value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, ulong value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, float value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, double value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, decimal value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Qualify(string name, DateTime value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes.Qualify(name, value);
+            return this;
         }
 
         /// <inheritdoc/>
         public IElement<TId> Qualify(string name, string value)
         {
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
 
-        /// <inheritdoc/>
-        public string Quality(string name)
-        {
-            return this.qualifications.Quality(name);
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Quantify(NamedQuantity quantity)
-        {
-            this.attributes.Quantify(quantity);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public NamedQuantity Quantity(string name)
-        {
-            return this.attributes.Quantity(name);
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> RemoveQuantity(string name)
-        {
-            this.attributes.RemoveQuantity(name);
+            this.attributes.Qualify(name, value);
             return this;
         }
     }
