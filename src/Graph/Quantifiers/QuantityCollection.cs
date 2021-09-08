@@ -12,15 +12,15 @@ namespace Graph.Quantifiers
     [JsonArray]
     internal sealed class QuantityCollection
         : IQuantifiable
-        , IEnumerable<IQuantity>
+        , IEnumerable<Quantity>
     {
         /// <inheritdoc/>
-        public event EventHandler<QuantificationChangedEventArgs> QuantificationChanged;
+        public event EventHandler<QuantifiedEventArgs> Quantified;
 
         /// <inheritdoc/>
-        public event EventHandler<QuantificationIgnoredEventArgs> QuantificationIngnored;
+        public event EventHandler<QuantityRemovedEventArgs> QuantityRemoved;
 
-        private ImmutableDictionary<string, IQuantity> quantities = ImmutableDictionary<string, IQuantity>.Empty;
+        private ImmutableDictionary<string, Quantity> quantities = ImmutableDictionary<string, Quantity>.Empty;
 
         public static QuantityCollection Empty => new();
 
@@ -33,7 +33,7 @@ namespace Graph.Quantifiers
 
         [JsonConstructor]
         [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used for serialization.")]
-        private QuantityCollection([DisallowNull, Pure] IEnumerable<IQuantity> quantities)
+        private QuantityCollection([DisallowNull, Pure] IEnumerable<Quantity> quantities)
         {
             this.quantities = quantities
                 .ToImmutableDictionary(q => q.Name);
@@ -54,24 +54,24 @@ namespace Graph.Quantifiers
         }
 
         /// <inheritdoc/>
-        public IQuantifiable Ignore(string name)
+        public IQuantifiable RemoveQuantity(string name)
         {
             this.quantities = this.quantities.Remove(name);
-            QuantificationIngnored?.Invoke(this, new QuantificationIgnoredEventArgs(name));
+            QuantityRemoved?.Invoke(this, new QuantityRemovedEventArgs(name));
             return this;
         }
 
         /// <inheritdoc/>
-        public IQuantifiable Quantify([DisallowNull, Pure] IQuantity quantity)
+        public IQuantifiable Quantify([DisallowNull, Pure] Quantity quantity)
         {
             this.quantities = this.quantities.SetItem(quantity.Name, quantity);
-            QuantificationChanged?.Invoke(this, new QuantificationChangedEventArgs(quantity));
+            Quantified?.Invoke(this, new QuantifiedEventArgs(quantity));
             return this;
         }
 
         /// <inheritdoc/>
         [Pure]
-        public IQuantity Quantity(string name)
+        public Quantity Quantity(string name)
         {
             return this.quantities.TryGetValue(name, out var quantity)
                 ? quantity
@@ -80,21 +80,7 @@ namespace Graph.Quantifiers
 
         /// <inheritdoc/>
         [Pure]
-        public bool TryGetValue<T>(string name, out T value) where T : struct, IComparable, IComparable<T>, IEquatable<T>, IFormattable
-        {
-            value = default;
-            if (this.quantities.TryGetValue(name, out var quantity))
-            {
-                value = quantity.ParseValue<T>();
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc/>
-        [Pure]
-        public IEnumerator<IQuantity> GetEnumerator()
+        public IEnumerator<Quantity> GetEnumerator()
         {
             foreach (var kvp in this.quantities)
             {

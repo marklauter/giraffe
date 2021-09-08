@@ -46,91 +46,50 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public event EventHandler<ClassifiedEventArgs> Classified
         {
-            add
-            {
-                ((IClassifiable)this.classifications).Classified += value;
-            }
-
-            remove
-            {
-                ((IClassifiable)this.classifications).Classified -= value;
-            }
+            add { this.classifications.Classified += value; }
+            remove { this.classifications.Classified -= value; }
         }
 
         /// <inheritdoc/>
         public event EventHandler<DeclassifiedEventArgs> Declassified
         {
-            add
-            {
-                ((IClassifiable)this.classifications).Declassified += value;
-            }
-
-            remove
-            {
-                ((IClassifiable)this.classifications).Declassified -= value;
-            }
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<QuantificationChangedEventArgs> QuantificationChanged
-        {
-            add
-            {
-                ((IQuantifiable)this.quantities).QuantificationChanged += value;
-            }
-
-            remove
-            {
-                ((IQuantifiable)this.quantities).QuantificationChanged -= value;
-            }
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<QuantificationIgnoredEventArgs> QuantificationIngnored
-        {
-            add
-            {
-                ((IQuantifiable)this.quantities).QuantificationIngnored += value;
-            }
-
-            remove
-            {
-                ((IQuantifiable)this.quantities).QuantificationIngnored -= value;
-            }
+            add { this.classifications.Declassified += value; }
+            remove { this.classifications.Declassified -= value; }
         }
 
         /// <inheritdoc/>
         public event EventHandler<QualifiedEventArgs> Qualified
         {
-            add
-            {
-                ((IQualifiable)this.qualifications).Qualified += value;
-            }
-
-            remove
-            {
-                ((IQualifiable)this.qualifications).Qualified -= value;
-            }
+            add { this.qualifications.Qualified += value; }
+            remove { this.qualifications.Qualified -= value; }
         }
 
         /// <inheritdoc/>
         public event EventHandler<DisqualifiedEventArgs> Disqualified
         {
-            add
-            {
-                ((IQualifiable)this.qualifications).Disqualified += value;
-            }
-
-            remove
-            {
-                ((IQualifiable)this.qualifications).Disqualified -= value;
-            }
+            add { this.qualifications.Disqualified += value; }
+            remove { this.qualifications.Disqualified -= value; }
         }
 
         /// <inheritdoc/>
-        public IClassifiable Classify(string label)
+        public event EventHandler<QuantifiedEventArgs> Quantified
         {
-            return ((IClassifiable)this.classifications).Classify(label);
+            add { this.quantities.Quantified += value; }
+            remove { this.quantities.Quantified -= value; }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<QuantityRemovedEventArgs> QuantityRemoved
+        {
+            add { this.quantities.QuantityRemoved += value; }
+            remove { this.quantities.QuantityRemoved -= value; }
+        }
+
+        /// <inheritdoc/>
+        public IElement<TId> Classify(string label)
+        {
+            _ = this.classifications.Classify(label);
+            return this;
         }
 
         /// <inheritdoc/>
@@ -138,83 +97,69 @@ namespace Graph.Elements
         public abstract object Clone();
 
         /// <inheritdoc/>
-        public IClassifiable Declassify(string label)
+        public IElement<TId> Declassify(string label)
         {
-            return ((IClassifiable)this.classifications).Declassify(label);
+            _ = this.classifications.Declassify(label);
+            return this;
         }
 
         /// <inheritdoc/>
-        [Pure]
-        public bool HasQuality(string name)
+        public IElement<TId> Disqualify(string name)
         {
-            return ((IQualifiable)this.qualifications).HasQuality(name);
+            _ = this.qualifications.Disqualify(name);
+            return this;
         }
 
         /// <inheritdoc/>
-        [Pure]
-        public bool HasQuantity(string name)
+        public bool HasAttribute(string name)
         {
-            return ((IQuantifiable)this.quantities).HasQuantity(name);
+            return this.qualifications.HasQuality(name)
+                || this.quantities.HasQuantity(name);
         }
 
         /// <inheritdoc/>
-        public IQuantifiable Ignore(string name)
-        {
-            return ((IQuantifiable)this.quantities).Ignore(name);
-        }
-
-        /// <inheritdoc/>
-        [Pure]
         public bool Is(string label)
         {
-            return ((IClassifiable)this.classifications).Is(label);
+            return this.classifications.Is(label);
         }
 
         /// <inheritdoc/>
-        [Pure]
-        public bool Is([DisallowNull] IEnumerable<string> labels)
+        public bool Is(IEnumerable<string> labels)
         {
-            return ((IClassifiable)this.classifications).Is(labels);
+            return this.classifications.Is(labels);
         }
 
         /// <inheritdoc/>
-        [Pure]
-        public IQualifiable Qualify(string name, string value)
+        public IElement<TId> Qualify(string name, string value)
         {
-            return ((IQualifiable)this.qualifications).Qualify(name, value);
+            this.qualifications.Qualify(name, value);
+            return this;
         }
 
         /// <inheritdoc/>
-        [Pure]
         public string Quality(string name)
         {
-            return ((IQualifiable)this.qualifications).Quality(name);
+            return this.qualifications.Quality(name);
         }
 
         /// <inheritdoc/>
-        public IQuantifiable Quantify([DisallowNull, Pure] IQuantity quantity)
+        public IElement<TId> Quantify(Quantity quantity)
         {
-            return ((IQuantifiable)this.quantities).Quantify(quantity);
+            this.quantities.Quantify(quantity);
+            return this;
         }
 
         /// <inheritdoc/>
-        [Pure]
-        public IQuantity Quantity(string name)
+        public Quantity Quantity(string name)
         {
-            return ((IQuantifiable)this.quantities).Quantity(name);
+            return this.quantities.Quantity(name);
         }
 
         /// <inheritdoc/>
-        public IQualifiable Disqualify(string name)
+        public IElement<TId> RemoveQuantity(string name)
         {
-            return ((IQualifiable)this.qualifications).Disqualify(name);
-        }
-
-        /// <inheritdoc/>
-        [Pure]
-        public bool TryGetValue<Tq>(string name, out Tq value) where Tq : struct, IComparable, IComparable<Tq>, IEquatable<Tq>, IFormattable
-        {
-            return ((IQuantifiable)this.quantities).TryGetValue(name, out value);
+            this.quantities.RemoveQuantity(name);
+            return this;
         }
     }
 }

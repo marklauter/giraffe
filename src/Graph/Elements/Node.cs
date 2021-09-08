@@ -122,10 +122,7 @@ namespace Graph.Elements
         [Pure]
         public IEnumerable<Guid> Neighbors()
         {
-            foreach (var neighbor in this.neighbors)
-            {
-                yield return neighbor;
-            }
+            return this.neighbors;
         }
     }
 }

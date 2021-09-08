@@ -125,5 +125,15 @@ namespace Graph.Tests
             var edge = Edge.New(source, target);
             Assert.Throws<ArgumentNullException>(() => edge.GetHashCode(null));
         }
+
+        [Fact]
+        public void Edge_Enumerates_Values()
+        {
+            var source = Guid.NewGuid();
+            var target = Guid.NewGuid();
+            var edge = Edge.New(source, target);
+            Assert.Contains(source, edge.Nodes());
+            Assert.Contains(target, edge.Nodes());
+        }
     }
 }

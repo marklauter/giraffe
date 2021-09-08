@@ -90,8 +90,8 @@ namespace Graph.Elements
         [Pure]
         public int GetHashCode([DisallowNull] Edge obj)
         {
-            return obj is null 
-                ? throw new ArgumentNullException(nameof(obj)) 
+            return obj is null
+                ? throw new ArgumentNullException(nameof(obj))
                 : obj.GetHashCode();
         }
 
@@ -108,8 +108,7 @@ namespace Graph.Elements
         [Pure]
         public IEnumerable<Guid> Nodes()
         {
-            yield return this.SourceId;
-            yield return this.TargetId;
+            return new Guid[] { this.SourceId, this.TargetId };
         }
     }
 }

@@ -4,14 +4,14 @@ using System.Diagnostics.Contracts;
 
 namespace Graph.Quantifiers
 {
-    public sealed class QuantificationChangedEventArgs
+    public sealed class QuantifiedEventArgs
         : EventArgs
     {
-        public QuantificationChangedEventArgs([DisallowNull, Pure] IQuantity quantity)
+        public QuantifiedEventArgs([DisallowNull, Pure] Quantity quantity)
         {
             this.Quantity = quantity ?? throw new ArgumentNullException(nameof(quantity));
         }
 
-        public IQuantity Quantity { get; }
+        public Quantity Quantity { get; }
     }
 }

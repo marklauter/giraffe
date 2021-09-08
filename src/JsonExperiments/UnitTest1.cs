@@ -67,6 +67,37 @@ namespace JsonExperiments
             }
         }
 
+        internal sealed class Quantity
+        {
+            [JsonConstructor]
+            internal Quantity(string name, object value, TypeCode typeCode) 
+            {
+                this.Name = name;
+                this.TypeCode = typeCode;
+                this.Value = Convert.ChangeType(value, typeCode);
+            }
+
+            public Quantity(string name, int value)
+            {
+                this.Name = name;
+                this.Value = value;
+                this.TypeCode = Type.GetTypeCode(value.GetType());
+            }
+
+            public Quantity(string name, double value)
+            {
+                this.Name = name;
+                this.Value = value;
+                this.TypeCode = Type.GetTypeCode(value.GetType());
+            }
+
+            public string Name { get; set; }
+
+            public object Value { get; set; }
+
+            public TypeCode TypeCode { get; set; }
+        }
+
         [Fact]
         public void ArrayAttribute_Test()
         {
@@ -85,6 +116,25 @@ namespace JsonExperiments
             Assert.False(String.IsNullOrWhiteSpace(json));
             var ca = JsonConvert.DeserializeObject<AggregateClass>(json);
             Assert.Contains(1, ca.Items);
+        }
+
+        [Fact]
+        public void Quantity_WritesTypeCode()
+        {
+            var one = 1;
+            var two = 2.2;
+            var qty1 = new Quantity("q1", one);
+            var qty2 = new Quantity("q2", two);
+
+            var json1 = JsonConvert.SerializeObject(qty1);
+            Assert.NotEmpty(json1);
+            var qty3 = JsonConvert.DeserializeObject<Quantity>(json1);
+            Assert.Equal(one, qty3.Value);
+
+            var json2 = JsonConvert.SerializeObject(qty2);
+            Assert.NotEmpty(json2);
+            var qty4 = JsonConvert.DeserializeObject<Quantity>(json2);
+            Assert.Equal(two, qty4.Value);
         }
     }
 }

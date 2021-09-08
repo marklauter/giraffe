@@ -103,7 +103,7 @@ namespace Graph.Tests
             value = null;
             Assert.Throws<ArgumentException>(() => collection.Qualify(name, value));
         }
-        
+
         [Fact]
         public void QualificationCollection_Qualify_Sets_Name_and_Value()
         {

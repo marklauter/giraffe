@@ -5,18 +5,8 @@ namespace Graph.Quantifiers
     public interface IQuantifiable
         : ICloneable
     {
-        event EventHandler<QuantificationChangedEventArgs> QuantificationChanged;
-        event EventHandler<QuantificationIgnoredEventArgs> QuantificationIngnored;
-
-        /// <summary>
-        /// Removes a quantity attribute.
-        /// </summary>
-        /// <param name="name">Name of the quantity to remove.</param>
-        /// <returns><see cref="IQuantifiable"/></returns>
-        /// <remarks>
-        /// <seealso cref="Quantify"/>
-        /// </remarks>
-        IQuantifiable Ignore(string name);
+        event EventHandler<QuantifiedEventArgs> Quantified;
+        event EventHandler<QuantityRemovedEventArgs> QuantityRemoved;
 
         /// <summary>
         /// Returns true if the instance contains the named quantity.
@@ -26,35 +16,36 @@ namespace Graph.Quantifiers
         bool HasQuantity(string name);
 
         /// <summary>
+        /// Removes a quantity attribute.
+        /// </summary>
+        /// <param name="name">Name of the quantity to remove.</param>
+        /// <returns><see cref="IQuantifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Quantify"/>
+        /// </remarks>
+        IQuantifiable RemoveQuantity(string name);
+
+        /// <summary>
         /// Adds a quantity attribute.
         /// </summary>
         /// <param name="name">Name of the quantity.</param>
-        /// <param name="quantity"><see cref="IQuantity"/></param>
+        /// <param name="quantity"><see cref="Quantity"/></param>
         /// <returns><see cref="IQuantifiable"/></returns>
         /// <remarks>
-        /// <seealso cref="Ignore"/>
+        /// <seealso cref="RemoveQuantity"/>
         /// </remarks>
-        IQuantifiable Quantify(IQuantity quantity);
+        IQuantifiable Quantify(Quantity quantity);
 
         /// <summary>
         /// Returns the named quanity.
         /// </summary>
         /// <param name="name">Name of the quantity to return.</param>
-        /// <returns><see cref="IQuantity"/></returns>
+        /// <returns><see cref="Quantity"/></returns>
         /// <remarks>
         /// <seealso cref="Value{T}"/>
         /// </remarks>
-        IQuantity Quantity(string name);
+        Quantity Quantity(string name);
 
-        /// <summary>
-        /// Retruns the typed value of the named quantity.
-        /// </summary>
-        /// <typeparam name="T">Type to which the internal value of IQuantity will be converted.</typeparam>
-        /// <param name="name">Name of the qantity to return.</param>
-        /// <returns><see cref="Boolean"/></returns>
-        /// <remarks>
-        /// <seealso cref="Quantity(String)"/>
-        /// </remarks>
-        bool TryGetValue<T>(string name, out T value) where T : struct, IComparable, IComparable<T>, IEquatable<T>, IFormattable;
+        // todo: maybe change Quantity Quantity(string name) to TryGetQuantity(name, out qty)
     }
 }
