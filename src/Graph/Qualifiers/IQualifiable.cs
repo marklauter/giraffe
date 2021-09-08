@@ -37,6 +37,149 @@ namespace Graph.Qualifiers
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
+        IQualifiable Qualify(string name, bool value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, sbyte value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, byte value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, short value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, ushort value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, int value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, uint value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, long value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, ulong value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, float value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, double value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, decimal value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IQualifiable Qualify(string name, DateTime value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IQualifiable"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
         IQualifiable Qualify(string name, string value);
 
         /// <summary>
@@ -47,6 +190,6 @@ namespace Graph.Qualifiers
         /// <remarks>
         /// <seealso cref="HasQuality(String)"/>
         /// </remarks>
-        string Quality(string name);
+        object Value(string name);
     }
 }

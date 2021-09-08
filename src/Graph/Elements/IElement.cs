@@ -1,7 +1,6 @@
 ﻿using Graph.Classifiers;
 using Graph.Identifiers;
 using Graph.Qualifiers;
-using Graph.Quantifiers;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +10,6 @@ namespace Graph.Elements
         : IIdentifiable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        #region classification
         /// <summary>
         /// Raised when item is assigned to a classification.
         /// <see cref="ClassifiedEventArgs"/>
@@ -29,6 +27,9 @@ namespace Graph.Elements
         /// <seealso cref="Classified"/>
         /// </remarks>
         event EventHandler<DeclassifiedEventArgs> Declassified;
+
+        event EventHandler<QualifiedEventArgs> Qualified;
+        event EventHandler<DisqualifiedEventArgs> Disqualified;
 
         /// <summary>
         /// Classifies this instance.
@@ -54,6 +55,23 @@ namespace Graph.Elements
         IElement<TId> Declassify(string label);
 
         /// <summary>
+        /// Removes a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality to remove.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Qualify(String, String)"/>
+        /// </remarks>
+        IElement<TId> Disqualify(string name);
+
+        /// <summary>
+        /// Returns true if the instance contains the named attribute (quantity or quality).
+        /// </summary>
+        /// <param name="name">Name of the attribute (quantity or quality).</param>
+        /// <returns><see cref="Boolean"/></returns>
+        bool HasProperty(string name);
+
+        /// <summary>
         /// Returns true if the instance is a member of class referenced by label.
         /// </summary>
         /// <param name="label">A class label.</param>
@@ -73,32 +91,6 @@ namespace Graph.Elements
         /// <seealso cref="Is(String)"/>
         /// </remarks>
         bool Is(IEnumerable<string> labels);
-        #endregion
-
-        #region qualification
-        event EventHandler<QualifiedEventArgs> Qualified;
-        event EventHandler<DisqualifiedEventArgs> Disqualified;
-
-        /// <summary>
-        /// Removes a quality attribute.
-        /// </summary>
-        /// <param name="name">Name of the quality to remove.</param>
-        /// <returns><see cref="IQualifiable"/></returns>
-        /// <remarks>
-        /// <seealso cref="Qualify(String, String)"/>
-        /// </remarks>
-        IElement<TId> Disqualify(string name);
-
-        /// <summary>
-        /// Adds a quality attribute.
-        /// </summary>
-        /// <param name="name">Name of the quality.</param>
-        /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IQualifiable"/></returns>
-        /// <remarks>
-        /// <seealso cref="Disqualify(String)"/>
-        /// </remarks>
-        IElement<TId> Qualify(string name, string value);
 
         /// <summary>
         /// Returns the value of the named quality attribute.
@@ -108,50 +100,160 @@ namespace Graph.Elements
         /// <remarks>
         /// <seealso cref="HasQuality(String)"/>
         /// </remarks>
-        string Quality(string name);
-        #endregion
-
-        #region quatification
-        event EventHandler<QuantifiedEventArgs> Quantified;
-        event EventHandler<QuantityRemovedEventArgs> QuantityRemoved;
+        object Property(string name);
 
         /// <summary>
-        /// Removes a quantity attribute.
+        /// Adds a quality attribute.
         /// </summary>
-        /// <param name="name">Name of the quantity to remove.</param>
-        /// <returns><see cref="IQuantifiable"/></returns>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
         /// <remarks>
-        /// <seealso cref="Quantify"/>
+        /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IElement<TId> RemoveQuantity(string name);
+        IElement<TId> Qualify(string name, bool value);
 
         /// <summary>
-        /// Adds a quantity attribute.
+        /// Adds a quality attribute.
         /// </summary>
-        /// <param name="name">Name of the quantity.</param>
-        /// <param name="quantity"><see cref="IQuantity"/></param>
-        /// <returns><see cref="IQuantifiable"/></returns>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
         /// <remarks>
-        /// <seealso cref="Ignore"/>
+        /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IElement<TId> Quantify(Quantity quantity);
+        IElement<TId> Qualify(string name, sbyte value);
 
         /// <summary>
-        /// Returns the named quanity.
+        /// Adds a quality attribute.
         /// </summary>
-        /// <param name="name">Name of the quantity to return.</param>
-        /// <returns><see cref="IQuantity"/></returns>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
         /// <remarks>
-        /// <seealso cref="Value{T}"/>
+        /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        Quantity Quantity(string name);
-        #endregion
+        IElement<TId> Qualify(string name, byte value);
 
         /// <summary>
-        /// Returns true if the instance contains the named attribute (quantity or quality).
+        /// Adds a quality attribute.
         /// </summary>
-        /// <param name="name">Name of the attribute (quantity or quality).</param>
-        /// <returns><see cref="Boolean"/></returns>
-        bool HasAttribute(string name);
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, short value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, ushort value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, int value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, uint value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, long value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, ulong value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, float value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, double value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, decimal value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, DateTime value);
+
+        /// <summary>
+        /// Adds a quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality.</param>
+        /// <param name="value">Value of the quality.</param>
+        /// <returns><see cref="IElement{TId}"/></returns>
+        /// <remarks>
+        /// <seealso cref="Disqualify(String)"/>
+        /// </remarks>
+        IElement<TId> Qualify(string name, string value);
     }
 }

@@ -20,10 +20,7 @@ namespace Graph.Elements
         private readonly ClassificationCollection classifications = ClassificationCollection.Empty;
 
         [JsonProperty]
-        private readonly QualificationCollection qualifications = QualificationCollection.Empty;
-
-        [JsonProperty]
-        private readonly QuantityCollection quantities = QuantityCollection.Empty;
+        private readonly QuantityCollection attributes = QuantityCollection.Empty;
 
         protected Element() { }
 
@@ -74,15 +71,15 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public event EventHandler<QuantifiedEventArgs> Quantified
         {
-            add { this.quantities.Quantified += value; }
-            remove { this.quantities.Quantified -= value; }
+            add { this.attributes.Quantified += value; }
+            remove { this.attributes.Quantified -= value; }
         }
 
         /// <inheritdoc/>
         public event EventHandler<QuantityRemovedEventArgs> QuantityRemoved
         {
-            add { this.quantities.QuantityRemoved += value; }
-            remove { this.quantities.QuantityRemoved -= value; }
+            add { this.attributes.QuantityRemoved += value; }
+            remove { this.attributes.QuantityRemoved -= value; }
         }
 
         /// <inheritdoc/>
@@ -111,10 +108,10 @@ namespace Graph.Elements
         }
 
         /// <inheritdoc/>
-        public bool HasAttribute(string name)
+        public bool HasProperty(string name)
         {
             return this.qualifications.HasQuality(name)
-                || this.quantities.HasQuantity(name);
+                || this.attributes.HasQuantity(name);
         }
 
         /// <inheritdoc/>
@@ -143,22 +140,22 @@ namespace Graph.Elements
         }
 
         /// <inheritdoc/>
-        public IElement<TId> Quantify(Quantity quantity)
+        public IElement<TId> Quantify(NamedQuantity quantity)
         {
-            this.quantities.Quantify(quantity);
+            this.attributes.Quantify(quantity);
             return this;
         }
 
         /// <inheritdoc/>
-        public Quantity Quantity(string name)
+        public NamedQuantity Quantity(string name)
         {
-            return this.quantities.Quantity(name);
+            return this.attributes.Quantity(name);
         }
 
         /// <inheritdoc/>
         public IElement<TId> RemoveQuantity(string name)
         {
-            this.quantities.RemoveQuantity(name);
+            this.attributes.RemoveQuantity(name);
             return this;
         }
     }

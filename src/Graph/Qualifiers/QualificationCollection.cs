@@ -12,7 +12,7 @@ namespace Graph.Qualifiers
     [JsonArray]
     internal sealed class QualificationCollection
         : IQualifiable
-        , IEnumerable<KeyValuePair<string, string>>
+        , IEnumerable<(string Key, object Value)>
     {
         /// <inheritdoc/>
         public event EventHandler<QualifiedEventArgs> Qualified;
@@ -20,7 +20,7 @@ namespace Graph.Qualifiers
         /// <inheritdoc/>
         public event EventHandler<DisqualifiedEventArgs> Disqualified;
 
-        private ImmutableDictionary<string, string> qualifications = ImmutableDictionary<string, string>.Empty;
+        private ImmutableDictionary<string, SerializableValue> qualifications = ImmutableDictionary<string, SerializableValue>.Empty;
 
         public static QualificationCollection Empty => new();
 
@@ -33,7 +33,7 @@ namespace Graph.Qualifiers
 
         [JsonConstructor]
         [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used for serialization.")]
-        private QualificationCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, string>> qualifications)
+        private QualificationCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, SerializableValue>> qualifications)
         {
             this.qualifications = this.qualifications.AddRange(qualifications);
         }
@@ -71,26 +71,109 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, string value)
+        [Pure]
+        public IEnumerator<(string Key, object Value)> GetEnumerator()
         {
-            if (String.IsNullOrWhiteSpace(name))
+            foreach (var kvp in this.qualifications)
             {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+                yield return (kvp.Key, kvp.Value.Value);
             }
-
-            if (String.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentException($"'{nameof(value)}' cannot be null or whitespace.", nameof(value));
-            }
-
-            this.qualifications = this.qualifications.SetItem(name, value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
         }
 
         /// <inheritdoc/>
         [Pure]
-        public string Quality(string name)
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, bool value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, sbyte value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, byte value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, short value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, ushort value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, int value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, uint value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, long value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, ulong value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, float value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, double value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, decimal value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, DateTime value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        public IQualifiable Qualify(string name, string value)
+        {
+            return this.SetQualification(name, value);
+        }
+
+        /// <inheritdoc/>
+        [Pure]
+        public object Value(string name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -102,21 +185,16 @@ namespace Graph.Qualifiers
                 : null;
         }
 
-        /// <inheritdoc/>
-        [Pure]
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        private IQualifiable SetQualification(string name, object value)
         {
-            foreach (var kvp in this.qualifications)
+            if (String.IsNullOrWhiteSpace(name))
             {
-                yield return kvp;
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
-        }
 
-        /// <inheritdoc/>
-        [Pure]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
+            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
+            return this;
         }
     }
 }
