@@ -71,7 +71,7 @@ namespace JsonExperiments
         internal sealed class Quantity
         {
             [JsonConstructor]
-            internal Quantity(string name, object value, TypeCode typeCode) 
+            internal Quantity(string name, object value, TypeCode typeCode)
             {
                 this.Name = name;
                 this.TypeCode = typeCode;
@@ -169,7 +169,7 @@ namespace JsonExperiments
         }
 
         [Fact]
-        public void MetaModel_Test() 
+        public void MetaModel_Test()
         {
             var m = new Model("yo", "world");
             var json = JsonConvert.SerializeObject(m);

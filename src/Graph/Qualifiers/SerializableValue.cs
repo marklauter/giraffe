@@ -67,6 +67,13 @@ namespace Graph.Qualifiers
             return HashCode.Combine(this.TypeCode, this.Value);
         }
 
+        private static TypeCode GetTypeCode(object value)
+        {
+            return value is null
+                ? throw new ArgumentNullException(nameof(value))
+                : Type.GetTypeCode(value.GetType());
+        }
+
         private static bool AreEqual(SerializableValue q1, SerializableValue q2)
         {
             return (q1 == null && q2 == null)
@@ -211,13 +218,6 @@ namespace Graph.Qualifiers
         public static explicit operator SerializableValue(string value)
         {
             return new SerializableValue(value);
-        }
-
-        private static TypeCode GetTypeCode(object value)
-        {
-            return value is null
-                ? throw new ArgumentNullException(nameof(value))
-                : Type.GetTypeCode(value.GetType());
         }
     }
 }

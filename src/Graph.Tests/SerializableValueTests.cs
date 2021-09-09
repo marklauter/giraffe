@@ -204,7 +204,7 @@ namespace Graph.Tests
         [Fact]
         public void Quantity_New_String()
         {
-            object value = "y";
+            var value = "y";
             var quantity = (SerializableValue)value;
             Assert.Equal(value, quantity.Value);
 

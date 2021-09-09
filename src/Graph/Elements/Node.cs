@@ -127,8 +127,8 @@ namespace Graph.Elements
         [Pure]
         public int GetHashCode([DisallowNull, Pure] INode obj)
         {
-            return obj is null 
-                ? throw new ArgumentNullException(nameof(obj)) 
+            return obj is null
+                ? throw new ArgumentNullException(nameof(obj))
                 : obj.GetHashCode();
         }
 
