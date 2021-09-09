@@ -1,7 +1,6 @@
 ﻿using Graph.Qualifiers;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Graph.Tests
@@ -12,28 +11,16 @@ namespace Graph.Tests
         public void QualifiedEventArgs_Constructor_Throws_ArgumentException()
         {
             var name = String.Empty;
-            var value = "x";
-            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, value));
+            var v1 = "1";
+            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, v1));
 
             name = " ";
-            value = "x";
-            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, value));
+            var v2 = 2;
+            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, v2));
 
             name = null;
-            value = "x";
-            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, value));
-
-            name = "x";
-            value = String.Empty;
-            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, value));
-
-            name = "x";
-            value = " ";
-            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, value));
-
-            name = "x";
-            value = null;
-            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, value));
+            var v3 = 3.3;
+            Assert.Throws<ArgumentException>(() => new QualifiedEventArgs(name, v3));
         }
 
         [Fact]
@@ -142,12 +129,12 @@ namespace Graph.Tests
 
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
-            Assert.Contains((name, value), collection);
+            Assert.Contains((name, (SerializableValue)value), collection);
 
             collection.Disqualify(name);
-            Assert.False(collection.TryGetValue(name, out v));
-            Assert.Null(v);
-            Assert.DoesNotContain((name, value), collection);
+            Assert.False(collection.TryGetValue(name, out var v2));
+            Assert.Null(v2);
+            Assert.DoesNotContain((name, (SerializableValue)value), collection);
         }
 
         [Fact]

@@ -12,7 +12,7 @@ namespace Graph.Qualifiers
     [JsonArray]
     internal sealed class AttributeCollection
         : IQualifiable
-        , IEnumerable<(string Key, object Value)>
+        , IEnumerable<(string Key, SerializableValue Value)>
     {
         /// <inheritdoc/>
         public event EventHandler<QualifiedEventArgs> Qualified;
@@ -33,9 +33,10 @@ namespace Graph.Qualifiers
 
         [JsonConstructor]
         [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used for serialization.")]
-        private AttributeCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, SerializableValue>> qualifications)
+        private AttributeCollection([DisallowNull, Pure] IEnumerable<(string Key, SerializableValue Value)> qualifications)
         {
-            this.qualifications = this.qualifications.AddRange(qualifications);
+            this.qualifications = qualifications
+                .ToImmutableDictionary(q => q.Key, q => q.Value);
         }
 
         /// <inheritdoc/>
@@ -69,11 +70,11 @@ namespace Graph.Qualifiers
 
         /// <inheritdoc/>
         [Pure]
-        public IEnumerator<(string Key, object Value)> GetEnumerator()
+        public IEnumerator<(string Key, SerializableValue Value)> GetEnumerator()
         {
             foreach (var kvp in this.qualifications)
             {
-                yield return (kvp.Key, kvp.Value.Value);
+                yield return (kvp.Key, kvp.Value);
             }
         }
 
@@ -165,6 +166,11 @@ namespace Graph.Qualifiers
         /// <inheritdoc/>
         public IQualifiable Qualify(string name, string value)
         {
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException($"'{nameof(value)}' cannot be null or whitespace.", nameof(value));
+            }
+
             return this.SetQualification(name, value);
         }
 
@@ -177,8 +183,8 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            value = false;
-            if  (this.qualifications.TryGetValue(name, out var serializableValue))
+            value = null;
+            if (this.qualifications.TryGetValue(name, out var serializableValue))
             {
                 value = serializableValue.Value;
                 return true;
@@ -188,6 +194,21 @@ namespace Graph.Qualifiers
         }
 
         private IQualifiable SetQualification(string name, object value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
+            return this;
+        }
+
+        /// <summary>
+        /// this method is required because passing the string as an object breaks the explicit cast to SerializableValue
+        /// </summary>
+        private IQualifiable SetQualification(string name, string value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {

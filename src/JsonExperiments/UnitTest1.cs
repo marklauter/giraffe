@@ -100,15 +100,16 @@ namespace JsonExperiments
         }
 
         [MetadataType(typeof(MetaModel))]
-        internal partial class Model
+        internal sealed class Model
         {
-            public Model(string x)
+            public Model(string x, string Value)
             {
                 this.x = x;
+                this.Value = Value;
             }
 
-            [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "used for serialization")]
-            private string x;
+            [SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "used for serialization")]
+            private readonly string x;
 
             public string Value { get; set; }
         }
@@ -117,7 +118,7 @@ namespace JsonExperiments
         {
             [JsonProperty("XXXX")]
             [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "used for serialization")]
-            private string x;
+            private readonly string x;
 
             [Required]
             [JsonProperty("hello")]
@@ -166,9 +167,10 @@ namespace JsonExperiments
         [Fact]
         public void MetaModel_Test() 
         {
-            var m = new Model("yo") { Value = "world"};
+            var m = new Model("yo", "world");
             var json = JsonConvert.SerializeObject(m);
             Assert.NotNull(json);
+            var c = JsonConvert.DeserializeObject<Model>(json);
         }
     }
 }
