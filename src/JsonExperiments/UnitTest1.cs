@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
@@ -98,6 +99,31 @@ namespace JsonExperiments
             public TypeCode TypeCode { get; set; }
         }
 
+        [MetadataType(typeof(MetaModel))]
+        internal partial class Model
+        {
+            public Model(string x)
+            {
+                this.x = x;
+            }
+
+            [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "used for serialization")]
+            private string x;
+
+            public string Value { get; set; }
+        }
+
+        internal sealed class MetaModel
+        {
+            [JsonProperty("XXXX")]
+            [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "used for serialization")]
+            private string x;
+
+            [Required]
+            [JsonProperty("hello")]
+            public string Value { get; set; }
+        }
+
         [Fact]
         public void ArrayAttribute_Test()
         {
@@ -135,6 +161,14 @@ namespace JsonExperiments
             Assert.NotEmpty(json2);
             var qty4 = JsonConvert.DeserializeObject<Quantity>(json2);
             Assert.Equal(two, qty4.Value);
+        }
+
+        [Fact]
+        public void MetaModel_Test() 
+        {
+            var m = new Model("yo") { Value = "world"};
+            var json = JsonConvert.SerializeObject(m);
+            Assert.NotNull(json);
         }
     }
 }

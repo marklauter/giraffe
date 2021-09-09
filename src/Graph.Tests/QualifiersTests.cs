@@ -112,8 +112,8 @@ namespace Graph.Tests
             var name = "x";
             var value = "y";
             collection.Qualify(name, value);
-
-            Assert.Equal(value, collection.Value(name));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
         }
 
         [Fact]
@@ -140,11 +140,13 @@ namespace Graph.Tests
             var value = "y";
             collection.Qualify(name, value);
 
-            Assert.Equal(value, collection.Value(name));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
             Assert.Contains((name, value), collection);
 
             collection.Disqualify(name);
-            Assert.Null(collection.Value(name));
+            Assert.False(collection.TryGetValue(name, out v));
+            Assert.Null(v);
             Assert.DoesNotContain((name, value), collection);
         }
 
@@ -190,13 +192,13 @@ namespace Graph.Tests
             var collection = AttributeCollection.Empty;
 
             var name = String.Empty;
-            Assert.Throws<ArgumentException>(() => collection.Value(name));
+            Assert.Throws<ArgumentException>(() => collection.TryGetValue(name, out var _));
 
             name = " ";
-            Assert.Throws<ArgumentException>(() => collection.Value(name));
+            Assert.Throws<ArgumentException>(() => collection.TryGetValue(name, out var _));
 
             name = null;
-            Assert.Throws<ArgumentException>(() => collection.Value(name));
+            Assert.Throws<ArgumentException>(() => collection.TryGetValue(name, out var _));
         }
 
         [Fact]
@@ -240,9 +242,15 @@ namespace Graph.Tests
             var clone = JsonConvert.DeserializeObject<AttributeCollection>(json);
 
             Assert.NotNull(clone);
-            Assert.Equal(collection.Value("x1"), clone.Value("x1"));
-            Assert.Equal(collection.Value("x2"), clone.Value("x2"));
-            Assert.Equal(collection.Value("x3"), clone.Value("x3"));
+            Assert.True(collection.TryGetValue("x1", out var cox1));
+            Assert.True(clone.TryGetValue("x1", out var clx1));
+            Assert.Equal(cox1, clx1);
+            Assert.True(collection.TryGetValue("x2", out var cox2));
+            Assert.True(clone.TryGetValue("x2", out var clx2));
+            Assert.Equal(cox2, clx2);
+            Assert.True(collection.TryGetValue("x3", out var cox3));
+            Assert.True(clone.TryGetValue("x3", out var clx3));
+            Assert.Equal(cox3, clx3);
         }
 
         [Fact]
@@ -257,9 +265,16 @@ namespace Graph.Tests
             var clone = collection.Clone() as AttributeCollection;
 
             Assert.NotNull(clone);
-            Assert.Equal(collection.Value("x1"), clone.Value("x1"));
-            Assert.Equal(collection.Value("x2"), clone.Value("x2"));
-            Assert.Equal(collection.Value("x3"), clone.Value("x3"));
+            Assert.NotNull(clone);
+            Assert.True(collection.TryGetValue("x1", out var cox1));
+            Assert.True(clone.TryGetValue("x1", out var clx1));
+            Assert.Equal(cox1, clx1);
+            Assert.True(collection.TryGetValue("x2", out var cox2));
+            Assert.True(clone.TryGetValue("x2", out var clx2));
+            Assert.Equal(cox2, clx2);
+            Assert.True(collection.TryGetValue("x3", out var cox3));
+            Assert.True(clone.TryGetValue("x3", out var clx3));
+            Assert.Equal(cox3, clx3);
         }
     }
 }

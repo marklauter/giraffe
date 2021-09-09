@@ -33,6 +33,9 @@ namespace Graph.Elements
             this.Id = other.Id;
         }
 
+        // todo: 1: move all the json annotations to a MetadataType class in the data layer so the business layer is free of it
+        // todo: 2: See the json experiements unit test project
+
         /// <inheritdoc/>
         [Key]
         [Required]
