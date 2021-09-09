@@ -8,12 +8,12 @@ using System.Diagnostics.Contracts;
 
 namespace Graph.Elements
 {
-    [DebuggerDisplay("{Key}")]
+    /// <inheritdoc/>
+    [DebuggerDisplay("{Id}")]
     [JsonObject("node")]
     public sealed class Node
         : Element<Guid>
-        , IEquatable<Node>
-        , IEqualityComparer<Node>
+        , INode
     {
         [JsonProperty("neigbors")]
         private ImmutableHashSet<Guid> neighbors = ImmutableHashSet<Guid>.Empty;
@@ -38,25 +38,29 @@ namespace Graph.Elements
             this.neighbors = this.neighbors.Union(neighbors);
         }
 
+        /// <inheritdoc/>
         [Pure]
         public bool IsAdjacent(Guid nodeId)
         {
             return this.neighbors.Contains(nodeId);
         }
 
+        /// <inheritdoc/>
         [Pure]
-        public bool IsAdjacent([DisallowNull, Pure] Node node)
+        public bool IsAdjacent([DisallowNull, Pure] INode node)
         {
             return this.IsAdjacent(node.Id);
         }
 
+        /// <inheritdoc/>
         [Pure]
         public override object Clone()
         {
             return new Node(this);
         }
 
-        public bool TryCouple([DisallowNull, Pure] Node node)
+        /// <inheritdoc/>
+        public bool TryCouple([DisallowNull, Pure] INode node)
         {
             if (!this.neighbors.Contains(node.Id))
             {
@@ -69,7 +73,8 @@ namespace Graph.Elements
             return false;
         }
 
-        public bool TryDecouple([DisallowNull, Pure] Node node)
+        /// <inheritdoc/>
+        public bool TryDecouple([DisallowNull, Pure] INode node)
         {
             if (this.neighbors.Contains(node.Id))
             {
@@ -82,43 +87,52 @@ namespace Graph.Elements
             return false;
         }
 
+        /// <inheritdoc/>
         [Pure]
         public int Degree()
         {
             return this.neighbors.Count;
         }
 
+        /// <inheritdoc/>
         [Pure]
-        public bool Equals([Pure] Node other)
+        public bool Equals([Pure] INode other)
         {
             return other != null
                 && other.Id == this.Id;
         }
 
+        /// <inheritdoc/>
         [Pure]
-        public bool Equals(Node x, Node y)
+        public bool Equals([Pure] INode x, [Pure] INode y)
         {
             return x != null && x.Equals(y);
         }
 
+        /// <inheritdoc/>
         [Pure]
-        public override bool Equals(object obj)
+        public override bool Equals([Pure] object obj)
         {
-            return obj is Node node && this.Equals(node);
+            return obj is INode node && this.Equals(node);
         }
 
+        /// <inheritdoc/>
         [Pure]
         public override int GetHashCode()
         {
             return HashCode.Combine(this.Id);
         }
 
+        /// <inheritdoc/>
         [Pure]
-        public int GetHashCode([DisallowNull, Pure] Node obj)
+        public int GetHashCode([DisallowNull, Pure] INode obj)
         {
-            return obj.GetHashCode();
+            return obj is null 
+                ? throw new ArgumentNullException(nameof(obj)) 
+                : obj.GetHashCode();
         }
 
+        /// <inheritdoc/>
         [Pure]
         public IEnumerable<Guid> Neighbors()
         {

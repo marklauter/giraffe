@@ -12,8 +12,7 @@ namespace Graph.Elements
     [JsonObject("edge")]
     public sealed class Edge
         : Element<Guid>
-        , IEquatable<Edge>
-        , IEqualityComparer<Edge>
+        , IEdge
     {
         public static Edge New(Guid sourceId, Guid targetId)
         {
@@ -66,7 +65,7 @@ namespace Graph.Elements
         }
 
         [Pure]
-        public bool Equals(Edge other)
+        public bool Equals([Pure] IEdge other)
         {
             return other != null
                 && this.Id == other.Id
@@ -76,19 +75,19 @@ namespace Graph.Elements
         }
 
         [Pure]
-        public bool Equals(Edge x, Edge y)
+        public bool Equals([Pure] IEdge x, [Pure] IEdge y)
         {
             return x != null && x.Equals(y);
         }
 
         [Pure]
-        public override bool Equals(object obj)
+        public override bool Equals([Pure] object obj)
         {
-            return obj is Edge edge && this.Equals(edge);
+            return obj is IEdge edge && this.Equals(edge);
         }
 
         [Pure]
-        public int GetHashCode([DisallowNull] Edge obj)
+        public int GetHashCode([DisallowNull] IEdge obj)
         {
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))

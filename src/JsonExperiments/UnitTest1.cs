@@ -99,6 +99,10 @@ namespace JsonExperiments
             public TypeCode TypeCode { get; set; }
         }
 
+        /// <summary>
+        /// dependency on metadatatype is the wrong damn direction for my use
+        /// https://patrickdesjardins.com/blog/why-it-is-wrong-to-use-the-asp-net-mvc-metadatatype-attribute
+        /// </summary>
         [MetadataType(typeof(MetaModel))]
         internal sealed class Model
         {
