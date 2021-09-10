@@ -11,12 +11,12 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
             Assert.NotNull(edge);
             Assert.NotEqual(Guid.Empty, edge.Id);
             Assert.Equal(source.Id, edge.SourceId);
             Assert.Equal(target.Id, edge.TargetId);
-            Assert.False(edge.IsDirected);
+            Assert.True(edge.IsDirected);
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace Graph.Tests
             var directed = true;
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target, directed);
+            var edge = Edge.Couple(source, target, directed);
             Assert.NotEqual(Guid.Empty, edge.Id);
             Assert.NotNull(edge);
             Assert.Equal(source.Id, edge.SourceId);
@@ -38,7 +38,7 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
             var clone = edge.Clone() as Edge;
             Assert.True(edge.Equals(clone));
             Assert.Equal(edge.SourceId, clone.SourceId);
@@ -51,7 +51,7 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
             Assert.False(edge.Equals(null));
         }
 
@@ -60,7 +60,7 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
             var clone = edge.Clone() as Edge;
             Assert.True(edge.Equals(edge, clone));
         }
@@ -70,7 +70,7 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
             Assert.False(edge.Equals(edge, null));
             Assert.False(edge.Equals(null, edge));
         }
@@ -80,7 +80,7 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
             var clone = edge.Clone() as Edge;
             Assert.True(edge.Equals(clone as object));
         }
@@ -90,8 +90,8 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
-            var other = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
+            var other = Edge.Couple(source, target);
             Assert.False(edge.Equals(other as object));
 
             var node = Node.New;
@@ -103,8 +103,8 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
-            var other = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
+            var other = Edge.Couple(source, target);
             Assert.False(edge.Equals(other));
         }
 
@@ -113,7 +113,7 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
             Assert.Equal(edge.GetHashCode(edge), edge.GetHashCode());
         }
 
@@ -122,7 +122,7 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
+            var edge = Edge.Couple(source, target);
             Assert.Throws<ArgumentNullException>(() => edge.GetHashCode(null));
         }
 
@@ -131,9 +131,9 @@ namespace Graph.Tests
         {
             var source = Node.New;
             var target = Node.New;
-            var edge = Edge.New(source, target);
-            Assert.Contains(source.Id, edge.Nodes());
-            Assert.Contains(target.Id, edge.Nodes());
+            var edge = Edge.Couple(source, target);
+            Assert.Contains(source.Id, edge.Nodes);
+            Assert.Contains(target.Id, edge.Nodes);
         }
     }
 }

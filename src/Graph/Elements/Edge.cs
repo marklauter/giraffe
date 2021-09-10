@@ -14,13 +14,41 @@ namespace Graph.Elements
         : Element<Guid>
         , IEdge
     {
-        public static Edge New(INode source, INode target)
+        /// <summary>
+        /// Creates an edge from two nodes. Defaults to directed edge.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns><see cref="Edge"/></returns>
+        public static Edge Couple(INode source, INode target)
         {
-            return new(Guid.NewGuid(), source.Id, target.Id);
+            return Edge.Couple(source, target, true);
         }
 
-        public static Edge New(INode source, INode target, bool isDirected)
+        /// <summary>
+        /// Creates an edge from two nodes. Defaults to directed edge.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="isDirected"></param>
+        /// <returns><see cref="Edge"/></returns>
+        public static Edge Couple(INode source, INode target, bool isDirected)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (source.TryCouple(target) && !isDirected)
+            {
+                _ = target.TryCouple(source);
+            }
+
             return new(Guid.NewGuid(), source.Id, target.Id, isDirected);
         }
 
@@ -35,11 +63,6 @@ namespace Graph.Elements
         [Required]
         [JsonProperty("target")]
         public Guid TargetId { get; }
-
-        private Edge(Guid id, Guid sourceId, Guid targetId)
-            : this(id, sourceId, targetId, false)
-        {
-        }
 
         [JsonConstructor]
         private Edge(Guid id, Guid sourceId, Guid targetId, bool isDirected)
@@ -105,9 +128,7 @@ namespace Graph.Elements
         }
 
         [Pure]
-        public IEnumerable<Guid> Nodes()
-        {
-            return new Guid[] { this.SourceId, this.TargetId };
-        }
+        [JsonIgnore]
+        public IEnumerable<Guid> Nodes => new Guid[] { this.SourceId, this.TargetId };
     }
 }

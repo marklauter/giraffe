@@ -121,7 +121,7 @@ namespace Graph.Tests
         }
 
         [Fact]
-        public void NodeAdjacent_Returns_True()
+        public void Node_Adjacent_Returns_True()
         {
             var node = Node.New;
             for (var i = 0; i < 3; ++i)
@@ -164,6 +164,41 @@ namespace Graph.Tests
         }
 
         [Fact]
+        public void Node_TryDecouple_Returns_True()
+        {
+            var node = Node.New;
+            for (var i = 0; i < 3; ++i)
+            {
+                var other = Node.New;
+                Assert.True(node.TryCouple(other));
+                Assert.True(node.IsAdjacent(other));
+                Assert.True(node.TryDecouple(other));
+                Assert.False(node.IsAdjacent(other));
+            }
+            Assert.Equal(0, node.Degree);
+        }
+
+        [Fact]
+        public void Node_TryDecouple_Returns_False()
+        {
+            var node = Node.New;
+            var other = Node.New;
+            Assert.True(node.TryCouple(other));
+            Assert.True(node.IsAdjacent(other));
+            Assert.True(node.TryDecouple(other));
+            Assert.False(node.IsAdjacent(other));
+            Assert.False(node.TryDecouple(other));
+            Assert.Equal(0, node.Degree);
+        }
+
+        [Fact]
+        public void Node_TryDecouple_Throws()
+        {
+            var node = Node.New;
+            Assert.Throws<ArgumentNullException>(() => node.TryDecouple(null));
+        }
+
+        [Fact]
         public void Node_Json_Serialize_Deserialize()
         {
             var node = Node.New;
@@ -182,9 +217,9 @@ namespace Graph.Tests
         public void Node_Neighbors_Is_ReadOnly()
         {
             var node = Node.New;
-            Assert.True(node.TryCouple(Node.New));
-            Assert.True(node.TryCouple(Node.New));
-            Assert.True(node.TryCouple(Node.New));
+            var other = Node.New;
+            Assert.True(node.TryCouple(other));
+            Assert.Contains(other.Id, node.Neighbors);
         }
     }
 }

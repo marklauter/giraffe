@@ -9,9 +9,8 @@ namespace Graph.Elements
         , IEqualityComparer<IEdge>
     {
         bool IsDirected { get; }
+        IEnumerable<Guid> Nodes { get; }
         Guid SourceId { get; }
         Guid TargetId { get; }
-
-        IEnumerable<Guid> Nodes();
     }
 }

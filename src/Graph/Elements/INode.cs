@@ -16,9 +16,10 @@ namespace Graph.Elements
         // todo: need to raise events for couple and decouple
 
         public int Degree { get; }
+        public IEnumerable<Guid> Neighbors { get; }
+
         bool IsAdjacent(Guid nodeId);
         bool IsAdjacent(INode node);
-        public IEnumerable<Guid> Neighbors { get; }
         bool TryCouple(INode node);
         bool TryDecouple(INode node);
     }

@@ -41,6 +41,7 @@ namespace Graph.Elements
 
         /// <inheritdoc/>
         [Pure]
+        [JsonIgnore]
         public IEnumerable<Guid> Neighbors => this.neighbors;
 
         /// <inheritdoc/>
