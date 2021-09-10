@@ -89,6 +89,11 @@ namespace Graph.Classifiers
         [Pure]
         public bool Is([DisallowNull] IEnumerable<string> labels)
         {
+            if (labels is null)
+            {
+                throw new ArgumentNullException(nameof(labels));
+            }
+
             return this.classes.IsSupersetOf(labels);
         }
 

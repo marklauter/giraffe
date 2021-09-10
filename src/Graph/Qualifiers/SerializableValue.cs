@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
 namespace Graph.Qualifiers
 {
+    [DebuggerDisplay("{Value},  {TypeCode}")]
     internal sealed class SerializableValue
         : ICloneable
         , IEquatable<SerializableValue>
@@ -15,7 +17,9 @@ namespace Graph.Qualifiers
         internal SerializableValue(TypeCode typeCode, object value)
         {
             this.TypeCode = typeCode;
-            this.Value = Convert.ChangeType(value, typeCode);
+            this.Value = value == null
+                ? null
+                : Convert.ChangeType(value, typeCode);
         }
 
         private SerializableValue(object value)
@@ -49,7 +53,7 @@ namespace Graph.Qualifiers
         {
             return other != null
                 && this.TypeCode == other.TypeCode
-                && this.Value == other.Value;
+                && this.Value.Equals(other.Value);
         }
 
         public bool Equals(SerializableValue x, SerializableValue y)
@@ -64,13 +68,13 @@ namespace Graph.Qualifiers
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(this.TypeCode, this.Value);
+            return HashCode.Combine(this.TypeCode, this.Value, 7);
         }
 
         private static TypeCode GetTypeCode(object value)
         {
             return value is null
-                ? throw new ArgumentNullException(nameof(value))
+                ? TypeCode.DBNull
                 : Type.GetTypeCode(value.GetType());
         }
 

@@ -58,7 +58,7 @@ namespace Graph.Classifiers
         bool Is(string label);
 
         /// <summary>
-        /// Returns true if the instance is a member of any class referenced by the collection of labels.
+        /// Returns true if the instance is a member of every class referenced by the collection of labels.
         /// IE: The set of labeled classes is a superset of the collection of class labels.
         /// </summary>
         /// <param name="labels">A set of class labels.</param>

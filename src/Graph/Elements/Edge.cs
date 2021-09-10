@@ -14,14 +14,14 @@ namespace Graph.Elements
         : Element<Guid>
         , IEdge
     {
-        public static Edge New(Guid sourceId, Guid targetId)
+        public static Edge New(INode source, INode target)
         {
-            return new(Guid.NewGuid(), sourceId, targetId);
+            return new(Guid.NewGuid(), source.Id, target.Id);
         }
 
-        public static Edge New(Guid sourceId, Guid targetId, bool isDirected)
+        public static Edge New(INode source, INode target, bool isDirected)
         {
-            return new(Guid.NewGuid(), sourceId, targetId, isDirected);
+            return new(Guid.NewGuid(), source.Id, target.Id, isDirected);
         }
 
         [Required]

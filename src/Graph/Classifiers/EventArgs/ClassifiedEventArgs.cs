@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Graph.Classifiers
 {
-    public sealed class ClassifiedEventArgs
+    public class ClassifiedEventArgs
         : EventArgs
     {
         public ClassifiedEventArgs([DisallowNull] string label)
@@ -17,5 +17,18 @@ namespace Graph.Classifiers
         }
 
         public string Label { get; }
+    }
+
+    public class ClassifiedEventArgs<TId>
+        : ClassifiedEventArgs
+        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
+    {
+        public ClassifiedEventArgs([DisallowNull] string label, TId id)
+            : base(label)
+        {
+            this.Id = id;
+        }
+
+        public TId Id { get; }
     }
 }

@@ -15,14 +15,17 @@ namespace Graph.Elements
         : Element<Guid>
         , INode
     {
-        [JsonProperty("neigbors")]
+        // todo: to index by label replace neighbors with a hash of IClass. when coupling the target node gets added to the appropriate set of classes.
+
+        [JsonProperty("neighbors")]
         private ImmutableHashSet<Guid> neighbors = ImmutableHashSet<Guid>.Empty;
 
         public static Node New => new(Guid.NewGuid());
 
-        private Node() : base() { }
-
-        private Node(Guid id) : base(id) { }
+        [JsonConstructor]
+        private Node(Guid id) 
+            : base(id) 
+        { }
 
         private Node([DisallowNull, Pure] Node other)
             : base(other)
@@ -30,13 +33,15 @@ namespace Graph.Elements
             this.neighbors = other.neighbors;
         }
 
-        [JsonConstructor]
-        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used for serialization.")]
-        private Node(Guid id, IEnumerable<Guid> neighbors)
-            : base(id)
-        {
-            this.neighbors = this.neighbors.Union(neighbors);
-        }
+
+        /// <inheritdoc/>
+        [Pure]
+        [JsonIgnore]
+        public int Degree => this.neighbors.Count;
+
+        /// <inheritdoc/>
+        [Pure]
+        public IEnumerable<Guid> Neighbors => this.neighbors;
 
         /// <inheritdoc/>
         [Pure]
@@ -49,7 +54,9 @@ namespace Graph.Elements
         [Pure]
         public bool IsAdjacent([DisallowNull, Pure] INode node)
         {
-            return this.IsAdjacent(node.Id);
+            return node is null
+                ? throw new ArgumentNullException(nameof(node))
+                : this.IsAdjacent(node.Id);
         }
 
         /// <inheritdoc/>
@@ -62,6 +69,11 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public bool TryCouple([DisallowNull, Pure] INode node)
         {
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             if (!this.neighbors.Contains(node.Id))
             {
                 this.neighbors = this.neighbors
@@ -76,6 +88,11 @@ namespace Graph.Elements
         /// <inheritdoc/>
         public bool TryDecouple([DisallowNull, Pure] INode node)
         {
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             if (this.neighbors.Contains(node.Id))
             {
                 this.neighbors = this.neighbors
@@ -85,13 +102,6 @@ namespace Graph.Elements
             }
 
             return false;
-        }
-
-        /// <inheritdoc/>
-        [Pure]
-        public int Degree()
-        {
-            return this.neighbors.Count;
         }
 
         /// <inheritdoc/>
@@ -130,13 +140,6 @@ namespace Graph.Elements
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))
                 : obj.GetHashCode();
-        }
-
-        /// <inheritdoc/>
-        [Pure]
-        public IEnumerable<Guid> Neighbors()
-        {
-            return this.neighbors;
         }
     }
 }

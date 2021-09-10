@@ -19,22 +19,35 @@ namespace Graph.Elements
         private readonly ClassificationCollection classifications = ClassificationCollection.Empty;
 
         [JsonProperty]
-        private readonly AttributeCollection attributes = AttributeCollection.Empty;
+        private readonly QualificationCollection qualifications = QualificationCollection.Empty;
 
-        protected Element() { }
+        protected Element()
+        {
+            this.classifications.Classified += this.Classifications_Classified;
+            this.classifications.Declassified += this.Classifications_Declassified;
+            this.qualifications.Disqualified += this.Qualifications_Disqualified;
+            this.qualifications.Qualified += this.Qualifications_Qualified;
+        }
 
         protected Element(TId id)
+            : this()
         {
             this.Id = id;
         }
 
         protected Element([DisallowNull, Pure] Element<TId> other)
+            : this()
         {
+            this.classifications = other.classifications.Clone() as ClassificationCollection;
+            this.classifications.Classified += this.Classifications_Classified;
+            this.classifications.Declassified += this.Classifications_Declassified;
+
+            this.qualifications = other.qualifications.Clone() as QualificationCollection;
+            this.qualifications.Disqualified += this.Qualifications_Disqualified;
+            this.qualifications.Qualified += this.Qualifications_Qualified;
+
             this.Id = other.Id;
         }
-
-        // todo: 1: move all the json annotations to a MetadataType class in the data layer so the business layer is free of it
-        // todo: 2: See the json experiements unit test project
 
         /// <inheritdoc/>
         [Key]
@@ -43,32 +56,16 @@ namespace Graph.Elements
         public TId Id { get; }
 
         /// <inheritdoc/>
-        public event EventHandler<ClassifiedEventArgs> Classified
-        {
-            add { this.classifications.Classified += value; }
-            remove { this.classifications.Classified -= value; }
-        }
+        public event EventHandler<ClassifiedEventArgs> Classified;
 
         /// <inheritdoc/>
-        public event EventHandler<DeclassifiedEventArgs> Declassified
-        {
-            add { this.classifications.Declassified += value; }
-            remove { this.classifications.Declassified -= value; }
-        }
+        public event EventHandler<DeclassifiedEventArgs> Declassified;
 
         /// <inheritdoc/>
-        public event EventHandler<QualifiedEventArgs> Qualified
-        {
-            add { this.attributes.Qualified += value; }
-            remove { this.attributes.Qualified -= value; }
-        }
+        public event EventHandler<QualifiedEventArgs> Qualified;
 
         /// <inheritdoc/>
-        public event EventHandler<DisqualifiedEventArgs> Disqualified
-        {
-            add { this.attributes.Disqualified += value; }
-            remove { this.attributes.Disqualified -= value; }
-        }
+        public event EventHandler<DisqualifiedEventArgs> Disqualified;
 
         /// <inheritdoc/>
         public IElement<TId> Classify(string label)
@@ -106,7 +103,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Disqualify(name);
+            this.qualifications.Disqualify(name);
             return this;
         }
 
@@ -116,7 +113,7 @@ namespace Graph.Elements
         {
             return String.IsNullOrWhiteSpace(name)
                 ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
-                : this.attributes.HasQuality(name);
+                : this.qualifications.HasQuality(name);
         }
 
         /// <inheritdoc/>
@@ -143,7 +140,7 @@ namespace Graph.Elements
         {
             return String.IsNullOrWhiteSpace(name)
                 ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
-                : this.attributes.TryGetValue(name, out value);
+                : this.qualifications.TryGetValue(name, out value);
         }
 
         /// <inheritdoc/>
@@ -154,7 +151,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -166,7 +163,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -178,7 +175,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -190,7 +187,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -202,7 +199,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -214,7 +211,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -226,7 +223,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -238,7 +235,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -250,7 +247,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -262,7 +259,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -274,7 +271,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -286,7 +283,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -298,7 +295,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
         }
 
@@ -310,8 +307,29 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.attributes.Qualify(name, value);
+            this.qualifications.Qualify(name, value);
             return this;
+        }
+
+        private void Qualifications_Disqualified(object sender, DisqualifiedEventArgs e)
+        {
+            this.Disqualified?.Invoke(this, e);
+        }
+
+        private void Qualifications_Qualified(object sender, QualifiedEventArgs e)
+        {
+            this.Qualified?.Invoke(this, e);
+        }
+
+        private void Classifications_Declassified(object sender, DeclassifiedEventArgs e)
+        {
+            this.Declassified?.Invoke(this, e);
+
+        }
+
+        private void Classifications_Classified(object sender, ClassifiedEventArgs e)
+        {
+            this.Classified?.Invoke(this, e);
         }
     }
 }

@@ -9,13 +9,13 @@ namespace Graph.Tests
         [Fact]
         public void Edge_New_Sets_Source_Target_and_Directed_False()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             Assert.NotNull(edge);
             Assert.NotEqual(Guid.Empty, edge.Id);
-            Assert.Equal(source, edge.SourceId);
-            Assert.Equal(target, edge.TargetId);
+            Assert.Equal(source.Id, edge.SourceId);
+            Assert.Equal(target.Id, edge.TargetId);
             Assert.False(edge.IsDirected);
         }
 
@@ -23,21 +23,21 @@ namespace Graph.Tests
         public void Edge_New_Sets_Source_Target_and_Directed_True()
         {
             var directed = true;
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target, directed);
             Assert.NotEqual(Guid.Empty, edge.Id);
             Assert.NotNull(edge);
-            Assert.Equal(source, edge.SourceId);
-            Assert.Equal(target, edge.TargetId);
+            Assert.Equal(source.Id, edge.SourceId);
+            Assert.Equal(target.Id, edge.TargetId);
             Assert.Equal(directed, edge.IsDirected);
         }
 
         [Fact]
         public void Edge_Clone_Copies_Values()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             var clone = edge.Clone() as Edge;
             Assert.True(edge.Equals(clone));
@@ -49,8 +49,8 @@ namespace Graph.Tests
         [Fact]
         public void Edge_Equals_With_Null_Returns_False()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             Assert.False(edge.Equals(null));
         }
@@ -58,8 +58,8 @@ namespace Graph.Tests
         [Fact]
         public void Edge_Equals_X_Y_Returns_True()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             var clone = edge.Clone() as Edge;
             Assert.True(edge.Equals(edge, clone));
@@ -68,8 +68,8 @@ namespace Graph.Tests
         [Fact]
         public void Edge_Equals_X_Y_With_Null_Returns_False()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             Assert.False(edge.Equals(edge, null));
             Assert.False(edge.Equals(null, edge));
@@ -78,8 +78,8 @@ namespace Graph.Tests
         [Fact]
         public void Edge_Equals_Obj_Returns_True()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             var clone = edge.Clone() as Edge;
             Assert.True(edge.Equals(clone as object));
@@ -88,8 +88,8 @@ namespace Graph.Tests
         [Fact]
         public void Edge_Equals_Obj_Returns_False()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             var other = Edge.New(source, target);
             Assert.False(edge.Equals(other as object));
@@ -101,8 +101,8 @@ namespace Graph.Tests
         [Fact]
         public void Edge_Equals_Returns_False()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             var other = Edge.New(source, target);
             Assert.False(edge.Equals(other));
@@ -111,8 +111,8 @@ namespace Graph.Tests
         [Fact]
         public void Edge_GetHashCode_Obj_Equal_GetHashCode()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             Assert.Equal(edge.GetHashCode(edge), edge.GetHashCode());
         }
@@ -120,8 +120,8 @@ namespace Graph.Tests
         [Fact]
         public void Edge_GetHashCode_Obj_Throws_ArgumentNullException()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
             Assert.Throws<ArgumentNullException>(() => edge.GetHashCode(null));
         }
@@ -129,11 +129,11 @@ namespace Graph.Tests
         [Fact]
         public void Edge_Enumerates_Values()
         {
-            var source = Guid.NewGuid();
-            var target = Guid.NewGuid();
+            var source = Node.New;
+            var target = Node.New;
             var edge = Edge.New(source, target);
-            Assert.Contains(source, edge.Nodes());
-            Assert.Contains(target, edge.Nodes());
+            Assert.Contains(source.Id, edge.Nodes());
+            Assert.Contains(target.Id, edge.Nodes());
         }
     }
 }

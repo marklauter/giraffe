@@ -57,14 +57,14 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_Empty_Returns_Empty_Collection()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
             Assert.Empty(collection);
         }
 
         [Fact]
         public void QualificationCollection_Qualify_Throws_ArgumentException()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
 
             var name = String.Empty;
             var value = "x";
@@ -77,36 +77,26 @@ namespace Graph.Tests
             name = null;
             value = "x";
             Assert.Throws<ArgumentException>(() => collection.Qualify(name, value));
-
-            name = "x";
-            value = String.Empty;
-            Assert.Throws<ArgumentException>(() => collection.Qualify(name, value));
-
-            name = "x";
-            value = " ";
-            Assert.Throws<ArgumentException>(() => collection.Qualify(name, value));
-
-            name = "x";
-            value = null;
-            Assert.Throws<ArgumentException>(() => collection.Qualify(name, value));
         }
 
         [Fact]
         public void QualificationCollection_Qualify_Sets_Name_and_Value()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
 
             var name = "x";
             var value = "y";
-            collection.Qualify(name, value);
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
 
         [Fact]
         public void QualificationCollection_Disqualify_Throws_ArgumentException()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
 
             var name = String.Empty;
             Assert.Throws<ArgumentException>(() => collection.Disqualify(name));
@@ -121,11 +111,11 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_Disqualify_Removes_Attribute()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
 
             var name = "x";
             var value = "y";
-            collection.Qualify(name, value);
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
 
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
@@ -140,7 +130,7 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_HasQuality_Throws_ArgumentException()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
 
             var name = String.Empty;
             Assert.Throws<ArgumentException>(() => collection.HasQuality(name));
@@ -155,11 +145,11 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_HasQuality_Returns_True()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
 
             var name = "x";
             var value = "y";
-            collection.Qualify(name, value);
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
 
             Assert.True(collection.HasQuality(name));
         }
@@ -167,7 +157,7 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_HasQuality_Returns_False()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
 
             var name = "x";
             Assert.False(collection.HasQuality(name));
@@ -176,7 +166,7 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_Quality_Throws_ArgumentException()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
 
             var name = String.Empty;
             Assert.Throws<ArgumentException>(() => collection.TryGetValue(name, out var _));
@@ -193,7 +183,7 @@ namespace Graph.Tests
         {
             var name = "x";
             var value = "y";
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
             var args = Assert.Raises<QualifiedEventArgs>(
                 handler => collection.Qualified += handler,
                 handler => collection.Qualified -= handler,
@@ -207,7 +197,7 @@ namespace Graph.Tests
         public void QualificationCollection_Disqualify_Raises_DisqualifiedEventArgs()
         {
             var name = "x";
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
             var args = Assert.Raises<DisqualifiedEventArgs>(
                 handler => collection.Disqualified += handler,
                 handler => collection.Disqualified -= handler,
@@ -219,14 +209,14 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_JsonConstructor_Fills_Attributes()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
             _ = collection
                 .Qualify("x1", "y1")
                 .Qualify("x2", "y2")
                 .Qualify("x3", "y3");
 
             var json = JsonConvert.SerializeObject(collection);
-            var clone = JsonConvert.DeserializeObject<AttributeCollection>(json);
+            var clone = JsonConvert.DeserializeObject<QualificationCollection>(json);
 
             Assert.NotNull(clone);
             Assert.True(collection.TryGetValue("x1", out var cox1));
@@ -243,13 +233,13 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_Clone_Fills_Attributes()
         {
-            var collection = AttributeCollection.Empty;
+            var collection = QualificationCollection.Empty;
             _ = collection
                 .Qualify("x1", "y1")
                 .Qualify("x2", "y2")
                 .Qualify("x3", "y3");
 
-            var clone = collection.Clone() as AttributeCollection;
+            var clone = collection.Clone() as QualificationCollection;
 
             Assert.NotNull(clone);
             Assert.NotNull(clone);
@@ -262,6 +252,200 @@ namespace Graph.Tests
             Assert.True(collection.TryGetValue("x3", out var cox3));
             Assert.True(clone.TryGetValue("x3", out var clx3));
             Assert.Equal(cox3, clx3);
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_Bool_False_Sets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = false;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_BoolSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = true;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_SByteSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = (sbyte)-1;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_ByteSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = (byte)1;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_ShortSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = (short)1;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_UShortSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = (ushort)1;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_IntSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = 1;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_UIntSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = 1u;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_LongSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = 1L;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_ULongSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = 1UL;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_FloatSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = 1.1f;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_DoubleSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = 1.1d;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_DecimalSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = (decimal)1.1;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+        }
+
+        [Fact]
+        public void QualificationCollection_Qualify_DateTimeSets_Name_and_Value()
+        {
+            var collection = QualificationCollection.Empty;
+
+            var name = "x";
+            var value = DateTime.Now;
+            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            Assert.True(collection.TryGetValue(name, out var v));
+            Assert.Equal(value, v);
+
+            Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
     }
 }

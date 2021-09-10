@@ -13,7 +13,7 @@ namespace Graph.Qualifiers
             }
 
             this.Name = name;
-            this.Value = value ?? throw new ArgumentNullException(nameof(value));
+            this.Value = value;
         }
 
         public string Name { get; }
