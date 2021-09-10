@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace Documents
 {
-    public abstract class DocumentCollection<T>
-        : IDocumentCollection<T>
-        where T : class
+    /// <inheritdoc/>
+    public abstract class DocumentCollection<TMember>
+        : IDocumentCollection<TMember>
+        where TMember : class
     {
-        public event EventHandler<DocumentAddedEventArgs<T>> DocumentAdded;
-        public event EventHandler<DocumentRemovedEventArgs<T>> DocumentRemoved;
-        public event EventHandler<DocumentUpdatedEventArgs<T>> DocumentUpdated;
+        /// <inheritdoc/>
+        public event EventHandler<DocumentAddedEventArgs<TMember>> AfterAdd;
+
+        /// <inheritdoc/>
+        public event EventHandler<DocumentRemovedEventArgs<TMember>> AfterRemove;
+
+        /// <inheritdoc/>
+        public event EventHandler<DocumentUpdatedEventArgs<TMember>> AfterUpdate;
+
+        /// <inheritdoc/>
         public event EventHandler<EventArgs> Cleared;
 
+        /// <inheritdoc/>
+        [Pure]
         public abstract int Count { get; }
 
-        public void Add(Document<T> document)
+        /// <inheritdoc/>
+        public void Add([Pure] Document<TMember> document)
         {
             if (document is null)
             {
@@ -23,11 +35,11 @@ namespace Documents
             }
 
             this.AddDocument(document);
-
-            this.DocumentAdded?.Invoke(this, new DocumentAddedEventArgs<T>(document));
+            this.AfterAdd?.Invoke(this, new DocumentAddedEventArgs<TMember>(document));
         }
 
-        public void Add(IEnumerable<Document<T>> documents)
+        /// <inheritdoc/>
+        public void Add([Pure] IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
@@ -40,30 +52,56 @@ namespace Documents
             }
         }
 
+        /// <inheritdoc/>
         public void Clear()
         {
             this.ClearCollection();
             this.Cleared?.Invoke(this, EventArgs.Empty);
         }
 
-        public abstract bool Contains(string key);
+        /// <inheritdoc/>
+        [Pure]
+        public bool Contains(string key)
+        {
+            if (String.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
 
-        public abstract IEnumerator<Document<T>> GetEnumerator();
+            return this.ContainsDocument(key);
+        }
 
-        public Document<T> Read(string key)
+        /// <inheritdoc/>
+        [Pure]
+        public bool Contains([Pure] Document<TMember> document)
+        {
+            if (document is null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            return this.Contains(document.Key);
+        }
+
+        /// <inheritdoc/>
+        [Pure]
+        public Document<TMember> Read(string key)
         {
             return String.IsNullOrWhiteSpace(key)
                 ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
                 : this.ReadDocument(key);
         }
 
-        public IEnumerable<Document<T>> Read(IEnumerable<string> keys)
+        /// <inheritdoc/>
+        [Pure]
+        public IEnumerable<Document<TMember>> Read(IEnumerable<string> keys)
         {
             return keys is null
                 ? throw new ArgumentNullException(nameof(keys))
                 : this.ReadDocuments(keys);
         }
 
+        /// <inheritdoc/>
         public void Remove(string key)
         {
             if (String.IsNullOrWhiteSpace(key))
@@ -73,9 +111,10 @@ namespace Documents
 
             var document = this.Read(key);
             this.RemoveDocument(key);
-            this.DocumentRemoved?.Invoke(this, new DocumentRemovedEventArgs<T>(document));
+            this.AfterRemove?.Invoke(this, new DocumentRemovedEventArgs<TMember>(document));
         }
 
+        /// <inheritdoc/>
         public void Remove(IEnumerable<string> keys)
         {
             if (keys is null)
@@ -89,7 +128,8 @@ namespace Documents
             }
         }
 
-        public void Remove(Document<T> document)
+        /// <inheritdoc/>
+        public void Remove([Pure] Document<TMember> document)
         {
             if (document is null)
             {
@@ -99,7 +139,8 @@ namespace Documents
             this.Remove(document.Key);
         }
 
-        public void Remove(IEnumerable<Document<T>> documents)
+        /// <inheritdoc/>
+        public void Remove([Pure] IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
@@ -112,7 +153,8 @@ namespace Documents
             }
         }
 
-        public void Update(Document<T> document)
+        /// <inheritdoc/>
+        public void Update([Pure] Document<TMember> document)
         {
             if (document is null)
             {
@@ -127,10 +169,11 @@ namespace Documents
 
             this.UpdateDocument(document);
 
-            this.DocumentUpdated?.Invoke(this, new DocumentUpdatedEventArgs<T>(document));
+            this.AfterUpdate?.Invoke(this, new DocumentUpdatedEventArgs<TMember>(document));
         }
 
-        public void Update(IEnumerable<Document<T>> documents)
+        /// <inheritdoc/>
+        public void Update([Pure] IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
@@ -143,22 +186,34 @@ namespace Documents
             }
         }
 
+        /// <inheritdoc/>
+        [Pure]
+        public abstract IEnumerator<Document<TMember>> GetEnumerator();
+
+        /// <inheritdoc/>
+        [Pure]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
 
-        protected abstract void AddDocument(Document<T> document);
+        protected abstract void AddDocument([Pure] Document<TMember> document);
 
         protected abstract void ClearCollection();
 
-        protected abstract Document<T> ReadDocument(string key);
+        [Pure]
+        protected abstract bool ContainsDocument(string key);
 
+        [Pure]
+        protected abstract Document<TMember> ReadDocument(string key);
+
+        [Pure]
         protected abstract void RemoveDocument(string key);
 
-        protected abstract void UpdateDocument(Document<T> document);
+        protected abstract void UpdateDocument([Pure] Document<TMember> document);
 
-        private IEnumerable<Document<T>> ReadDocuments(IEnumerable<string> keys)
+        [Pure]
+        private IEnumerable<Document<TMember>> ReadDocuments(IEnumerable<string> keys)
         {
             foreach (var key in keys)
             {

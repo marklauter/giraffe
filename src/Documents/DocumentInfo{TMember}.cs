@@ -4,14 +4,14 @@ using System.Reflection;
 
 namespace Documents
 {
-    internal static class DocumentKeys<T>
-    where T : class
+    internal static class DocumentKeys<TMember>
+        where TMember : class
     {
         public static PropertyInfo[] KeyProperties { get; } =
-            typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            typeof(TMember).GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(p => p.GetCustomAttribute<KeyAttribute>() != null)
                 .ToArray();
 
-        public static string TypeName { get; } = typeof(T).Name;
+        public static string TypeName { get; } = typeof(TMember).Name;
     }
 }
