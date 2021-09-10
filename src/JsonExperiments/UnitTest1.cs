@@ -175,6 +175,7 @@ namespace JsonExperiments
             var json = JsonConvert.SerializeObject(m);
             Assert.NotNull(json);
             var c = JsonConvert.DeserializeObject<Model>(json);
+            Assert.NotNull(c);
         }
     }
 }

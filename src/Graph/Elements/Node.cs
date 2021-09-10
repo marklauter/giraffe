@@ -23,8 +23,8 @@ namespace Graph.Elements
         public static Node New => new(Guid.NewGuid());
 
         [JsonConstructor]
-        private Node(Guid id) 
-            : base(id) 
+        private Node(Guid id)
+            : base(id)
         { }
 
         private Node([DisallowNull, Pure] Node other)
