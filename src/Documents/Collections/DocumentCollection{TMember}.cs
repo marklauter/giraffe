@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Documents
+namespace Documents.Collections
 {
     /// <inheritdoc/>
     public abstract class DocumentCollection<TMember>
@@ -11,13 +11,13 @@ namespace Documents
         where TMember : class
     {
         /// <inheritdoc/>
-        public event EventHandler<DocumentAddedEventArgs<TMember>> AfterAdd;
+        public event EventHandler<DocumentAddedEventArgs<TMember>> DocumentAdded;
 
         /// <inheritdoc/>
-        public event EventHandler<DocumentRemovedEventArgs<TMember>> AfterRemove;
+        public event EventHandler<DocumentRemovedEventArgs<TMember>> DocumentRemoved;
 
         /// <inheritdoc/>
-        public event EventHandler<DocumentUpdatedEventArgs<TMember>> AfterUpdate;
+        public event EventHandler<DocumentUpdatedEventArgs<TMember>> DocumentUpdated;
 
         /// <inheritdoc/>
         public event EventHandler<EventArgs> Cleared;
@@ -27,7 +27,7 @@ namespace Documents
         public abstract int Count { get; }
 
         /// <inheritdoc/>
-        public void Add([Pure] Document<TMember> document)
+        public IDocumentCollection<TMember> Add([Pure] Document<TMember> document)
         {
             if (document is null)
             {
@@ -35,11 +35,12 @@ namespace Documents
             }
 
             this.AddDocument(document);
-            this.AfterAdd?.Invoke(this, new DocumentAddedEventArgs<TMember>(document));
+            this.DocumentAdded?.Invoke(this, new DocumentAddedEventArgs<TMember>(document));
+            return this;
         }
 
         /// <inheritdoc/>
-        public void Add([Pure] IEnumerable<Document<TMember>> documents)
+        public IDocumentCollection<TMember> Add([Pure] IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
@@ -48,15 +49,18 @@ namespace Documents
 
             foreach (var document in documents)
             {
-                this.Add(document);
+                _ = this.Add(document);
             }
+
+            return this;
         }
 
         /// <inheritdoc/>
-        public void Clear()
+        public IDocumentCollection<TMember> Clear()
         {
             this.ClearCollection();
             this.Cleared?.Invoke(this, EventArgs.Empty);
+            return this;
         }
 
         /// <inheritdoc/>
@@ -102,7 +106,7 @@ namespace Documents
         }
 
         /// <inheritdoc/>
-        public void Remove(string key)
+        public IDocumentCollection<TMember> Remove(string key)
         {
             if (String.IsNullOrWhiteSpace(key))
             {
@@ -111,11 +115,12 @@ namespace Documents
 
             var document = this.Read(key);
             this.RemoveDocument(key);
-            this.AfterRemove?.Invoke(this, new DocumentRemovedEventArgs<TMember>(document));
+            this.DocumentRemoved?.Invoke(this, new DocumentRemovedEventArgs<TMember>(document));
+            return this;
         }
 
         /// <inheritdoc/>
-        public void Remove(IEnumerable<string> keys)
+        public IDocumentCollection<TMember> Remove(IEnumerable<string> keys)
         {
             if (keys is null)
             {
@@ -124,23 +129,25 @@ namespace Documents
 
             foreach (var key in keys)
             {
-                this.Remove(key);
+                _ = this.Remove(key);
             }
+
+            return this;
         }
 
         /// <inheritdoc/>
-        public void Remove([Pure] Document<TMember> document)
+        public IDocumentCollection<TMember> Remove([Pure] Document<TMember> document)
         {
             if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            this.Remove(document.Key);
+            return this.Remove(document.Key);
         }
 
         /// <inheritdoc/>
-        public void Remove([Pure] IEnumerable<Document<TMember>> documents)
+        public IDocumentCollection<TMember> Remove([Pure] IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
@@ -149,12 +156,14 @@ namespace Documents
 
             foreach (var document in documents)
             {
-                this.Remove(document);
+                _ = this.Remove(document);
             }
+
+            return this;
         }
 
         /// <inheritdoc/>
-        public void Update([Pure] Document<TMember> document)
+        public IDocumentCollection<TMember> Update([Pure] Document<TMember> document)
         {
             if (document is null)
             {
@@ -168,12 +177,12 @@ namespace Documents
             }
 
             this.UpdateDocument(document);
-
-            this.AfterUpdate?.Invoke(this, new DocumentUpdatedEventArgs<TMember>(document));
+            this.DocumentUpdated?.Invoke(this, new DocumentUpdatedEventArgs<TMember>(document));
+            return this;
         }
 
         /// <inheritdoc/>
-        public void Update([Pure] IEnumerable<Document<TMember>> documents)
+        public IDocumentCollection<TMember> Update([Pure] IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
@@ -182,8 +191,10 @@ namespace Documents
 
             foreach (var document in documents)
             {
-                this.Update(document);
+                _ = this.Update(document);
             }
+
+            return this;
         }
 
         /// <inheritdoc/>
@@ -207,7 +218,6 @@ namespace Documents
         [Pure]
         protected abstract Document<TMember> ReadDocument(string key);
 
-        [Pure]
         protected abstract void RemoveDocument(string key);
 
         protected abstract void UpdateDocument([Pure] Document<TMember> document);

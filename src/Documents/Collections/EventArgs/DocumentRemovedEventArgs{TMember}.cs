@@ -1,4 +1,4 @@
-﻿namespace Documents
+﻿namespace Documents.Collections
 {
     public class DocumentRemovedEventArgs<TMember>
         : DocumentEventArgs<TMember>

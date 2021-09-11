@@ -7,7 +7,6 @@ using System.Diagnostics.Contracts;
 
 namespace Documents
 {
-
     [JsonObject]
     public sealed class Document<TMember>
         : ICloneable

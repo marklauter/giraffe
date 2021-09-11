@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Documents
+namespace Documents.Collections
 {
     public interface IDocumentCollection<TMember>
         : IEnumerable<Document<TMember>>
         where TMember : class
     {
-        event EventHandler<DocumentAddedEventArgs<TMember>> AfterAdd;
-        event EventHandler<DocumentRemovedEventArgs<TMember>> AfterRemove;
-        event EventHandler<DocumentUpdatedEventArgs<TMember>> AfterUpdate;
+        event EventHandler<DocumentAddedEventArgs<TMember>> DocumentAdded;
+        event EventHandler<DocumentRemovedEventArgs<TMember>> DocumentRemoved;
+        event EventHandler<DocumentUpdatedEventArgs<TMember>> DocumentUpdated;
         event EventHandler<EventArgs> Cleared;
 
         int Count { get; }
 
-        void Add(Document<TMember> document);
-        void Add(IEnumerable<Document<TMember>> documents);
+        IDocumentCollection<TMember> Add(Document<TMember> document);
+        IDocumentCollection<TMember> Add(IEnumerable<Document<TMember>> documents);
 
-        void Clear();
+        IDocumentCollection<TMember> Clear();
 
         bool Contains(string key);
         bool Contains(Document<TMember> document);
@@ -25,12 +25,12 @@ namespace Documents
         Document<TMember> Read(string key);
         IEnumerable<Document<TMember>> Read(IEnumerable<string> keys);
 
-        void Remove(string key);
-        void Remove(IEnumerable<string> keys);
-        void Remove(Document<TMember> document);
-        void Remove(IEnumerable<Document<TMember>> documents);
+        IDocumentCollection<TMember> Remove(string key);
+        IDocumentCollection<TMember> Remove(IEnumerable<string> keys);
+        IDocumentCollection<TMember> Remove(Document<TMember> document);
+        IDocumentCollection<TMember> Remove(IEnumerable<Document<TMember>> documents);
 
-        void Update(Document<TMember> document);
-        void Update(IEnumerable<Document<TMember>> documents);
+        IDocumentCollection<TMember> Update(Document<TMember> document);
+        IDocumentCollection<TMember> Update(IEnumerable<Document<TMember>> documents);
     }
 }

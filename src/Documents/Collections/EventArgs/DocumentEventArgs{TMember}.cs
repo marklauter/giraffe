@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Documents
+namespace Documents.Collections
 {
     public abstract class DocumentEventArgs<TMember>
         : EventArgs

@@ -1,4 +1,4 @@
-﻿namespace Documents
+﻿namespace Documents.Collections
 {
     public class DocumentUpdatedEventArgs<TMember>
         : DocumentEventArgs<TMember>
