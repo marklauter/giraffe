@@ -67,24 +67,16 @@ namespace Documents.Collections
         [Pure]
         public bool Contains(string key)
         {
-            if (String.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
-
-            return this.ContainsDocument(key);
+            return String.IsNullOrWhiteSpace(key)
+                ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
+                : this.ContainsDocument(key);
         }
 
         /// <inheritdoc/>
         [Pure]
         public bool Contains([Pure] Document<TMember> document)
         {
-            if (document is null)
-            {
-                throw new ArgumentNullException(nameof(document));
-            }
-
-            return this.Contains(document.Key);
+            return document is null ? throw new ArgumentNullException(nameof(document)) : this.Contains(document.Key);
         }
 
         /// <inheritdoc/>
@@ -138,12 +130,9 @@ namespace Documents.Collections
         /// <inheritdoc/>
         public IDocumentCollection<TMember> Remove([Pure] Document<TMember> document)
         {
-            if (document is null)
-            {
-                throw new ArgumentNullException(nameof(document));
-            }
-
-            return this.Remove(document.Key);
+            return document is null 
+                ? throw new ArgumentNullException(nameof(document)) 
+                : this.Remove(document.Key);
         }
 
         /// <inheritdoc/>

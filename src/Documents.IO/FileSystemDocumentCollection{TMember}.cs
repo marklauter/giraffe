@@ -6,50 +6,47 @@ using System.Linq;
 
 namespace Documents.IO
 {
-    public abstract class FileSystemDocumentCollection<T>
-        : DocumentCollection<T>
+    public sealed class FileSystemDocumentCollection<TMember>
+        : DocumentCollection<TMember>
         , IDisposable
-        where T : class
+        where TMember : class
     {
+        private static readonly string typeName = typeof(TMember).Name;
+
         private readonly string path;
         private readonly TimeSpan fileLockTimeout;
-        private readonly IDocumentSerializer<T> serializer;
-        private readonly DocumentActionQueueProcessor<T> actionQueue;
+        private readonly IDocumentSerializer<TMember> serializer;
+        private readonly DocumentActionQueueProcessor<TMember> actionQueue;
         private bool disposedValue;
 
-        protected FileSystemDocumentCollection(
+        public FileSystemDocumentCollection(
             string path,
             TimeSpan fileLockTimeout)
             : this(path, fileLockTimeout, null)
         {
         }
 
-        protected FileSystemDocumentCollection(
+        public FileSystemDocumentCollection(
             string path,
             TimeSpan fileLockTimeout,
-            IDocumentSerializer<T> serializer)
+            IDocumentSerializer<TMember> serializer)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace.", nameof(path));
             }
 
-            this.serializer = serializer ?? new JsonDocumentSerializer<T>();
-            this.actionQueue = new DocumentActionQueueProcessor<T>(this.DeleteFile, this.WriteFile);
-            this.fileLockTimeout = fileLockTimeout;
             this.path = path;
+            this.fileLockTimeout = fileLockTimeout;
+            this.serializer = serializer ?? new JsonDocumentSerializer<TMember>();
+            this.actionQueue = new DocumentActionQueueProcessor<TMember>(
+                this.DeleteFile,
+                this.WriteFile);
         }
 
         public override int Count => Directory.EnumerateFiles(this.path).Count();
 
-        public override bool Contains(string key)
-        {
-            return String.IsNullOrWhiteSpace(key)
-                ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
-                : File.Exists(this.GetFileName(key));
-        }
-
-        public override IEnumerator<Document<T>> GetEnumerator()
+        public override IEnumerator<Document<TMember>> GetEnumerator()
         {
             foreach (var file in Directory.EnumerateFiles(this.path))
             {
@@ -57,7 +54,7 @@ namespace Documents.IO
             }
         }
 
-        protected override void AddDocument(Document<T> document)
+        protected override void AddDocument(Document<TMember> document)
         {
             this.actionQueue.EnqueueAddAction(document);
         }
@@ -70,9 +67,16 @@ namespace Documents.IO
             }
         }
 
-        protected override Document<T> ReadDocument(string key)
+        protected override bool ContainsDocument(string key)
         {
-            return this.documentCache.Read(key, this.ReadDocumentWithKey);
+            return String.IsNullOrWhiteSpace(key)
+                ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
+                : File.Exists(this.GetFileName(key));
+        }
+
+        protected override Document<TMember> ReadDocument(string key)
+        {
+            return this.ReadDocumentWithKey(key);
         }
 
         protected override void RemoveDocument(string key)
@@ -80,7 +84,7 @@ namespace Documents.IO
             this.actionQueue.EnqueueRemoveAction(key);
         }
 
-        protected override void UpdateDocument(Document<T> document)
+        protected override void UpdateDocument(Document<TMember> document)
         {
             this.actionQueue.EnqueueUpdateAction(document);
         }
@@ -90,12 +94,12 @@ namespace Documents.IO
             ThreadSafeFile.Delete(this.GetFileName(key), this.fileLockTimeout);
         }
 
-        private Document<T> ReadDocumentWithKey(string key)
+        private Document<TMember> ReadDocumentWithKey(string key)
         {
             return this.ReadFile(this.GetFileName(key));
         }
 
-        private Document<T> ReadFile(string fileName)
+        private Document<TMember> ReadFile(string fileName)
         {
             using var stream = ThreadSafeFile.Open(
                 fileName,
@@ -107,7 +111,7 @@ namespace Documents.IO
             return this.serializer.Deserialize(stream);
         }
 
-        private void WriteFile(Document<T> document)
+        private void WriteFile(Document<TMember> document)
         {
             using var stream = ThreadSafeFile.Open(
                 this.GetFileName(document.Key),
@@ -122,10 +126,10 @@ namespace Documents.IO
 
         private string GetFileName(string key)
         {
-            return Path.Combine(this.path, $"{key}.{DocumentKeys<T>.TypeName}");
+            return Path.Combine(this.path, $"{key}.{typeName}");
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!this.disposedValue)
             {

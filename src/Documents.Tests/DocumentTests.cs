@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Xunit;
 
 namespace Documents.Tests
@@ -114,6 +115,12 @@ namespace Documents.Tests
         {
             var document = (Document<Member>)new Member();
             Assert.Throws<ArgumentNullException>(() => document.GetHashCode(null));
+        }
+
+        [Fact]
+        public void Document_Keys_Caches_Keys()
+        {
+            Assert.Contains("Id", Document<Member>.KeyProperties.Select(pi => pi.Name));
         }
     }
 }

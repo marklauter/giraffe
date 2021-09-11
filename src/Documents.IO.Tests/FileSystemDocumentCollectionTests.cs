@@ -1,24 +1,50 @@
-﻿using Documents.Collections;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using Xunit;
 
-namespace Documents.Tests
+namespace Documents.IO.Tests
 {
-    public sealed class DocumentCollectionTests
+    public sealed class FileSystemDocumentCollectionTests
     {
+        private static FileSystemDocumentCollection<Member> GetCollection(string path)
+        {
+            return new FileSystemDocumentCollection<Member>(path, TimeSpan.FromSeconds(10));
+        }
+
+        private static string MakePath()
+        {
+            var path = Guid.NewGuid().ToString();
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            return path;
+        }
+
         [Fact]
         public void Collection_Empty_Contains_Zero_Items()
         {
-            var collection = HeapDocumentCollection<Member>.Empty;
-            Assert.Equal(0, collection.Count);
-            Assert.Empty(collection);
+            // todo: apply try/finally pattern to every method in this test
+            var path = MakePath();
+            using var collection = GetCollection(path);
+            try
+            {
+                Assert.Equal(0, collection.Count);
+                Assert.Empty(collection);
+            }
+            finally
+            {
+                Directory.Delete(path, true);
+            }
         }
 
         [Fact]
         public void Collection_Add_Single_Throws_ArgumentNullException()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             Assert.Throws<ArgumentNullException>(() =>
                 HeapDocumentCollection<Member>.Empty.Add(null as Document<Member>));
         }
@@ -26,6 +52,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Add_Multiple_Throws_ArgumentNullException()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             Assert.Throws<ArgumentNullException>(() =>
                 HeapDocumentCollection<Member>.Empty.Add(null as IEnumerable<Document<Member>>));
         }
@@ -33,6 +62,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Add_Changes_Count()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(document);
@@ -44,6 +76,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Add_Multiple_Changes_Count()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var documents = new Document<Member>[]
             {
@@ -62,6 +97,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Add_Raises_DocumentAdded()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var collection = HeapDocumentCollection<Member>.Empty;
             var e = Assert.Raises<DocumentAddedEventArgs<Member>>(
@@ -75,7 +113,8 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Contains_Throws_When_Invalid()
         {
-            var collection = HeapDocumentCollection<Member>.Empty;
+            var path = MakePath();
+            using var collection = GetCollection(path);
 
             var key = String.Empty;
             Assert.Throws<ArgumentException>(() => collection.Contains(key));
@@ -92,6 +131,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Contains_Document_Returns_True()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(document);
@@ -102,6 +144,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Contains_Document_Returns_False()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(document);
@@ -112,6 +157,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Contains_Key_Returns_True()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(document);
@@ -122,6 +170,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Contains_Key_Returns_False()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(document);
@@ -132,6 +183,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Clear_Empties_Collection_And_Raises_Cleared()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add((Document<Member>)new Member())
                 .Add((Document<Member>)new Member())
@@ -148,6 +202,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Clear_Empties_Collection()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add((Document<Member>)new Member())
                 .Add((Document<Member>)new Member())
@@ -159,6 +216,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Remove_Single_Key_Throws_When_Invalid()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var collection = HeapDocumentCollection<Member>.Empty;
 
             var key = String.Empty;
@@ -174,6 +234,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Remove_Single_Document_Throws_When_Null()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var collection = HeapDocumentCollection<Member>.Empty;
             Assert.Throws<ArgumentNullException>(() => collection.Remove(null as Document<Member>));
         }
@@ -181,6 +244,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Remove_Multiple_Key_Throws_When_Invalid()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var collection = HeapDocumentCollection<Member>.Empty;
             Assert.Throws<ArgumentNullException>(() => collection.Remove(null as IEnumerable<string>));
         }
@@ -188,6 +254,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Remove_Multiple_Document_Throws_When_Null()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var collection = HeapDocumentCollection<Member>.Empty;
             Assert.Throws<ArgumentNullException>(() => collection.Remove(null as IEnumerable<Document<Member>>));
         }
@@ -195,6 +264,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Remove_Single_Document_Raises_DocumentRemoved()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(document);
@@ -208,6 +280,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Remove_Single_Key_Raises_DocumentRemoved()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(document);
@@ -221,6 +296,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Remove_Multiple_Key_Removes_Documents()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var documents = new Document<Member>[]
             {
@@ -240,6 +318,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Remove_Multiple_Document_Removes_Documents()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var documents = new Document<Member>[]
             {
@@ -259,6 +340,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Read_Throws_When_Invalid()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var collection = HeapDocumentCollection<Member>.Empty;
 
             var key = String.Empty;
@@ -276,6 +360,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Read_Single_Returns_Document()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document = (Document<Member>)new Member();
             var documents = new Document<Member>[]
             {
@@ -295,6 +382,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Read_Multiple_Returns_Document()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var document1 = (Document<Member>)new Member();
             var document2 = (Document<Member>)new Member();
             var document3 = (Document<Member>)new Member();
@@ -318,6 +408,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Update_Fails_When_Null()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var member = new Member();
             var document1 = (Document<Member>)member;
             var collection = HeapDocumentCollection<Member>.Empty
@@ -329,6 +422,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Update_Fails_When_ETags_Are_Mismatched()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var member = new Member();
             var document1 = (Document<Member>)member;
             var collection = HeapDocumentCollection<Member>.Empty
@@ -343,6 +439,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Update_Raises_DocumentUpdated()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var member = new Member();
             var document1 = (Document<Member>)member;
             var collection = HeapDocumentCollection<Member>.Empty
@@ -360,6 +459,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Update_Without_EventHandler()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var member = new Member();
             var document1 = (Document<Member>)member;
             var collection = HeapDocumentCollection<Member>.Empty
@@ -378,6 +480,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Update_Multiple_Throws_When_Null()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             Assert.Throws<ArgumentNullException>(() =>
                 HeapDocumentCollection<Member>.Empty
                     .Update(null as IEnumerable<Document<Member>>));
@@ -386,6 +491,9 @@ namespace Documents.Tests
         [Fact]
         public void Collection_Update_Multiple()
         {
+            var path = MakePath();
+            using var collection = GetCollection(path);
+
             var documents = new Document<Member>[]
             {
                 (Document<Member>)new Member(),
@@ -393,7 +501,7 @@ namespace Documents.Tests
                 (Document<Member>)new Member(),
                 (Document<Member>)new Member(),
             };
-            
+
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(documents);
 
@@ -403,7 +511,7 @@ namespace Documents.Tests
             document1.Member.Value = "x";
             document2.Member.Value = "y";
 
-            collection.Update(new Document<Member>[] { document1, document2});
+            collection.Update(new Document<Member>[] { document1, document2 });
 
             var document3 = collection.Read(documents[0].Key);
             var document4 = collection.Read(documents[1].Key);
@@ -415,4 +523,5 @@ namespace Documents.Tests
             Assert.Equal("y", document4.Member.Value);
         }
     }
+
 }

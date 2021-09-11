@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Documents.IO
 {
-    public sealed class JsonDocumentSerializer<T>
+    internal sealed class JsonDocumentSerializer<T>
         : IDocumentSerializer<T>
         where T : class
     {
