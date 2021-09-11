@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Graph.Classifiers
 {
-    public interface IClassifiable
+    internal interface IClassifiable
         : ICloneable
     {
         /// <summary>

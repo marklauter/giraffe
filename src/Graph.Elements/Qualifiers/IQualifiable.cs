@@ -2,7 +2,7 @@
 
 namespace Graph.Qualifiers
 {
-    public interface IQualifiable
+    internal interface IQualifiable
         : ICloneable
     {
         event EventHandler<QualifiedEventArgs> Qualified;
