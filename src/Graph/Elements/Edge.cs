@@ -12,27 +12,29 @@ namespace Graph.Elements
     [JsonObject("edge")]
     public sealed class Edge
         : Element<Guid>
-        , IEdge
+        , IElement<Guid>
+        , IEquatable<Edge>
+        , IEqualityComparer<Edge>
     {
         /// <summary>
         /// Creates an edge from two nodes. Defaults to directed edge.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
+        /// <param name="source"><see cref="Node"/></param>
+        /// <param name="target"><see cref="Node"/></param>
         /// <returns><see cref="Edge"/></returns>
-        public static Edge Couple(INode source, INode target)
+        public static Edge Couple(Node source, Node target)
         {
-            return Edge.Couple(source, target, true);
+            return Couple(source, target, true);
         }
 
         /// <summary>
         /// Creates an edge from two nodes. Defaults to directed edge.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        /// <param name="isDirected"></param>
+        /// <param name="source"><see cref="Node"/></param>
+        /// <param name="target"><see cref="Node"/></param>
+        /// <param name="isDirected"><see cref="bool"/></param>
         /// <returns><see cref="Edge"/></returns>
-        public static Edge Couple(INode source, INode target, bool isDirected)
+        public static Edge Couple(Node source, Node target, bool isDirected)
         {
             if (source is null)
             {
@@ -44,12 +46,27 @@ namespace Graph.Elements
                 throw new ArgumentNullException(nameof(target));
             }
 
-            if (source.TryCouple(target) && !isDirected)
+            var edge = new Edge(Guid.NewGuid(), source.Id, target.Id, isDirected);
+            source.Couple(edge);
+            target.Couple(edge);
+
+            return edge;
+        }
+
+        public static void Decouple(Edge edge, Node source, Node target)
+        {
+            if (source is null)
             {
-                _ = target.TryCouple(source);
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return new(Guid.NewGuid(), source.Id, target.Id, isDirected);
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            source.Decouple(edge);
+            target.Decouple(edge);
         }
 
         [Required]
@@ -88,7 +105,7 @@ namespace Graph.Elements
         }
 
         [Pure]
-        public bool Equals([Pure] IEdge other)
+        public bool Equals([Pure] Edge other)
         {
             return other != null
                 && this.Id == other.Id
@@ -98,7 +115,7 @@ namespace Graph.Elements
         }
 
         [Pure]
-        public bool Equals([Pure] IEdge x, [Pure] IEdge y)
+        public bool Equals([Pure] Edge x, [Pure] Edge y)
         {
             return x != null && x.Equals(y);
         }
@@ -106,11 +123,11 @@ namespace Graph.Elements
         [Pure]
         public override bool Equals([Pure] object obj)
         {
-            return obj is IEdge edge && this.Equals(edge);
+            return obj is Edge edge && this.Equals(edge);
         }
 
         [Pure]
-        public int GetHashCode([DisallowNull] IEdge obj)
+        public int GetHashCode([DisallowNull] Edge obj)
         {
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))

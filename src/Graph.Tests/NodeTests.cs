@@ -98,8 +98,7 @@ namespace Graph.Tests
         [Fact]
         public void Node_TryCouple_Throws_On_Null()
         {
-            var node = Node.New;
-            Assert.Throws<ArgumentNullException>(() => _ = node.TryCouple(null));
+            Assert.Throws<ArgumentNullException>(() => Node.New.Couple(null));
         }
 
         [Fact]
@@ -116,7 +115,7 @@ namespace Graph.Tests
             for (var i = 0; i < 3; ++i)
             {
                 Assert.Equal(i, node.Degree);
-                Assert.True(node.TryCouple(Node.New));
+                Assert.NotNull(Edge.Couple(node, Node.New));
             }
         }
 
@@ -127,7 +126,7 @@ namespace Graph.Tests
             for (var i = 0; i < 3; ++i)
             {
                 var other = Node.New;
-                Assert.True(node.TryCouple(other));
+                Assert.NotNull(Edge.Couple(node, other));
                 Assert.True(node.IsAdjacent(other));
                 Assert.True(node.IsAdjacent(other.Id));
             }
@@ -140,7 +139,7 @@ namespace Graph.Tests
             for (var i = 0; i < 3; ++i)
             {
                 var coupled = Node.New;
-                Assert.True(node.TryCouple(coupled));
+                Assert.NotNull(Edge.Couple(node, coupled));
                 Assert.True(node.IsAdjacent(coupled));
                 Assert.True(node.IsAdjacent(coupled.Id));
             }
@@ -151,60 +150,35 @@ namespace Graph.Tests
         }
 
         [Fact]
-        public void Node_TryCouple_Returns_False()
-        {
-            var node = Node.New;
-            var coupled = Node.New;
-            Assert.True(node.TryCouple(coupled));
-            for (var i = 0; i < 3; ++i)
-            {
-                Assert.Equal(1, node.Degree);
-                Assert.False(node.TryCouple(coupled));
-            }
-        }
-
-        [Fact]
         public void Node_TryDecouple_Returns_True()
         {
             var node = Node.New;
             for (var i = 0; i < 3; ++i)
             {
                 var other = Node.New;
-                Assert.True(node.TryCouple(other));
+                var edge = Edge.Couple(node, other);
+                Assert.NotNull(edge);
                 Assert.True(node.IsAdjacent(other));
-                Assert.True(node.TryDecouple(other));
+                node.Decouple(edge);
                 Assert.False(node.IsAdjacent(other));
             }
             Assert.Equal(0, node.Degree);
         }
 
         [Fact]
-        public void Node_TryDecouple_Returns_False()
-        {
-            var node = Node.New;
-            var other = Node.New;
-            Assert.True(node.TryCouple(other));
-            Assert.True(node.IsAdjacent(other));
-            Assert.True(node.TryDecouple(other));
-            Assert.False(node.IsAdjacent(other));
-            Assert.False(node.TryDecouple(other));
-            Assert.Equal(0, node.Degree);
-        }
-
-        [Fact]
         public void Node_TryDecouple_Throws()
         {
-            var node = Node.New;
-            Assert.Throws<ArgumentNullException>(() => node.TryDecouple(null));
+            Assert.Throws<ArgumentNullException>(() => Node.New.Decouple(null));
         }
 
         [Fact]
         public void Node_Json_Serialize_Deserialize()
         {
             var node = Node.New;
-            Assert.True(node.TryCouple(Node.New));
-            Assert.True(node.TryCouple(Node.New));
-            Assert.True(node.TryCouple(Node.New));
+            _ = Edge.Couple(node, Node.New);
+            _ = Edge.Couple(node, Node.New);
+            _ = Edge.Couple(node, Node.New);
+
             var json = JsonConvert.SerializeObject(node);
             Assert.False(String.IsNullOrWhiteSpace(json));
             var clone = JsonConvert.DeserializeObject<Node>(json);
@@ -214,12 +188,25 @@ namespace Graph.Tests
         }
 
         [Fact]
-        public void Node_Neighbors_Is_ReadOnly()
+        public void Node_Neighbors_Enumerates_Adjacent_Nodes()
         {
             var node = Node.New;
             var other = Node.New;
-            Assert.True(node.TryCouple(other));
+            _ = Edge.Couple(node, other);
             Assert.Contains(other.Id, node.Neighbors);
+        }
+
+        [Fact]
+        public void Node_Addition_Operator()
+        {
+            var source = Node.New;
+            var target = Node.New;
+            var edge = source + target;
+            Assert.NotNull(edge);
+            Assert.True(edge.IsDirected);
+            Assert.Equal(source.Id, edge.SourceId);
+            Assert.Equal(target.Id, edge.TargetId);
+            Assert.True(source.IsAdjacent(target));
         }
     }
 }

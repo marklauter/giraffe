@@ -5,20 +5,25 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Graph.Elements
 {
-    /// <inheritdoc/>
     [DebuggerDisplay("{Id}")]
     [JsonObject("node")]
     public sealed class Node
         : Element<Guid>
-        , INode
+        , IElement<Guid>
+        , IEquatable<Node>
+        , IEqualityComparer<Node>
     {
         // todo: to index by label replace neighbors with a dictionary of IClass mapped by label. when coupling the target node gets added to the appropriate set of classes.
 
-        [JsonProperty("neighbors")]
-        private ImmutableHashSet<Guid> neighbors = ImmutableHashSet<Guid>.Empty;
+        [JsonProperty("adjacentNodes")]
+        private ImmutableHashSet<Guid> adjacentNodes = ImmutableHashSet<Guid>.Empty;
+
+        [JsonProperty("incidentEdges")]
+        private ImmutableHashSet<Guid> incidentEdges = ImmutableHashSet<Guid>.Empty;
 
         public static Node New => new(Guid.NewGuid());
 
@@ -30,113 +35,66 @@ namespace Graph.Elements
         private Node([DisallowNull, Pure] Node other)
             : base(other)
         {
-            this.neighbors = other.neighbors;
+            this.adjacentNodes = other.adjacentNodes;
+            this.incidentEdges = other.incidentEdges;
         }
 
-        /// <inheritdoc/>
         [Pure]
         [JsonIgnore]
-        public int Degree => this.neighbors.Count;
+        public int Degree => this.adjacentNodes.Count;
 
-        /// <inheritdoc/>
         [Pure]
         [JsonIgnore]
-        public IEnumerable<Guid> Neighbors => this.neighbors;
+        public IEnumerable<Guid> Neighbors => this.adjacentNodes;
 
-        /// <inheritdoc/>
         [Pure]
         public bool IsAdjacent(Guid nodeId)
         {
-            return this.neighbors.Contains(nodeId);
+            return this.adjacentNodes.Contains(nodeId);
         }
 
-        /// <inheritdoc/>
         [Pure]
-        public bool IsAdjacent([DisallowNull, Pure] INode node)
+        public bool IsAdjacent([DisallowNull, Pure] Node node)
         {
             return node is null
                 ? throw new ArgumentNullException(nameof(node))
                 : this.IsAdjacent(node.Id);
         }
 
-        /// <inheritdoc/>
         [Pure]
         public override object Clone()
         {
             return new Node(this);
         }
 
-        /// <inheritdoc/>
-        public bool TryCouple([DisallowNull, Pure] INode node)
-        {
-            if (node is null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-
-            if (!this.neighbors.Contains(node.Id))
-            {
-                this.neighbors = this.neighbors
-                    .Add(node.Id);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc/>
-        public bool TryDecouple([DisallowNull, Pure] INode node)
-        {
-            if (node is null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-
-            if (this.neighbors.Contains(node.Id))
-            {
-                this.neighbors = this.neighbors
-                    .Remove(node.Id);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc/>
         [Pure]
-        public bool Equals([Pure] INode other)
+        public bool Equals([Pure] Node other)
         {
             return other != null
                 && other.Id == this.Id;
         }
 
-        /// <inheritdoc/>
         [Pure]
-        public bool Equals([Pure] INode x, [Pure] INode y)
+        public bool Equals([Pure] Node x, [Pure] Node y)
         {
             return x != null && x.Equals(y);
         }
 
-        /// <inheritdoc/>
         [Pure]
         public override bool Equals([Pure] object obj)
         {
-            return obj is INode node 
+            return obj is Node node
                 && this.Equals(node);
         }
 
-        /// <inheritdoc/>
         [Pure]
         public override int GetHashCode()
         {
             return HashCode.Combine(this.Id);
         }
 
-        /// <inheritdoc/>
         [Pure]
-        public int GetHashCode([DisallowNull, Pure] INode obj)
+        public int GetHashCode([DisallowNull, Pure] Node obj)
         {
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))
@@ -148,15 +106,44 @@ namespace Graph.Elements
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        /// <returns><see cref="IEdge"/></returns>
-        [SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "If it's not one thing, it's another.")]
-        public static IEdge operator +(Node source, INode target)
+        /// <returns><see cref="Edge"/></returns>
+        public static Edge operator +(Node source, Node target)
         {
-            return source is null
-                ? throw new ArgumentNullException(nameof(source))
-                : target is null
-                    ? throw new ArgumentNullException(nameof(target))
-                    : Edge.Couple(source, target);
+            return Edge.Couple(source, target);
+        }
+
+        internal void Couple([DisallowNull, Pure] Edge edge)
+        {
+            if (edge is null)
+            {
+                throw new ArgumentNullException(nameof(edge));
+            }
+
+            var targetId = edge.Nodes
+                .Single(id => id != this.Id);
+
+            this.adjacentNodes = this.adjacentNodes
+                .Add(targetId);
+
+            this.incidentEdges = this.incidentEdges
+                .Add(edge.Id);
+        }
+
+        internal void Decouple([DisallowNull, Pure] Edge edge)
+        {
+            if (edge is null)
+            {
+                throw new ArgumentNullException(nameof(edge));
+            }
+
+            var targetId = edge.Nodes
+                .Single(id => id != this.Id);
+
+            this.adjacentNodes = this.adjacentNodes
+                .Remove(targetId);
+
+            this.incidentEdges = this.incidentEdges
+                .Remove(edge.Id);
         }
     }
 }

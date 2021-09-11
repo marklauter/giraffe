@@ -159,7 +159,7 @@ namespace Graph.Tests
                 .Classify("2")
                 .Classify("3");
 
-            var clone = node.Clone() as INode;
+            var clone = node.Clone() as Node;
 
             Assert.NotNull(clone);
             Assert.True(clone.Is("1"));
