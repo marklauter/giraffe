@@ -16,26 +16,21 @@ namespace Documents
         where TMember : class
     {
         private Document([Pure] Document<TMember> other)
-            : this(other.Member, other.Key, Guid.NewGuid())
+            : this(other.Member, other.Key, other.ETag)
         {
         }
 
         [JsonConstructor]
-        private Document([Pure] TMember member, string key, Guid etag)
+        private Document([Pure] TMember member, string key, int etag)
         {
-            if (String.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
-
-            this.Member = member ?? throw new ArgumentNullException(nameof(member));
+            this.Member = member;
             this.Key = key;
             this.ETag = etag;
         }
 
         [Pure]
         [JsonProperty]
-        public Guid ETag { get; }
+        public int ETag { get; }
 
         [Pure]
         [JsonProperty]
@@ -94,7 +89,17 @@ namespace Documents
         [Pure]
         public static explicit operator Document<TMember>([DisallowNull, Pure] TMember member)
         {
-            return new Document<TMember>(member, GetKey(member), Guid.NewGuid());
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            var key = GetKey(member);
+
+            return new Document<TMember>(
+                member, 
+                key, 
+                HashCode.Combine(member, key));
         }
 
         [Pure]
