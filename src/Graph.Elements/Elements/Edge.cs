@@ -28,7 +28,7 @@ namespace Graph.Elements
         }
 
         /// <summary>
-        /// Creates an edge from two nodes. Defaults to directed edge.
+        /// Creates an edge from two nodes.
         /// </summary>
         /// <param name="source"><see cref="Node"/></param>
         /// <param name="target"><see cref="Node"/></param>
@@ -81,8 +81,9 @@ namespace Graph.Elements
         [JsonProperty("target")]
         public Guid TargetId { get; }
 
+        // internal for testing
         [JsonConstructor]
-        private Edge(Guid id, Guid sourceId, Guid targetId, bool isDirected)
+        internal Edge(Guid id, Guid sourceId, Guid targetId, bool isDirected)
             : base(id)
         {
             this.SourceId = sourceId;

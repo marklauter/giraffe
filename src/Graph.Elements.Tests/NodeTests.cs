@@ -5,6 +5,25 @@ using Xunit;
 
 namespace Graph.Tests
 {
+    public sealed class NodeSerializationTests
+    {
+        [Fact]
+        public void Node_Json_Serialize_Deserialize()
+        {
+            var node = Node.New;
+            _ = Edge.Couple(node, Node.New);
+            _ = Edge.Couple(node, Node.New);
+            _ = Edge.Couple(node, Node.New);
+
+            var json = JsonConvert.SerializeObject(node);
+            Assert.False(String.IsNullOrWhiteSpace(json));
+            var clone = JsonConvert.DeserializeObject<Node>(json);
+            Assert.NotNull(clone);
+            Assert.Equal(node, clone);
+            Assert.True(node.Equals(clone));
+        }
+    }
+
     public sealed class NodeTests
     {
         [Fact]
@@ -169,22 +188,6 @@ namespace Graph.Tests
         public void Node_TryDecouple_Throws()
         {
             Assert.Throws<ArgumentNullException>(() => Node.New.Decouple(null));
-        }
-
-        [Fact]
-        public void Node_Json_Serialize_Deserialize()
-        {
-            var node = Node.New;
-            _ = Edge.Couple(node, Node.New);
-            _ = Edge.Couple(node, Node.New);
-            _ = Edge.Couple(node, Node.New);
-
-            var json = JsonConvert.SerializeObject(node);
-            Assert.False(String.IsNullOrWhiteSpace(json));
-            var clone = JsonConvert.DeserializeObject<Node>(json);
-            Assert.NotNull(clone);
-            Assert.Equal(node, clone);
-            Assert.True(node.Equals(clone));
         }
 
         [Fact]

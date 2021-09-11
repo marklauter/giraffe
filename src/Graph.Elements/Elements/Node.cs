@@ -22,7 +22,7 @@ namespace Graph.Elements
 
         [Pure]
         [JsonIgnore]
-        public int Degree => this.nodesAndEdges.Count;
+        public int Degree => this.nodesAndEdges.NodeCount;
 
         [Pure]
         [JsonIgnore]
@@ -138,7 +138,7 @@ namespace Graph.Elements
                 ? edge.TargetId
                 : edge.SourceId;
 
-            this.nodesAndEdges.Add(edge, otherNodeId);
+            this.nodesAndEdges.Add(edge.Id, otherNodeId);
         }
 
         internal void Decouple([DisallowNull, Pure] Edge edge)
@@ -150,14 +150,14 @@ namespace Graph.Elements
 
             if (edge.SourceId != this.Id && edge.TargetId != this.Id)
             {
-                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}'does not point to a node with id {this.Id}.");
+                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}' does not point to node with id '{this.Id}'.");
             }
 
             var otherNodeId = edge.SourceId == this.Id
                 ? edge.TargetId
                 : edge.SourceId;
 
-            this.nodesAndEdges.Remove(edge, otherNodeId);
+            this.nodesAndEdges.Remove(edge.Id, otherNodeId);
         }
     }
 }
