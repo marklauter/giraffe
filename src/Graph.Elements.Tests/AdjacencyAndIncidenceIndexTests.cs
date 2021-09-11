@@ -1,5 +1,6 @@
 ﻿using Graph.Elements;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Graph.Tests
@@ -128,6 +129,20 @@ namespace Graph.Tests
         }
 
         [Fact]
+        public void Index_NodeReferenceCount_Returns_Zero()
+        {
+            Assert.Equal(0, AdjacencyAndIncidenceIndex.Empty
+                .NodeReferenceCount(Guid.Empty));
+        }
+
+        [Fact]
+        public void Index_Remove_Throws_When_Edge_Not_Found()
+        {
+            Assert.Throws<KeyNotFoundException>(()=>
+                AdjacencyAndIncidenceIndex.Empty.Remove(Guid.Empty, Guid.Empty));
+        }
+
+        [Fact]
         public void Index_Clone_Copies_Edges_Nodes_and_NodesToEdges()
         {
             var source = Node.New;
@@ -144,6 +159,27 @@ namespace Graph.Tests
             var clone = index.Clone() as AdjacencyAndIncidenceIndex;
             Assert.True(clone.ContainsNode(target.Id));
             Assert.True(clone.ContainsEdge(edge.Id));
+        }
+
+        [Fact]
+        public void Index_Remove_All_Edges_Removes_Node()
+        {
+            var source = Node.New;
+            var target = Node.New;
+            var edge1 = new Edge(Guid.NewGuid(), source.Id, target.Id, true);
+            var edge2 = new Edge(Guid.NewGuid(), source.Id, target.Id, true);
+
+            var index = AdjacencyAndIncidenceIndex.Empty
+                .Add(edge1.Id, target.Id)
+                .Add(edge2.Id, target.Id);
+
+            Assert.Equal(2, index.NodeReferenceCount(target.Id));
+
+            _ = index.Remove(edge1.Id, target.Id);
+            _ = index.Remove(edge2.Id, target.Id);
+
+            Assert.Equal(0, index.NodeReferenceCount(target.Id));
+            Assert.False(index.ContainsNode(target.Id));
         }
     }
 }
