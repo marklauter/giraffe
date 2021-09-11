@@ -15,7 +15,7 @@ namespace Graph.Elements
         : Element<Guid>
         , INode
     {
-        // todo: to index by label replace neighbors with a hash of IClass. when coupling the target node gets added to the appropriate set of classes.
+        // todo: to index by label replace neighbors with a dictionary of IClass mapped by label. when coupling the target node gets added to the appropriate set of classes.
 
         [JsonProperty("neighbors")]
         private ImmutableHashSet<Guid> neighbors = ImmutableHashSet<Guid>.Empty;
@@ -32,7 +32,6 @@ namespace Graph.Elements
         {
             this.neighbors = other.neighbors;
         }
-
 
         /// <inheritdoc/>
         [Pure]
@@ -124,7 +123,8 @@ namespace Graph.Elements
         [Pure]
         public override bool Equals([Pure] object obj)
         {
-            return obj is INode node && this.Equals(node);
+            return obj is INode node 
+                && this.Equals(node);
         }
 
         /// <inheritdoc/>
@@ -141,6 +141,22 @@ namespace Graph.Elements
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))
                 : obj.GetHashCode();
+        }
+
+        /// <summary>
+        /// Couples the nodes.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns><see cref="IEdge"/></returns>
+        [SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "If it's not one thing, it's another.")]
+        public static IEdge operator +(Node source, INode target)
+        {
+            return source is null
+                ? throw new ArgumentNullException(nameof(source))
+                : target is null
+                    ? throw new ArgumentNullException(nameof(target))
+                    : Edge.Couple(source, target);
         }
     }
 }
