@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Linq;
 
 namespace Graph.Elements
 {
@@ -17,15 +15,22 @@ namespace Graph.Elements
         , IEquatable<Node>
         , IEqualityComparer<Node>
     {
-        // todo: to index by label replace neighbors with a dictionary of IClass mapped by label. when coupling the target node gets added to the appropriate set of classes.
-
-        [JsonProperty("adjacentNodes")]
-        private ImmutableHashSet<Guid> adjacentNodes = ImmutableHashSet<Guid>.Empty;
-
-        [JsonProperty("incidentEdges")]
-        private ImmutableHashSet<Guid> incidentEdges = ImmutableHashSet<Guid>.Empty;
+        [JsonProperty("nodesAndEdges")]
+        private readonly AdjacencyAndIncidenceIndex nodesAndEdges = AdjacencyAndIncidenceIndex.Empty;
 
         public static Node New => new(Guid.NewGuid());
+
+        [Pure]
+        [JsonIgnore]
+        public int Degree => this.nodesAndEdges.Count;
+
+        [Pure]
+        [JsonIgnore]
+        public IEnumerable<Guid> Neighbors => this.nodesAndEdges.Nodes;
+
+        [Pure]
+        [JsonIgnore]
+        public IEnumerable<Guid> IncidentEdges => this.nodesAndEdges.Edges;
 
         [JsonConstructor]
         private Node(Guid id)
@@ -35,30 +40,7 @@ namespace Graph.Elements
         private Node([DisallowNull, Pure] Node other)
             : base(other)
         {
-            this.adjacentNodes = other.adjacentNodes;
-            this.incidentEdges = other.incidentEdges;
-        }
-
-        [Pure]
-        [JsonIgnore]
-        public int Degree => this.adjacentNodes.Count;
-
-        [Pure]
-        [JsonIgnore]
-        public IEnumerable<Guid> Neighbors => this.adjacentNodes;
-
-        [Pure]
-        public bool IsAdjacent(Guid nodeId)
-        {
-            return this.adjacentNodes.Contains(nodeId);
-        }
-
-        [Pure]
-        public bool IsAdjacent([DisallowNull, Pure] Node node)
-        {
-            return node is null
-                ? throw new ArgumentNullException(nameof(node))
-                : this.IsAdjacent(node.Id);
+            this.nodesAndEdges = other.nodesAndEdges.Clone() as AdjacencyAndIncidenceIndex;
         }
 
         [Pure]
@@ -101,11 +83,39 @@ namespace Graph.Elements
                 : obj.GetHashCode();
         }
 
+        [Pure]
+        public bool IsAdjacent(Guid nodeId)
+        {
+            return this.nodesAndEdges.ContainsNode(nodeId);
+        }
+
+        [Pure]
+        public bool IsAdjacent([DisallowNull, Pure] Node node)
+        {
+            return node is null
+                ? throw new ArgumentNullException(nameof(node))
+                : this.IsAdjacent(node.Id);
+        }
+
+        [Pure]
+        public bool IsIncident(Guid edgeId)
+        {
+            return this.nodesAndEdges.ContainsEdge(edgeId);
+        }
+
+        [Pure]
+        public bool IsIncident([DisallowNull, Pure] Edge edge)
+        {
+            return edge is null
+                ? throw new ArgumentNullException(nameof(edge))
+                : this.IsIncident(edge.Id);
+        }
+
         /// <summary>
-        /// Couples the nodes.
+        /// Couples the nodes and returns the resulting edge.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
+        /// <param name="source"><see cref="Node"/></param>
+        /// <param name="target"><see cref="Node"/></param>
         /// <returns><see cref="Edge"/></returns>
         public static Edge operator +(Node source, Node target)
         {
@@ -119,14 +129,16 @@ namespace Graph.Elements
                 throw new ArgumentNullException(nameof(edge));
             }
 
-            var targetId = edge.Nodes
-                .Single(id => id != this.Id);
+            if (edge.SourceId != this.Id && edge.TargetId != this.Id)
+            {
+                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}'does not point to a node with id {this.Id}.");
+            }
 
-            this.adjacentNodes = this.adjacentNodes
-                .Add(targetId);
+            var otherNodeId = edge.SourceId == this.Id
+                ? edge.TargetId
+                : edge.SourceId;
 
-            this.incidentEdges = this.incidentEdges
-                .Add(edge.Id);
+            this.nodesAndEdges.Add(edge, otherNodeId);
         }
 
         internal void Decouple([DisallowNull, Pure] Edge edge)
@@ -136,14 +148,16 @@ namespace Graph.Elements
                 throw new ArgumentNullException(nameof(edge));
             }
 
-            var targetId = edge.Nodes
-                .Single(id => id != this.Id);
+            if (edge.SourceId != this.Id && edge.TargetId != this.Id)
+            {
+                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}'does not point to a node with id {this.Id}.");
+            }
 
-            this.adjacentNodes = this.adjacentNodes
-                .Remove(targetId);
+            var otherNodeId = edge.SourceId == this.Id
+                ? edge.TargetId
+                : edge.SourceId;
 
-            this.incidentEdges = this.incidentEdges
-                .Remove(edge.Id);
+            this.nodesAndEdges.Remove(edge, otherNodeId);
         }
     }
 }

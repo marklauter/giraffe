@@ -393,7 +393,7 @@ namespace Documents.Tests
                 (Document<Member>)new Member(),
                 (Document<Member>)new Member(),
             };
-            
+
             var collection = HeapDocumentCollection<Member>.Empty
                 .Add(documents);
 
@@ -403,7 +403,7 @@ namespace Documents.Tests
             document1.Member.Value = "x";
             document2.Member.Value = "y";
 
-            collection.Update(new Document<Member>[] { document1, document2});
+            collection.Update(new Document<Member>[] { document1, document2 });
 
             var document3 = collection.Read(documents[0].Key);
             var document4 = collection.Read(documents[1].Key);

@@ -130,8 +130,8 @@ namespace Documents.Collections
         /// <inheritdoc/>
         public IDocumentCollection<TMember> Remove([Pure] Document<TMember> document)
         {
-            return document is null 
-                ? throw new ArgumentNullException(nameof(document)) 
+            return document is null
+                ? throw new ArgumentNullException(nameof(document))
                 : this.Remove(document.Key);
         }
 

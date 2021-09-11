@@ -32,7 +32,7 @@ namespace Graph.Elements
         /// </summary>
         /// <param name="source"><see cref="Node"/></param>
         /// <param name="target"><see cref="Node"/></param>
-        /// <param name="isDirected"><see cref="bool"/></param>
+        /// <param name="isDirected"><see cref="Boolean"/></param>
         /// <returns><see cref="Edge"/></returns>
         public static Edge Couple(Node source, Node target, bool isDirected)
         {

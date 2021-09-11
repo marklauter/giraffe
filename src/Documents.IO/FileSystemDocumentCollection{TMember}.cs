@@ -11,7 +11,7 @@ namespace Documents.IO
         , IDisposable
         where TMember : class
     {
-        private static readonly string typeName = typeof(TMember).Name;
+        private static readonly string TypeName = typeof(TMember).Name;
 
         private readonly string path;
         private readonly TimeSpan fileLockTimeout;
@@ -107,7 +107,7 @@ namespace Documents.IO
                 FileAccess.Read,
                 FileShare.Read,
                 this.fileLockTimeout);
-            
+
             return this.serializer.Deserialize(stream);
         }
 
@@ -119,14 +119,14 @@ namespace Documents.IO
                 FileAccess.Write,
                 FileShare.None,
                 this.fileLockTimeout);
-            
+
             this.serializer.Serialize(document, stream);
             stream.Flush(true);
         }
 
         private string GetFileName(string key)
         {
-            return Path.Combine(this.path, $"{key}.{typeName}");
+            return Path.Combine(this.path, $"{key}.{TypeName}");
         }
 
         private void Dispose(bool disposing)

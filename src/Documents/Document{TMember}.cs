@@ -103,8 +103,8 @@ namespace Documents
             var key = GetKey(member);
 
             return new Document<TMember>(
-                member, 
-                key, 
+                member,
+                key,
                 HashCode.Combine(member, key));
         }
 
