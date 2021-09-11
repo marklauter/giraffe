@@ -18,17 +18,4 @@ namespace Graph.Classifiers
 
         public string Label { get; }
     }
-
-    public class ClassifiedEventArgs<TId>
-        : ClassifiedEventArgs
-        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
-    {
-        public ClassifiedEventArgs([DisallowNull] string label, TId id)
-            : base(label)
-        {
-            this.Id = id;
-        }
-
-        public TId Id { get; }
-    }
 }
