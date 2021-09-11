@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Documents.Collections;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Documents.IO
 {
-    public abstract class PersistentDocumentCollection<T>
+    public abstract class FileSystemDocumentCollection<T>
         : DocumentCollection<T>
         , IDisposable
         where T : class
@@ -14,34 +14,26 @@ namespace Documents.IO
         private readonly string path;
         private readonly TimeSpan fileLockTimeout;
         private readonly IDocumentSerializer<T> serializer;
-        private readonly IDocumentCache<T> documentCache;
         private readonly DocumentActionQueueProcessor<T> actionQueue;
         private bool disposedValue;
 
-        protected PersistentDocumentCollection(
+        protected FileSystemDocumentCollection(
             string path,
             TimeSpan fileLockTimeout)
-            : this(path, fileLockTimeout, null, null)
+            : this(path, fileLockTimeout, null)
         {
         }
 
-        protected PersistentDocumentCollection(
+        protected FileSystemDocumentCollection(
             string path,
             TimeSpan fileLockTimeout,
-            IDocumentSerializer<T> serializer,
-            IDocumentCache<T> documentCache)
+            IDocumentSerializer<T> serializer)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace.", nameof(path));
             }
 
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                SlidingExpiration = TimeSpan.FromMinutes(5),
-            };
-
-            this.documentCache = documentCache ?? new DocumentCache<T>(cacheEntryOptions);
             this.serializer = serializer ?? new JsonDocumentSerializer<T>();
             this.actionQueue = new DocumentActionQueueProcessor<T>(this.DeleteFile, this.WriteFile);
             this.fileLockTimeout = fileLockTimeout;

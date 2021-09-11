@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Threading;
 
 namespace Documents.IO
@@ -8,45 +9,48 @@ namespace Documents.IO
         : IDisposable
         where T : class
     {
-        // queues minimize write collisions on files better than locks and also improve perceived performance
-
-        private readonly ConcurrentQueue<DocumentActionItem<T>> documentActionQueue = new();
+        private ImmutableQueue<DocumentActionItem<T>> documentActionQueue = ImmutableQueue<DocumentActionItem<T>>.Empty;
         private readonly CancellationTokenSource cancellationTokenSource = new();
-        private readonly DeleteDocument deleteDocument;
-        private readonly WriteDocument writeDocument;
+        private readonly Action<string> deleteDocumentAction;
+        private readonly Action<Document<T>> writeDocumentAction;
         private bool disposedValue;
 
-        public delegate void DeleteDocument(string key);
         public delegate void WriteDocument(Document<T> document);
 
         public DocumentActionQueueProcessor(
-            DeleteDocument deleteDocument,
-            WriteDocument writeDocument)
+            Action<string> deleteDocumentAction,
+            Action<Document<T>> writeDocumentAction)
         {
             this.StartActionQueueProcessor();
-            this.deleteDocument = deleteDocument ?? throw new ArgumentNullException(nameof(deleteDocument));
-            this.writeDocument = writeDocument ?? throw new ArgumentNullException(nameof(writeDocument));
+            this.deleteDocumentAction = deleteDocumentAction ?? throw new ArgumentNullException(nameof(deleteDocumentAction));
+            this.writeDocumentAction = writeDocumentAction ?? throw new ArgumentNullException(nameof(writeDocumentAction));
         }
 
         public void EnqueueAddAction(Document<T> document)
         {
-            this.documentActionQueue.Enqueue(new DocumentActionItem<T>(DocumentAction.Add, document));
+            this.documentActionQueue = this.documentActionQueue
+                .Enqueue(new DocumentActionItem<T>(DocumentAction.Add, document));
         }
 
         public void EnqueueRemoveAction(string key)
         {
-            this.documentActionQueue.Enqueue(new DocumentActionItem<T>(DocumentAction.Remove, key));
+            this.documentActionQueue = this.documentActionQueue
+                .Enqueue(new DocumentActionItem<T>(DocumentAction.Remove, key));
         }
 
         public void EnqueueUpdateAction(Document<T> document)
         {
-            this.documentActionQueue.Enqueue(new DocumentActionItem<T>(DocumentAction.Update, document));
+            this.documentActionQueue = this.documentActionQueue
+                .Enqueue(new DocumentActionItem<T>(DocumentAction.Update, document));
         }
 
         public void Flush()
         {
-            while (this.documentActionQueue.TryDequeue(out var actionItem))
+            while (!this.documentActionQueue.IsEmpty)
             {
+                this.documentActionQueue = this.documentActionQueue
+                    .Dequeue(out var actionItem);
+
                 this.ProcessActionItem(actionItem);
             }
         }
@@ -57,10 +61,10 @@ namespace Documents.IO
             {
                 case DocumentAction.Add:
                 case DocumentAction.Update:
-                    this.writeDocument.Invoke(actionItem.Item as Document<T>);
+                    this.writeDocumentAction.Invoke(actionItem.Item as Document<T>);
                     break;
                 case DocumentAction.Remove:
-                    this.deleteDocument.Invoke(actionItem.Item as string);
+                    this.deleteDocumentAction.Invoke(actionItem.Item as string);
                     break;
             }
         }
@@ -70,11 +74,14 @@ namespace Documents.IO
             var wait = new SpinWait();
             while (!cancellationToken.IsCancellationRequested)
             {
-                if (!this.documentActionQueue.TryDequeue(out var actionItem))
+                if (this.documentActionQueue.IsEmpty)
                 {
                     wait.SpinOnce();
                     continue;
                 }
+
+                this.documentActionQueue = this.documentActionQueue
+                    .Dequeue(out var actionItem);
 
                 this.ProcessActionItem(actionItem);
             }

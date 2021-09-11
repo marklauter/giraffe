@@ -1,6 +1,6 @@
 ﻿namespace Documents.Collections
 {
-    public class DocumentUpdatedEventArgs<TMember>
+    public sealed class DocumentUpdatedEventArgs<TMember>
         : DocumentEventArgs<TMember>
         where TMember : class
     {
