@@ -46,6 +46,7 @@ namespace Documents.IO
                 try
                 {
                     File.Delete(fileName);
+                    return;
                 }
                 catch (IOException ex)
                 {

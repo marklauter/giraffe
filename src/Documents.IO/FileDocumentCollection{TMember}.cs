@@ -6,9 +6,8 @@ using System.Linq;
 
 namespace Documents.IO
 {
-    public sealed class FileSystemDocumentCollection<TMember>
+    public sealed class FileDocumentCollection<TMember>
         : DocumentCollection<TMember>
-        , IDisposable
         where TMember : class
     {
         private static readonly string TypeName = typeof(TMember).Name;
@@ -16,17 +15,15 @@ namespace Documents.IO
         private readonly string path;
         private readonly TimeSpan fileLockTimeout;
         private readonly IDocumentSerializer<TMember> serializer;
-        private readonly DocumentActionQueueProcessor<TMember> actionQueue;
-        private bool disposedValue;
 
-        public FileSystemDocumentCollection(
+        public FileDocumentCollection(
             string path,
             TimeSpan fileLockTimeout)
             : this(path, fileLockTimeout, null)
         {
         }
 
-        public FileSystemDocumentCollection(
+        public FileDocumentCollection(
             string path,
             TimeSpan fileLockTimeout,
             IDocumentSerializer<TMember> serializer)
@@ -39,9 +36,6 @@ namespace Documents.IO
             this.path = path;
             this.fileLockTimeout = fileLockTimeout;
             this.serializer = serializer ?? new JsonDocumentSerializer<TMember>();
-            this.actionQueue = new DocumentActionQueueProcessor<TMember>(
-                this.DeleteFile,
-                this.WriteFile);
         }
 
         public override int Count => Directory.EnumerateFiles(this.path).Count();
@@ -56,7 +50,7 @@ namespace Documents.IO
 
         protected override void AddDocument(Document<TMember> document)
         {
-            this.actionQueue.EnqueueAddAction(document);
+            this.WriteFile(document);
         }
 
         protected override void ClearCollection()
@@ -69,9 +63,7 @@ namespace Documents.IO
 
         protected override bool ContainsDocument(string key)
         {
-            return String.IsNullOrWhiteSpace(key)
-                ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
-                : File.Exists(this.GetFileName(key));
+            return File.Exists(this.GetFileName(key));
         }
 
         protected override Document<TMember> ReadDocument(string key)
@@ -81,17 +73,17 @@ namespace Documents.IO
 
         protected override void RemoveDocument(string key)
         {
-            this.actionQueue.EnqueueRemoveAction(key);
+            this.DeleteFile(this.GetFileName(key));
         }
 
         protected override void UpdateDocument(Document<TMember> document)
         {
-            this.actionQueue.EnqueueUpdateAction(document);
+            this.WriteFile(document);
         }
 
-        private void DeleteFile(string key)
+        private void DeleteFile(string fileName)
         {
-            ThreadSafeFile.Delete(this.GetFileName(key), this.fileLockTimeout);
+            ThreadSafeFile.Delete(fileName, this.fileLockTimeout);
         }
 
         private Document<TMember> ReadDocumentWithKey(string key)
@@ -121,31 +113,11 @@ namespace Documents.IO
                 this.fileLockTimeout);
 
             this.serializer.Serialize(document, stream);
-            stream.Flush(true);
         }
 
         private string GetFileName(string key)
         {
             return Path.Combine(this.path, $"{key}.{TypeName}");
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!this.disposedValue)
-            {
-                if (disposing)
-                {
-                    this.actionQueue.Dispose();
-                }
-
-                this.disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }
