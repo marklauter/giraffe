@@ -139,7 +139,7 @@ namespace Graph.Tests
         }
 
         [Fact]
-        public void Node_Adjacent_Returns_True()
+        public void Node_IsAdjacent_Returns_True()
         {
             var node = Node.New;
             for (var i = 0; i < 3; ++i)
@@ -152,7 +152,7 @@ namespace Graph.Tests
         }
 
         [Fact]
-        public void Node_Adjacent_Returns_False()
+        public void Node_IsAdjacent_Returns_False()
         {
             var node = Node.New;
             for (var i = 0; i < 3; ++i)
@@ -166,6 +166,35 @@ namespace Graph.Tests
             var other = Node.New;
             Assert.False(node.IsAdjacent(other));
             Assert.False(node.IsAdjacent(other.Id));
+        }
+
+        [Fact]
+        public void Node_IsIncident_Returns_True()
+        {
+            var node = Node.New;
+            var other = Node.New;
+            var edge = node + other;
+            Assert.NotEmpty(node.IncidentEdges);
+            Assert.True(node.IsIncident(edge));
+        }
+
+        [Fact]
+        public void Node_IsIncident_Returns_False()
+        {
+            var node = Node.New;
+            var other = Node.New;
+            var edge = node + other;
+            Assert.True(node.IsIncident(edge));
+
+            node.Decouple(edge);
+            Assert.False(node.IsIncident(edge));
+            Assert.Empty(node.IncidentEdges);
+        }
+
+        [Fact]
+        public void Node_IsIncident_Throws_When_Edge_Is_Null()
+        {
+            Assert.Throws<ArgumentNullException>(()=> Node.New.IsIncident(null as Edge));
         }
 
         [Fact]
@@ -210,6 +239,39 @@ namespace Graph.Tests
             Assert.Equal(source.Id, edge.SourceId);
             Assert.Equal(target.Id, edge.TargetId);
             Assert.True(source.IsAdjacent(target));
+        }
+
+        [Fact]
+        public void Node_Couple_Throws_When_Edge_Is_Invalid()
+        {
+            var source = Node.New;
+            var edge = new Edge(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), true);
+            Assert.Throws<InvalidOperationException>(() => source.Couple(edge));
+        }
+
+        [Fact]
+        public void Node_Decouple_Throws_When_Edge_Is_Invalid()
+        {
+            var source = Node.New;
+            var edge = new Edge(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), true);
+            Assert.Throws<InvalidOperationException>(() => source.Decouple(edge));
+        }
+
+        [Fact]
+        public void Node_Decouple_Works_When_Node_Is_Source_Or_Target()
+        {
+            var node = Node.New;
+            var edge = new Edge(Guid.NewGuid(), Guid.NewGuid(), node.Id, true);
+            node.Couple(edge);
+            Assert.True(node.IsAdjacent(edge.SourceId));
+            node.Decouple(edge);
+            Assert.False(node.IsAdjacent(edge.SourceId));
+
+            edge = new Edge(Guid.NewGuid(), node.Id, Guid.NewGuid(), true);
+            node.Couple(edge);
+            Assert.True(node.IsAdjacent(edge.TargetId));
+            node.Decouple(edge);
+            Assert.False(node.IsAdjacent(edge.TargetId));
         }
     }
 }
