@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Graph.Elements
 {
@@ -53,22 +54,6 @@ namespace Graph.Elements
             return edge;
         }
 
-        public static void Decouple(Edge edge, Node source, Node target)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (target is null)
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
-
-            source.Decouple(edge);
-            target.Decouple(edge);
-        }
-
         [Required]
         [JsonProperty("directed")]
         public bool IsDirected { get; }
@@ -103,6 +88,32 @@ namespace Graph.Elements
         public override object Clone()
         {
             return new Edge(this);
+        }
+
+        public void Decouple(Node node1, Node node2)
+        {
+            if (node1 is null)
+            {
+                throw new ArgumentNullException(nameof(node1));
+            }
+
+            if (node2 is null)
+            {
+                throw new ArgumentNullException(nameof(node2));
+            }
+
+            if (!this.Nodes.Contains(node1.Id))
+            {
+                throw new InvalidOperationException($"{nameof(Node)} with id '{node1.Id}' is not incident to edge with id '{this.Id}'.");
+            }
+
+            if (!this.Nodes.Contains(node2.Id))
+            {
+                throw new InvalidOperationException($"{nameof(Node)} with id '{node2.Id}' is not incident to edge with id '{this.Id}'.");
+            }
+
+            node1.Decouple(this);
+            node2.Decouple(this);
         }
 
         [Pure]

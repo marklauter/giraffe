@@ -6,7 +6,7 @@ namespace Documents.Tests
     public sealed class ArgumentTests
     {
         [Fact]
-        public void Fail()
+        public void WriteSomeTests()
         {
             throw new Exception("write some tests!");
         }

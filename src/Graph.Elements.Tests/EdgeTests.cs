@@ -135,5 +135,62 @@ namespace Graph.Tests
             Assert.Contains(source.Id, edge.Nodes);
             Assert.Contains(target.Id, edge.Nodes);
         }
+
+        [Fact]
+        public void Edge_Couple_Throws_With_Nulls()
+        {
+            Assert.Throws<ArgumentNullException>(() => Edge.Couple(null, Node.New));
+            Assert.Throws<ArgumentNullException>(() => Edge.Couple(Node.New, null));
+        }
+
+        [Fact]
+        public void Edge_Decouple_Throws_With_Nulls()
+        {
+            var source = Node.New;
+            var target = Node.New;
+            var edge = Edge.Couple(source, target);
+            Assert.Throws<ArgumentNullException>(() => edge.Decouple(null, target));
+            Assert.Throws<ArgumentNullException>(() => edge.Decouple(source, null));
+        }
+
+        [Fact]
+        public void Edge_Decouple_Unlinks_TheNodes()
+        {
+            var source = Node.New;
+            var target = Node.New;
+            var edge = Edge.Couple(source, target);
+
+            Assert.True(source.IsAdjacent(target));
+            Assert.True(target.IsAdjacent(source));
+
+            Assert.True(source.IsIncident(edge));
+            Assert.True(target.IsIncident(edge));
+
+            edge.Decouple(source, target);
+
+            Assert.False(source.IsAdjacent(target));
+            Assert.False(target.IsAdjacent(source));
+
+            Assert.False(source.IsIncident(edge));
+            Assert.False(target.IsIncident(edge));
+        }
+
+        [Fact]
+        public void Edge_Decouple_Throws_When_Wrong_Node_Passed()
+        {
+            var source = Node.New;
+            var target = Node.New;
+            var other = Node.New;
+            var edge = Edge.Couple(source, target);
+
+            var ex = Assert.Throws<InvalidOperationException>(() => edge.Decouple(other, source));
+            Assert.Equal(typeof(Edge), ex.TargetSite.DeclaringType);
+            Assert.Throws<InvalidOperationException>(() => edge.Decouple(source, other));
+            Assert.Equal(typeof(Edge), ex.TargetSite.DeclaringType);
+            edge.Decouple(source, target);
+
+            Assert.False(source.IsIncident(edge));
+            Assert.False(target.IsIncident(edge));
+        }
     }
 }
