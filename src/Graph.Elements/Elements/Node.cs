@@ -18,6 +18,8 @@ namespace Graph.Elements
         [JsonProperty("nodesAndEdges")]
         private readonly AdjacencyAndIncidenceIndex nodesAndEdges = AdjacencyAndIncidenceIndex.Empty;
 
+        // todo: raise events on coupled and decoupled 
+
         public static Node New => new(Guid.NewGuid());
 
         [Pure]

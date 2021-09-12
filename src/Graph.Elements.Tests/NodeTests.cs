@@ -11,16 +11,23 @@ namespace Graph.Tests
         public void Node_Json_Serialize_Deserialize()
         {
             var node = Node.New;
-            _ = Edge.Couple(node, Node.New);
-            _ = Edge.Couple(node, Node.New);
-            _ = Edge.Couple(node, Node.New);
+            var edge1 = node + Node.New;
+            var edge2 = node + Node.New;
+            var edge3 = node + Node.New;
 
             var json = JsonConvert.SerializeObject(node);
             Assert.False(String.IsNullOrWhiteSpace(json));
+            
             var clone = JsonConvert.DeserializeObject<Node>(json);
             Assert.NotNull(clone);
             Assert.Equal(node, clone);
             Assert.True(node.Equals(clone));
+            Assert.True(clone.IsIncident(edge1));
+            Assert.True(clone.IsIncident(edge2));
+            Assert.True(clone.IsIncident(edge3));
+            Assert.True(clone.IsAdjacent(edge1.TargetId));
+            Assert.True(clone.IsAdjacent(edge2.TargetId));
+            Assert.True(clone.IsAdjacent(edge3.TargetId));
         }
     }
 
