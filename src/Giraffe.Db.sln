@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Collections.Concurrent.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.Cache.Tests", "Documents.Cache.Tests\Documents.Cache.Tests.csproj", "{AC25BB0E-D01B-4456-B456-A185AB3FCCA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPLExperiments", "TPLExperiments\TPLExperiments.csproj", "{7694F3BB-19DD-4DC5-8852-2AEF027D374C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{AC25BB0E-D01B-4456-B456-A185AB3FCCA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC25BB0E-D01B-4456-B456-A185AB3FCCA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC25BB0E-D01B-4456-B456-A185AB3FCCA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7694F3BB-19DD-4DC5-8852-2AEF027D374C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7694F3BB-19DD-4DC5-8852-2AEF027D374C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7694F3BB-19DD-4DC5-8852-2AEF027D374C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7694F3BB-19DD-4DC5-8852-2AEF027D374C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +129,7 @@ Global
 		{64685A1D-D421-47F8-B4BA-6ED82DAB2368} = {88364EE2-0105-4F27-9BA7-E859AB8DB9AA}
 		{2BC8AD7C-B6A7-40A4-97AB-F7DB6F74C88F} = {69E3F924-46CF-4D88-8A83-204693AAAD06}
 		{AC25BB0E-D01B-4456-B456-A185AB3FCCA5} = {69E3F924-46CF-4D88-8A83-204693AAAD06}
+		{7694F3BB-19DD-4DC5-8852-2AEF027D374C} = {88364EE2-0105-4F27-9BA7-E859AB8DB9AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF74DDB4-21CF-4E68-BC2E-F79540A7FDF4}
