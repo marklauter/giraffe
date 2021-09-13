@@ -11,6 +11,11 @@ namespace Documents.IO.Encoding
     {
         private readonly JsonSerializerSettings settings;
 
+        public JsonDocumentDecoder()
+            : this(new JsonSerializerSettings())
+        {
+        }
+
         public JsonDocumentDecoder(JsonSerializerSettings settings)
         {
             this.settings = settings ?? throw new ArgumentNullException(nameof(settings));

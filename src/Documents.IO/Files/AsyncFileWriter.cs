@@ -12,7 +12,7 @@ namespace Documents.IO.Files
         private readonly System.Text.Encoding encoding;
 
         public AsyncFileWriter(TimeSpan timeout)
-            : this(timeout, Encoding.UTF8)
+            : this(timeout, System.Text.Encoding.UTF8)
         {
         }
 
@@ -22,17 +22,19 @@ namespace Documents.IO.Files
             this.encoding = encoding;
         }
 
-        public Task WriteAsync(string path, string text)
+        public async Task WriteAsync(string path, string text)
         {
             var wait = new SpinWait();
             var start = DateTime.UtcNow;
-            IOException lastIoEx;
+            var lastIoEx = default(IOException);
             do
             {
                 try
                 {
-                    using var writer = new StreamWriter(path, false, this.encoding);
-                    return writer.WriteAsync(text);
+                    using var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+                    using var writer = new StreamWriter(stream, this.encoding);
+                    await writer.WriteAsync(text);
+                    return;
                 }
                 catch (IOException ex)
                 {

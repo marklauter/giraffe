@@ -7,22 +7,24 @@ namespace Documents.IO.Files
 {
     public sealed class AsyncFileDeleter
         : AsyncSafeFileAccessor
+        , IAsyncFileDeleter
     {
         public AsyncFileDeleter(TimeSpan timeout)
             : base(timeout)
         {
         }
 
-        public Task DeleteAsync(string path)
+        public async Task DeleteAsync(string path)
         {
             var wait = new SpinWait();
             var start = DateTime.UtcNow;
-            IOException lastIoEx;
+            var lastIoEx = default(IOException);
             do
             {
                 try
                 {
-                    return Task.Run(() => File.Delete(path));
+                    await Task.Run(() => File.Delete(path));
+                    return;
                 }
                 catch (IOException ex)
                 {

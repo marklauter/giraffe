@@ -12,7 +12,7 @@ namespace Documents.IO.Files
         private readonly System.Text.Encoding encoding;
 
         public AsyncFileReader(TimeSpan timeout)
-            : this(timeout, Encoding.UTF8)
+            : this(timeout, System.Text.Encoding.UTF8)
         {
         }
 
@@ -22,17 +22,18 @@ namespace Documents.IO.Files
             this.encoding = encoding;
         }
 
-        public Task<string> ReadAsync(string path)
+        public async Task<string> ReadAsync(string path)
         {
             var wait = new SpinWait();
             var start = DateTime.UtcNow;
-            IOException lastIoEx;
+            var lastIoEx = default(IOException);
             do
             {
                 try
                 {
-                    using var reader = new StreamReader(path, this.encoding);
-                    return reader.ReadToEndAsync();
+                    using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    using var reader = new StreamReader(stream, this.encoding);
+                    return await reader.ReadToEndAsync();
                 }
                 catch (IOException ex)
                 {
