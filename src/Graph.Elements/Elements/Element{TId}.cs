@@ -103,7 +103,7 @@ namespace Graph.Elements
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications.Disqualify(name);
+            _ = this.qualifications.Disqualify(name);
             return this;
         }
 

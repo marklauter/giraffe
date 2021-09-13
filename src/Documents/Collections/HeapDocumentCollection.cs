@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Documents.Collections
@@ -10,7 +9,7 @@ namespace Documents.Collections
         : DocumentCollection<TMember>
         where TMember : class
     {
-        private ImmutableDictionary<string, Document<TMember>> documents = ImmutableDictionary<string, Document<TMember>>.Empty;
+        private readonly ConcurrentDictionary<string, Document<TMember>> documents = new();
 
         public static HeapDocumentCollection<TMember> Empty => new();
 
@@ -18,7 +17,7 @@ namespace Documents.Collections
 
         protected override Task ClearCollectionAsync()
         {
-            this.documents = ImmutableDictionary<string, Document<TMember>>.Empty;
+            this.documents.Clear();
 
             return Task.CompletedTask;
         }
@@ -37,17 +36,14 @@ namespace Documents.Collections
 
         protected override Task RemoveDocumentAsync(string key)
         {
-            this.documents = this.documents.ContainsKey(key)
-                ? this.documents.Remove(key)
+            return this.documents.TryRemove(key, out var _) 
+                ? Task.CompletedTask 
                 : throw new KeyNotFoundException(key);
-
-            return Task.CompletedTask;
         }
 
         protected override Task WriteDocumentAsync([Pure] Document<TMember> document)
         {
-            this.documents = this.documents.SetItem(document.Key, document);
-
+            this.documents[document.Key] = document;
             return Task.CompletedTask;
         }
     }

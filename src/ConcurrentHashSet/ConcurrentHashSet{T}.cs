@@ -10,24 +10,29 @@ namespace Collections.Concurrent
         : ISet<T>
         , ICloneable
     {
-        private readonly HashSet<T> hashset = new();
+        private readonly HashSet<T> hashset;
         private readonly Gate gate = new();
 
         public static ConcurrentHashSet<T> Empty => new();
 
-        private ConcurrentHashSet() { }
+        private ConcurrentHashSet()
+        {
+            this.hashset = new();
+        }
 
         private ConcurrentHashSet(ConcurrentHashSet<T> other)
         {
-            this.hashset.UnionWith(other);
+            this.hashset = new(other);
         }
 
         public ConcurrentHashSet(IEnumerable<T> items)
         {
-            this.hashset.UnionWith(items);
+            this.hashset = new(items);
         }
 
         public int Count => this.gate.Read(() => this.hashset.Count);
+
+        public bool IsEmpty => this.Count == 0;
 
         public bool IsReadOnly => false;
 

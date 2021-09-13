@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Collections.Concurrent;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 
 namespace Graph.Elements
@@ -12,10 +13,10 @@ namespace Graph.Elements
         private readonly object gate = new();
 
         [JsonProperty("incidentEdges")]
-        private ImmutableHashSet<Guid> edges = ImmutableHashSet<Guid>.Empty;
+        private readonly ConcurrentHashSet<Guid> edges;
 
         [JsonProperty("adjacentNodes")]
-        private ImmutableDictionary<Guid, int> nodes = ImmutableDictionary<Guid, int>.Empty;
+        private readonly ConcurrentDictionary<Guid, int> nodes;
 
         public static AdjacencyAndIncidenceIndex Empty => new();
 
@@ -39,12 +40,16 @@ namespace Graph.Elements
         [JsonIgnore]
         public int NodeCount => this.nodes.Count;
 
-        private AdjacencyAndIncidenceIndex() { }
+        private AdjacencyAndIncidenceIndex()
+        {
+            this.edges = ConcurrentHashSet<Guid>.Empty;
+            this.nodes = new();
+        }
 
         private AdjacencyAndIncidenceIndex(AdjacencyAndIncidenceIndex other)
         {
-            this.edges = other.edges;
-            this.nodes = other.nodes;
+            this.edges = new(other.edges);
+            this.nodes = new(other.nodes);
         }
 
         public AdjacencyAndIncidenceIndex Add(Guid edgeId, Guid nodeId)
@@ -53,15 +58,13 @@ namespace Graph.Elements
             {
                 if (!this.edges.Contains(edgeId))
                 {
-                    this.edges = this.edges
-                        .Add(edgeId);
+                    _ = this.edges.Add(edgeId);
 
                     var referenceCount = this.nodes.TryGetValue(nodeId, out var count)
                         ? count + 1
                         : 1;
 
-                    this.nodes = this.nodes
-                        .SetItem(nodeId, referenceCount);
+                    _ = this.nodes[nodeId] = referenceCount;
                 }
             }
 
@@ -96,23 +99,25 @@ namespace Graph.Elements
 
         public AdjacencyAndIncidenceIndex Remove(Guid edgeId, Guid nodeId)
         {
-            if (!this.edges.Contains(edgeId))
-            {
-                throw new KeyNotFoundException($"{nameof(edgeId)} with value '{edgeId}' is not contained by the index.");
-            }
-
             lock (this.gate)
             {
-                this.edges = this.edges
-                    .Remove(edgeId);
+                if (!this.edges.Remove(edgeId))
+                {
+                    throw new KeyNotFoundException($"{nameof(edgeId)} with value '{edgeId}' is not contained by the index.");
+                }
 
                 var referenceCount = this.nodes.TryGetValue(nodeId, out var count)
                     ? count - 1
                     : 0;
 
-                this.nodes = referenceCount <= 0
-                    ? this.nodes.Remove(nodeId)
-                    : this.nodes.SetItem(nodeId, referenceCount);
+                if (referenceCount <= 0)
+                {
+                    _ = this.nodes.TryRemove(nodeId, out var _);
+                }
+                else
+                {
+                    this.nodes[nodeId] = referenceCount;
+                }
             }
 
             return this;

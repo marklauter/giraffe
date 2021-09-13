@@ -8,8 +8,6 @@ using System.Diagnostics.Contracts;
 
 namespace Graph.Qualifiers
 {
-    // todo: immutable collections were a mistake
-
     /// <inheritdoc/>
     [JsonArray]
     internal sealed class QualificationCollection
@@ -34,6 +32,7 @@ namespace Graph.Qualifiers
         }
 
         [JsonConstructor]
+        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used by serialization.")]
         private QualificationCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, SerializableValue>> qualifications)
         {
             this.qualifications = new(qualifications);

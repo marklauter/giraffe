@@ -311,16 +311,35 @@ namespace Graph.Tests
         }
 
         [Fact]
-        public void Element_Disqualify_Raises_DisqualifiedEventArgs()
+        public void Element_Disqualify_Does_Not_Raise_DisqualifiedEventArgs()
         {
             var name = "x";
             var node = Node.New;
+
+            Assert.Throws<Xunit.Sdk.RaisesException>(() =>
+            {
+                _ = Assert.Raises<DisqualifiedEventArgs>(
+                    handler => node.Disqualified += handler,
+                    handler => node.Disqualified -= handler,
+                    () => node.Disqualify(name));
+            });
+        }
+
+        [Fact]
+        public void Element_Disqualify_Raises_DisqualifiedEventArgs()
+        {
+            var value = 1;
+            var name = "x";
+            var node = Node.New;
+            node.Qualify(name, value);
+
             var args = Assert.Raises<DisqualifiedEventArgs>(
                 handler => node.Disqualified += handler,
                 handler => node.Disqualified -= handler,
                 () => node.Disqualify(name));
             Assert.Equal(node, args.Sender);
             Assert.Equal(name, args.Arguments.Name);
+            Assert.Equal(value, args.Arguments.Value.Value);
         }
 
         [Fact]
