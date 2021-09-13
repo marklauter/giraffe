@@ -5,24 +5,15 @@ using System.Threading.Tasks;
 
 namespace Documents.IO.Files
 {
-    public sealed class ThreadSafeFileReader
-        : ThreadSafeFileAccessor
-        , IAsyncFileReader
+    public sealed class AsyncFileDeleter
+        : AsyncSafeFileAccessor
     {
-        private readonly System.Text.Encoding encoding;
-
-        public ThreadSafeFileReader(TimeSpan timeout)
-            : this(timeout, Encoding.UTF8)
-        {
-        }
-
-        public ThreadSafeFileReader(TimeSpan timeout, System.Text.Encoding encoding)
+        public AsyncFileDeleter(TimeSpan timeout)
             : base(timeout)
         {
-            this.encoding = encoding;
         }
 
-        public Task<string> ReadAsync(string path)
+        public Task DeleteAsync(string path)
         {
             var wait = new SpinWait();
             var start = DateTime.UtcNow;
@@ -31,8 +22,7 @@ namespace Documents.IO.Files
             {
                 try
                 {
-                    using var reader = new StreamReader(path, this.encoding);
-                    return reader.ReadToEndAsync();
+                    return Task.Run(() => File.Delete(path));
                 }
                 catch (IOException ex)
                 {
@@ -47,7 +37,7 @@ namespace Documents.IO.Files
             }
             while (DateTime.UtcNow - start < this.Timeout);
 
-            throw new TimeoutException(nameof(ReadAsync), lastIoEx);
+            throw new TimeoutException(nameof(DeleteAsync), lastIoEx);
         }
     }
 }

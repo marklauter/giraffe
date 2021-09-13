@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Documents.IO.Encoding
 {
-    internal sealed class JsonDocumentEncoder<T>
-        : IDocumentEncoder<T>
-        where T : class
+    internal sealed class JsonDocumentEncoder<TMember>
+        : IDocumentEncoder<TMember>
+        where TMember : class
     {
         private readonly JsonSerializerSettings settings;
 
@@ -15,7 +15,7 @@ namespace Documents.IO.Encoding
             this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
-        public Task<string> SerializeAsync(Document<T> document)
+        public Task<string> SerializeAsync(Document<TMember> document)
         {
             return Task.Run(() => JsonConvert.SerializeObject(document, this.settings));
         }

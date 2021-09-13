@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Documents.Collections
 {
     public interface IDocumentCollection<TMember>
-        : IEnumerable<Document<TMember>>
         where TMember : class
     {
         event EventHandler<DocumentAddedEventArgs<TMember>> DocumentAdded;
@@ -14,23 +14,23 @@ namespace Documents.Collections
 
         int Count { get; }
 
-        IDocumentCollection<TMember> Add(Document<TMember> document);
-        IDocumentCollection<TMember> Add(IEnumerable<Document<TMember>> documents);
+        Task AddAsync(Document<TMember> document);
+        IEnumerable<Task> AddAsync(IEnumerable<Document<TMember>> documents);
 
-        IDocumentCollection<TMember> Clear();
+        Task ClearAsync();
 
-        bool Contains(string key);
-        bool Contains(Document<TMember> document);
+        Task<bool> ContainsAsync(string key);
+        Task<bool> ContainsAsync(Document<TMember> document);
 
-        Document<TMember> Read(string key);
-        IEnumerable<Document<TMember>> Read(IEnumerable<string> keys);
+        Task<Document<TMember>> ReadAsync(string key);
+        Task<IEnumerable<Document<TMember>>> ReadAsync(IEnumerable<string> keys);
 
-        IDocumentCollection<TMember> Remove(string key);
-        IDocumentCollection<TMember> Remove(IEnumerable<string> keys);
-        IDocumentCollection<TMember> Remove(Document<TMember> document);
-        IDocumentCollection<TMember> Remove(IEnumerable<Document<TMember>> documents);
+        Task RemoveAsync(string key);
+        Task RemoveAsync(IEnumerable<string> keys);
+        Task RemoveAsync(Document<TMember> document);
+        Task RemoveAsync(IEnumerable<Document<TMember>> documents);
 
-        IDocumentCollection<TMember> Update(Document<TMember> document);
-        IDocumentCollection<TMember> Update(IEnumerable<Document<TMember>> documents);
+        Task UpdateAsync(Document<TMember> document);
+        Task UpdateAsync(IEnumerable<Document<TMember>> documents);
     }
 }

@@ -17,7 +17,7 @@ namespace Graph.Tests
 
             var json = JsonConvert.SerializeObject(node);
             Assert.False(String.IsNullOrWhiteSpace(json));
-            
+
             var clone = JsonConvert.DeserializeObject<Node>(json);
             Assert.NotNull(clone);
             Assert.Equal(node, clone);
@@ -201,7 +201,7 @@ namespace Graph.Tests
         [Fact]
         public void Node_IsIncident_Throws_When_Edge_Is_Null()
         {
-            Assert.Throws<ArgumentNullException>(()=> Node.New.IsIncident(null as Edge));
+            Assert.Throws<ArgumentNullException>(() => Node.New.IsIncident(null));
         }
 
         [Fact]

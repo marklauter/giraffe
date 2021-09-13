@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Documents.Collections
 {
@@ -27,197 +29,182 @@ namespace Documents.Collections
         public abstract int Count { get; }
 
         /// <inheritdoc/>
-        public IDocumentCollection<TMember> Add([Pure] Document<TMember> document)
+        public async Task AddAsync([Pure] Document<TMember> document)
         {
             if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            this.AddDocument(document);
+            if (await this.ContainsAsync(document.Key))
+            {
+                throw new InvalidOperationException($"Document with key '{document.Key}' is already in the collection.");
+            }
+
+            await this.WriteDocumentAsync(document);
             this.DocumentAdded?.Invoke(this, new DocumentAddedEventArgs<TMember>(document));
-            return this;
         }
 
         /// <inheritdoc/>
-        public IDocumentCollection<TMember> Add([Pure] IEnumerable<Document<TMember>> documents)
+        public Task AddAsync([Pure] IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
                 throw new ArgumentNullException(nameof(documents));
             }
 
-            foreach (var document in documents)
-            {
-                _ = this.Add(document);
-            }
-
-            return this;
+            var tasks = documents.Select(document => this.AddAsync(document));
+            return Task.WhenAll(tasks);
         }
 
         /// <inheritdoc/>
-        public IDocumentCollection<TMember> Clear()
+        public async Task ClearAsync()
         {
-            this.ClearCollection();
+            await this.ClearCollectionAsync();
             this.Cleared?.Invoke(this, EventArgs.Empty);
-            return this;
         }
 
         /// <inheritdoc/>
         [Pure]
-        public bool Contains(string key)
+        public Task<bool> ContainsAsync(string key)
         {
             return String.IsNullOrWhiteSpace(key)
                 ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
-                : this.ContainsDocument(key);
+                : this.ContainsDocumentAsync(key);
         }
 
         /// <inheritdoc/>
         [Pure]
-        public bool Contains([Pure] Document<TMember> document)
+        public Task<bool> ContainsAsync([Pure] Document<TMember> document)
         {
-            return document is null ? throw new ArgumentNullException(nameof(document)) : this.Contains(document.Key);
+            return document is null
+                ? throw new ArgumentNullException(nameof(document)) :
+                this.ContainsAsync(document.Key);
         }
 
         /// <inheritdoc/>
         [Pure]
-        public Document<TMember> Read(string key)
+        public Task<Document<TMember>> ReadAsync(string key)
         {
             return String.IsNullOrWhiteSpace(key)
                 ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
-                : this.ReadDocument(key);
+                : this.ReadDocumentAsync(key);
         }
 
         /// <inheritdoc/>
         [Pure]
-        public IEnumerable<Document<TMember>> Read(IEnumerable<string> keys)
-        {
-            return keys is null
-                ? throw new ArgumentNullException(nameof(keys))
-                : this.ReadDocuments(keys);
-        }
-
-        /// <inheritdoc/>
-        public IDocumentCollection<TMember> Remove(string key)
-        {
-            if (String.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
-
-            var document = this.Read(key);
-            this.RemoveDocument(key);
-            this.DocumentRemoved?.Invoke(this, new DocumentRemovedEventArgs<TMember>(document));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IDocumentCollection<TMember> Remove(IEnumerable<string> keys)
+        public async Task<IEnumerable<Document<TMember>>> ReadAsync(IEnumerable<string> keys)
         {
             if (keys is null)
             {
                 throw new ArgumentNullException(nameof(keys));
             }
 
-            foreach (var key in keys)
-            {
-                _ = this.Remove(key);
-            }
-
-            return this;
+            var tasks = keys.Select(key => this.ReadAsync(key));
+            return await Task.WhenAll(tasks);
         }
 
         /// <inheritdoc/>
-        public IDocumentCollection<TMember> Remove([Pure] Document<TMember> document)
+        public async Task RemoveAsync(string key)
         {
-            return document is null
-                ? throw new ArgumentNullException(nameof(document))
-                : this.Remove(document.Key);
+            if (String.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+
+            if (await this.ContainsAsync(key))
+            {
+                var document = await this.ReadAsync(key);
+                await this.RemoveDocumentAsync(key);
+                this.DocumentRemoved?.Invoke(this, new DocumentRemovedEventArgs<TMember>(document));
+            }
         }
 
         /// <inheritdoc/>
-        public IDocumentCollection<TMember> Remove([Pure] IEnumerable<Document<TMember>> documents)
+        public async Task RemoveAsync(IEnumerable<string> keys)
         {
-            if (documents is null)
+            if (keys is null)
             {
-                throw new ArgumentNullException(nameof(documents));
+                throw new ArgumentNullException(nameof(keys));
             }
 
-            foreach (var document in documents)
-            {
-                _ = this.Remove(document);
-            }
+            var tasks = keys
+                .Select(key => this.RemoveAsync(key));
 
-            return this;
+            await Task.WhenAll(tasks);
         }
 
         /// <inheritdoc/>
-        public IDocumentCollection<TMember> Update([Pure] Document<TMember> document)
+        public async Task RemoveAsync([Pure] Document<TMember> document)
         {
             if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            var d = this.Read(document.Key);
-            if (d.ETag != document.ETag)
-            {
-                throw new ETagMismatchException($"key: {document.Key}, expected: {d.ETag}, actual: {document.ETag}");
-            }
-
-            this.UpdateDocument(document);
-            this.DocumentUpdated?.Invoke(this, new DocumentUpdatedEventArgs<TMember>(document));
-            return this;
+            await this.RemoveDocumentAsync(document.Key);
+            this.DocumentRemoved?.Invoke(this, new DocumentRemovedEventArgs<TMember>(document));
         }
 
         /// <inheritdoc/>
-        public IDocumentCollection<TMember> Update([Pure] IEnumerable<Document<TMember>> documents)
+        public async Task RemoveAsync([Pure] IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
                 throw new ArgumentNullException(nameof(documents));
             }
 
-            foreach (var document in documents)
-            {
-                _ = this.Update(document);
-            }
+            var tasks = documents
+                .Select(document => this.RemoveAsync(document));
 
-            return this;
+            await Task.WhenAll(tasks);
         }
 
         /// <inheritdoc/>
-        [Pure]
-        public abstract IEnumerator<Document<TMember>> GetEnumerator();
+        public async Task UpdateAsync([Pure] Document<TMember> document)
+        {
+            if (document is null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            if (!await this.ContainsAsync(document.Key))
+            {
+                throw new KeyNotFoundException(document.Key);
+            }
+
+            var original = await this.ReadAsync(document.Key);
+            if (original.ETag != document.ETag)
+            {
+                throw new ETagMismatchException($"key: {document.Key}, expected: {original.ETag}, actual: {document.ETag}");
+            }
+
+            await this.WriteDocumentAsync(document);
+            this.DocumentUpdated?.Invoke(this, new DocumentUpdatedEventArgs<TMember>(document));
+        }
 
         /// <inheritdoc/>
-        [Pure]
-        IEnumerator IEnumerable.GetEnumerator()
+        public async Task UpdateAsync([Pure] IEnumerable<Document<TMember>> documents)
         {
-            return this.GetEnumerator();
-        }
-
-        protected abstract void AddDocument([Pure] Document<TMember> document);
-
-        protected abstract void ClearCollection();
-
-        [Pure]
-        protected abstract bool ContainsDocument(string key);
-
-        [Pure]
-        protected abstract Document<TMember> ReadDocument(string key);
-
-        protected abstract void RemoveDocument(string key);
-
-        protected abstract void UpdateDocument([Pure] Document<TMember> document);
-
-        [Pure]
-        private IEnumerable<Document<TMember>> ReadDocuments(IEnumerable<string> keys)
-        {
-            foreach (var key in keys)
+            if (documents is null)
             {
-                yield return this.Read(key);
+                throw new ArgumentNullException(nameof(documents));
             }
+
+            var tasks = documents
+                .Select(document => this.UpdateAsync(document));
+
+            await Task.WhenAll(tasks);
         }
+
+        protected abstract Task ClearCollectionAsync();
+
+        protected abstract Task<bool> ContainsDocumentAsync(string key);
+
+        protected abstract Task<Document<TMember>> ReadDocumentAsync(string key);
+
+        protected abstract Task RemoveDocumentAsync(string key);
+
+        protected abstract Task WriteDocumentAsync([Pure] Document<TMember> document);
     }
 }

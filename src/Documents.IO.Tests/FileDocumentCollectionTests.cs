@@ -60,14 +60,14 @@ namespace Documents.IO.Tests
         public void Collection_Add_Single_Throws_ArgumentNullException()
         {
             var collection = GetCollection();
-            Assert.Throws<ArgumentNullException>(() => collection.Add(null as Document<Member>));
+            Assert.Throws<ArgumentNullException>(() => collection.AddAsync(null as Document<Member>));
         }
 
         [Fact]
         public void Collection_Add_Multiple_Throws_ArgumentNullException()
         {
             var collection = GetCollection();
-            Assert.Throws<ArgumentNullException>(() => collection.Add(null as IEnumerable<Document<Member>>));
+            Assert.Throws<ArgumentNullException>(() => collection.AddAsync(null as IEnumerable<Document<Member>>));
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var document = (Document<Member>)new Member();
-            collection.Add(document);
+            collection.AddAsync(document);
 
             Assert.Equal(1, collection.Count);
             Assert.Contains(document, collection);
@@ -96,9 +96,9 @@ namespace Documents.IO.Tests
                 document
             };
 
-            collection.Add(documents);
+            collection.AddAsync(documents);
             Assert.Equal(documents.Length, collection.Count);
-            Assert.True(collection.Contains(document));
+            Assert.True(collection.ContainsAsync(document));
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace Documents.IO.Tests
             var e = Assert.Raises<DocumentAddedEventArgs<Member>>(
                 h => collection.DocumentAdded += h,
                 h => collection.DocumentAdded -= h,
-                () => collection.Add(document));
+                () => collection.AddAsync(document));
             Assert.Equal(collection, e.Sender);
             Assert.Equal(document, e.Arguments.Document);
         }
@@ -129,7 +129,7 @@ namespace Documents.IO.Tests
             key = " ";
             Assert.Throws<ArgumentException>(() => collection.Contains(key));
 
-            Assert.Throws<ArgumentNullException>(() => collection.Contains(null as Document<Member>));
+            Assert.Throws<ArgumentNullException>(() => collection.ContainsAsync(null as Document<Member>));
         }
 
         [Fact]
@@ -138,9 +138,9 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var document = (Document<Member>)new Member();
-            collection.Add(document);
+            collection.AddAsync(document);
 
-            Assert.True(collection.Contains(document));
+            Assert.True(collection.ContainsAsync(document));
         }
 
         [Fact]
@@ -149,9 +149,9 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var document = (Document<Member>)new Member();
-            collection.Add(document);
+            collection.AddAsync(document);
 
-            Assert.False(collection.Contains((Document<Member>)new Member()));
+            Assert.False(collection.ContainsAsync((Document<Member>)new Member()));
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var document = (Document<Member>)new Member();
-            collection.Add(document);
+            collection.AddAsync(document);
 
             Assert.True(collection.Contains(document.Key));
         }
@@ -171,7 +171,7 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var document = (Document<Member>)new Member();
-            collection.Add(document);
+            collection.AddAsync(document);
 
             Assert.False(collection.Contains(((Document<Member>)new Member()).Key));
         }
@@ -182,9 +182,9 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             collection
-                .Add((Document<Member>)new Member())
-                .Add((Document<Member>)new Member())
-                .Add((Document<Member>)new Member());
+                .AddAsync((Document<Member>)new Member())
+                .AddAsync((Document<Member>)new Member())
+                .AddAsync((Document<Member>)new Member());
             Assert.Equal(3, collection.Count);
             var e = Assert.Raises<EventArgs>(
                 h => collection.Cleared += h,
@@ -200,9 +200,9 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             collection
-                .Add((Document<Member>)new Member())
-                .Add((Document<Member>)new Member())
-                .Add((Document<Member>)new Member())
+                .AddAsync((Document<Member>)new Member())
+                .AddAsync((Document<Member>)new Member())
+                .AddAsync((Document<Member>)new Member())
                 .Clear();
             Assert.Empty(collection);
         }
@@ -213,13 +213,13 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var key = String.Empty;
-            Assert.Throws<ArgumentException>(() => collection.Remove(key));
+            Assert.Throws<ArgumentException>(() => collection.RemoveAsync(key));
 
             key = null;
-            Assert.Throws<ArgumentException>(() => collection.Remove(key));
+            Assert.Throws<ArgumentException>(() => collection.RemoveAsync(key));
 
             key = " ";
-            Assert.Throws<ArgumentException>(() => collection.Remove(key));
+            Assert.Throws<ArgumentException>(() => collection.RemoveAsync(key));
         }
 
         [Fact]
@@ -227,7 +227,7 @@ namespace Documents.IO.Tests
         {
             var collection = GetCollection();
 
-            Assert.Throws<ArgumentNullException>(() => collection.Remove(null as Document<Member>));
+            Assert.Throws<ArgumentNullException>(() => collection.RemoveAsync(null as Document<Member>));
         }
 
         [Fact]
@@ -235,7 +235,7 @@ namespace Documents.IO.Tests
         {
             var collection = GetCollection();
 
-            Assert.Throws<ArgumentNullException>(() => collection.Remove(null as IEnumerable<string>));
+            Assert.Throws<ArgumentNullException>(() => collection.RemoveAsync(null as IEnumerable<string>));
         }
 
         [Fact]
@@ -243,7 +243,7 @@ namespace Documents.IO.Tests
         {
             var collection = GetCollection();
 
-            Assert.Throws<ArgumentNullException>(() => collection.Remove(null as IEnumerable<Document<Member>>));
+            Assert.Throws<ArgumentNullException>(() => collection.RemoveAsync(null as IEnumerable<Document<Member>>));
         }
 
         [Fact]
@@ -252,11 +252,11 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var document = (Document<Member>)new Member();
-            collection.Add(document);
+            collection.AddAsync(document);
             var e = Assert.Raises<DocumentRemovedEventArgs<Member>>(
                 h => collection.DocumentRemoved += h,
                 h => collection.DocumentRemoved -= h,
-                () => collection.Remove(document));
+                () => collection.RemoveAsync(document));
             Assert.Empty(collection);
         }
 
@@ -266,11 +266,11 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var document = (Document<Member>)new Member();
-            collection.Add(document);
+            collection.AddAsync(document);
             var e = Assert.Raises<DocumentRemovedEventArgs<Member>>(
                 h => collection.DocumentRemoved += h,
                 h => collection.DocumentRemoved -= h,
-                () => collection.Remove(document.Key));
+                () => collection.RemoveAsync(document.Key));
             Assert.Empty(collection);
         }
 
@@ -288,9 +288,9 @@ namespace Documents.IO.Tests
                 document
             };
 
-            collection.Add(documents);
+            collection.AddAsync(documents);
 
-            collection.Remove(documents.Select(d => d.Key));
+            collection.RemoveAsync(documents.Select(d => d.Key));
             Assert.Empty(collection);
         }
 
@@ -308,8 +308,8 @@ namespace Documents.IO.Tests
                 document
             };
 
-            collection.Add(documents);
-            collection.Remove(documents);
+            collection.AddAsync(documents);
+            collection.RemoveAsync(documents);
             Assert.Empty(collection);
         }
 
@@ -319,13 +319,13 @@ namespace Documents.IO.Tests
             var collection = GetCollection();
 
             var key = String.Empty;
-            Assert.Throws<ArgumentException>(() => collection.Read(key));
+            Assert.Throws<ArgumentException>(() => collection.ReadAsync(key));
 
             key = null;
-            Assert.Throws<ArgumentException>(() => collection.Read(key));
+            Assert.Throws<ArgumentException>(() => collection.ReadAsync(key));
 
             key = " ";
-            Assert.Throws<ArgumentException>(() => collection.Read(key));
+            Assert.Throws<ArgumentException>(() => collection.ReadAsync(key));
 
             Assert.Throws<ArgumentNullException>(() => collection.Read(null as IEnumerable<string>));
         }
@@ -345,8 +345,8 @@ namespace Documents.IO.Tests
             };
 
             var read = collection
-                .Add(documents)
-                .Read(document.Key);
+                .AddAsync(documents)
+                .ReadAsync(document.Key);
 
             Assert.Equal(document, read);
         }
@@ -368,8 +368,8 @@ namespace Documents.IO.Tests
             };
 
             var read = collection
-                .Add(documents)
-                .Read(new string[] { document1.Key, document2.Key });
+                .AddAsync(documents)
+                .ReadAsync(new string[] { document1.Key, document2.Key });
 
             Assert.Contains(document1, read);
             Assert.Contains(document2, read);
@@ -383,7 +383,7 @@ namespace Documents.IO.Tests
 
             var member = new Member();
             var document1 = (Document<Member>)member;
-            collection.Add(document1);
+            collection.AddAsync(document1);
 
             Assert.Throws<ArgumentNullException>(() => collection.Update(null as Document<Member>));
         }
@@ -395,7 +395,7 @@ namespace Documents.IO.Tests
 
             var member = new Member();
             var document1 = (Document<Member>)member;
-            collection.Add(document1);
+            collection.AddAsync(document1);
 
             member.Value = "x";
             var document2 = (Document<Member>)member;
@@ -410,7 +410,7 @@ namespace Documents.IO.Tests
 
             var member = new Member();
             var document1 = (Document<Member>)member;
-            collection.Add(document1);
+            collection.AddAsync(document1);
 
             var document2 = (Document<Member>)member;
             member.Value = "x";
@@ -428,14 +428,14 @@ namespace Documents.IO.Tests
 
             var member = new Member();
             var document1 = (Document<Member>)member;
-            collection.Add(document1);
+            collection.AddAsync(document1);
 
             var document2 = (Document<Member>)member;
             member.Value = "x";
 
             var document3 = collection
                 .Update(document2)
-                .Read(document1.Key);
+                .ReadAsync(document1.Key);
 
             Assert.Equal(document1.Key, document3.Key);
         }
@@ -464,18 +464,18 @@ namespace Documents.IO.Tests
                 (Document<Member>)new Member(),
             };
 
-            collection.Add(documents);
+            collection.AddAsync(documents);
 
-            var document1 = collection.Read(documents[0].Key);
-            var document2 = collection.Read(documents[1].Key);
+            var document1 = collection.ReadAsync(documents[0].Key);
+            var document2 = collection.ReadAsync(documents[1].Key);
 
             document1.Member.Value = "x";
             document2.Member.Value = "y";
 
             collection.Update(new Document<Member>[] { document1, document2 });
 
-            var document3 = collection.Read(documents[0].Key);
-            var document4 = collection.Read(documents[1].Key);
+            var document3 = collection.ReadAsync(documents[0].Key);
+            var document4 = collection.ReadAsync(documents[1].Key);
 
             Assert.Equal(document1, document3);
             Assert.Equal(document2, document4);

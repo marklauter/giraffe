@@ -138,7 +138,7 @@ namespace Graph.Tests
         [Fact]
         public void Index_Remove_Throws_When_Edge_Not_Found()
         {
-            Assert.Throws<KeyNotFoundException>(()=>
+            Assert.Throws<KeyNotFoundException>(() =>
                 AdjacencyAndIncidenceIndex.Empty.Remove(Guid.Empty, Guid.Empty));
         }
 

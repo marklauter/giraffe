@@ -2,9 +2,9 @@
 
 namespace Documents.IO.Encoding
 {
-    public interface IDocumentDecoder<T>
-        where T : class
+    public interface IDocumentDecoder<TMember>
+        where TMember : class
     {
-        Task<Document<T>> DeserializeAsync(string json);
+        Task<Document<TMember>> DeserializeAsync(string json);
     }
 }

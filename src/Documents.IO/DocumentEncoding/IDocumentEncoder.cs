@@ -2,9 +2,9 @@
 
 namespace Documents.IO.Encoding
 {
-    public interface IDocumentEncoder<T>
-        where T : class
+    public interface IDocumentEncoder<TMember>
+        where TMember : class
     {
-        Task<string> SerializeAsync(Document<T> document);
+        Task<string> SerializeAsync(Document<TMember> document);
     }
 }

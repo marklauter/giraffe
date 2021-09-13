@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 
 namespace Documents.IO.Files
 {
-    public sealed class ThreadSafeFileWriter
-        : ThreadSafeFileAccessor
+    public sealed class AsyncFileWriter
+        : AsyncSafeFileAccessor
         , IAsyncFileWriter
     {
         private readonly System.Text.Encoding encoding;
 
-        public ThreadSafeFileWriter(TimeSpan timeout)
+        public AsyncFileWriter(TimeSpan timeout)
             : this(timeout, Encoding.UTF8)
         {
         }
 
-        public ThreadSafeFileWriter(TimeSpan timeout, System.Text.Encoding encoding)
+        public AsyncFileWriter(TimeSpan timeout, System.Text.Encoding encoding)
             : base(timeout)
         {
             this.encoding = encoding;

@@ -3,8 +3,11 @@ using Documents.IO.Encoding;
 using Documents.IO.Files;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Documents.IO
 {
@@ -15,16 +18,19 @@ namespace Documents.IO
         private static readonly string TypeName = typeof(TMember).Name;
 
         private readonly string path;
-
-        //public FileDocumentCollection(
-        //    string path,
-        //    TimeSpan fileLockTimeout)
-        //    : this(path, fileLockTimeout, null)
-        //{
-        //}
+        private readonly IDocumentEncoder<TMember> encoder;
+        private readonly IDocumentDecoder<TMember> decoder;
+        private readonly IAsyncFileReader reader;
+        private readonly IAsyncFileWriter writer;
+        private readonly IAsyncFileDeleter deleter;
 
         public FileDocumentCollection(
-            string path            )
+            string path,
+            IDocumentEncoder<TMember> encoder,
+            IDocumentDecoder<TMember> decoder,
+            IAsyncFileReader reader,
+            IAsyncFileWriter writer,
+            IAsyncFileDeleter deleter)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
@@ -32,83 +38,63 @@ namespace Documents.IO
             }
 
             this.path = path;
+            this.encoder = encoder;
+            this.decoder = decoder;
+            this.reader = reader;
+            this.writer = writer;
+            this.deleter = deleter;
         }
 
         public override int Count => Directory.EnumerateFiles(this.path).Count();
 
-        public override IEnumerator<Document<TMember>> GetEnumerator()
+        protected override Task ClearCollectionAsync()
         {
-            foreach (var file in Directory.EnumerateFiles(this.path))
-            {
-                yield return this.ReadFile(file);
-            }
+            var tasks = Directory.EnumerateFiles(this.path)
+                .Select(file => this.DeleteFileAsync(file));
+
+            return Task.WhenAll(tasks);
         }
 
-        protected override void AddDocument(Document<TMember> document)
+        protected override Task<bool> ContainsDocumentAsync(string key)
         {
-            this.WriteFile(document);
+            return Task.Run(() => File.Exists(this.GetFileName(key)));
         }
 
-        protected override void ClearCollection()
+        protected override Task<Document<TMember>> ReadDocumentAsync(string key)
         {
-            foreach (var file in Directory.EnumerateFiles(this.path))
-            {
-                this.DeleteFile(file);
-            }
+            return this.ReadDocumentWithKeyAsync(key);
         }
 
-        protected override bool ContainsDocument(string key)
+        protected override Task RemoveDocumentAsync(string key)
         {
-            return File.Exists(this.GetFileName(key));
+            return this.DeleteFileAsync(this.GetFileName(key));
         }
 
-        protected override Document<TMember> ReadDocument(string key)
+        protected override Task WriteDocumentAsync([Pure] Document<TMember> document)
         {
-            return this.ReadDocumentWithKey(key);
+            return this.WriteFileAsync(document);
         }
 
-        protected override void RemoveDocument(string key)
+        private Task DeleteFileAsync(string path)
         {
-            this.DeleteFile(this.GetFileName(key));
+            return this.deleter.DeleteAsync(path);
         }
 
-        protected override void UpdateDocument(Document<TMember> document)
+        private Task<Document<TMember>> ReadDocumentWithKeyAsync(string key)
         {
-            this.WriteFile(document);
+            return this.ReadFileAsync(this.GetFileName(key));
         }
 
-        private void DeleteFile(string fileName)
+        private async Task<Document<TMember>> ReadFileAsync(string path)
         {
-            ThreadSafeFileStatic.Delete(fileName, this.fileLockTimeout);
+            var json = await this.reader.ReadAsync(path);
+            return await this.decoder.DeserializeAsync(json);
         }
 
-        private Document<TMember> ReadDocumentWithKey(string key)
+        private async Task WriteFileAsync([Pure] Document<TMember> document)
         {
-            return this.ReadFile(this.GetFileName(key));
-        }
-
-        private Document<TMember> ReadFile(string fileName)
-        {
-            using var stream = ThreadSafeFileStatic.Open(
-                fileName,
-                FileMode.Open,
-                FileAccess.Read,
-                FileShare.Read,
-                this.fileLockTimeout);
-
-            return this.serializer.Deserialize(stream);
-        }
-
-        private void WriteFile(Document<TMember> document)
-        {
-            using var stream = ThreadSafeFileStatic.Open(
-                this.GetFileName(document.Key),
-                FileMode.OpenOrCreate,
-                FileAccess.Write,
-                FileShare.None,
-                this.fileLockTimeout);
-
-            this.serializer.Serialize(document, stream);
+            var json = await this.encoder.SerializeAsync(document);
+            await this.writer.WriteAsync(this.GetFileName(document.Key), json);
         }
 
         private string GetFileName(string key)

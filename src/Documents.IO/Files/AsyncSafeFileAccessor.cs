@@ -4,14 +4,14 @@ using System.Runtime.InteropServices;
 
 namespace Documents.IO.Files
 {
-    public abstract class ThreadSafeFileAccessor
+    public abstract class AsyncSafeFileAccessor
     {
         protected readonly TimeSpan Timeout;
 
         private const uint HRFileLocked = 0x80070020;
         private const uint HRPortionOfFileLocked = 0x80070021;
 
-        protected ThreadSafeFileAccessor(TimeSpan timeout)
+        protected AsyncSafeFileAccessor(TimeSpan timeout)
         {
             this.Timeout = timeout;
         }
