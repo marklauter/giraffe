@@ -1,6 +1,7 @@
 ﻿using Graph.Qualifiers;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Graph.Tests
@@ -36,21 +37,26 @@ namespace Graph.Tests
         [Fact]
         public void DisqualifiedEventArgs_Constructor_Throws_ArgumentException()
         {
+            var value = (SerializableValue)1;
             var name = String.Empty;
-            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name));
+            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name, value));
 
             name = " ";
-            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name));
+            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name, value));
 
             name = null;
-            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name));
+            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name, value));
+
+            name = "x";
+            Assert.Throws<ArgumentNullException>(() => new DisqualifiedEventArgs(name, null as SerializableValue));
         }
 
         [Fact]
         public void DisqualifiedEventArgs_Constructor_Sets_Name_and_Value()
         {
+            var value = (SerializableValue)1;
             var name = "x";
-            var args = new DisqualifiedEventArgs(name);
+            var args = new DisqualifiedEventArgs(name, value);
             Assert.Equal(name, args.Name);
         }
 
@@ -119,12 +125,12 @@ namespace Graph.Tests
 
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
-            Assert.Contains((name, (SerializableValue)value), collection);
+            Assert.Contains(KeyValuePair.Create(name, (SerializableValue)value), collection);
 
             collection.Disqualify(name);
             Assert.False(collection.TryGetValue(name, out var v2));
             Assert.Null(v2);
-            Assert.DoesNotContain((name, (SerializableValue)value), collection);
+            Assert.DoesNotContain(KeyValuePair.Create(name, (SerializableValue)value), collection);
         }
 
         [Fact]
@@ -196,14 +202,19 @@ namespace Graph.Tests
         [Fact]
         public void QualificationCollection_Disqualify_Raises_DisqualifiedEventArgs()
         {
+            var value = 1;
             var name = "x";
             var collection = QualificationCollection.Empty;
+            collection.Qualify(name, value);
+            
             var args = Assert.Raises<DisqualifiedEventArgs>(
                 handler => collection.Disqualified += handler,
                 handler => collection.Disqualified -= handler,
                 () => collection.Disqualify(name));
+            
             Assert.Equal(collection, args.Sender);
             Assert.Equal(name, args.Arguments.Name);
+            Assert.Equal(value, args.Arguments.Value.Value);
         }
 
         [Fact]

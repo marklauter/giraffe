@@ -1,18 +1,20 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
 namespace Graph.Qualifiers
 {
+    // todo: immutable collections were a mistake
+
     /// <inheritdoc/>
     [JsonArray]
     internal sealed class QualificationCollection
         : IQualifiable
-        , IEnumerable<(string Key, SerializableValue Value)>
+        , IEnumerable<KeyValuePair<string, SerializableValue>>
     {
         /// <inheritdoc/>
         public event EventHandler<QualifiedEventArgs> Qualified;
@@ -20,7 +22,7 @@ namespace Graph.Qualifiers
         /// <inheritdoc/>
         public event EventHandler<DisqualifiedEventArgs> Disqualified;
 
-        private ImmutableDictionary<string, SerializableValue> qualifications = ImmutableDictionary<string, SerializableValue>.Empty;
+        private readonly ConcurrentDictionary<string, SerializableValue> qualifications = new();
 
         public static QualificationCollection Empty => new();
 
@@ -28,15 +30,13 @@ namespace Graph.Qualifiers
 
         private QualificationCollection([DisallowNull, Pure] QualificationCollection other)
         {
-            this.qualifications = other.qualifications;
+            this.qualifications = new(other.qualifications);
         }
 
         [JsonConstructor]
-        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used for serialization.")]
-        private QualificationCollection([DisallowNull, Pure] IEnumerable<(string Key, SerializableValue Value)> qualifications)
+        private QualificationCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, SerializableValue>> qualifications)
         {
-            this.qualifications = qualifications
-                .ToImmutableDictionary(q => q.Key, q => q.Value);
+            this.qualifications = new(qualifications);
         }
 
         /// <inheritdoc/>
@@ -54,8 +54,11 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.Remove(name);
-            Disqualified?.Invoke(this, new DisqualifiedEventArgs(name));
+            if (this.qualifications.TryRemove(name, out var value))
+            {
+                Disqualified?.Invoke(this, new DisqualifiedEventArgs(name, value));
+            }
+
             return this;
         }
 
@@ -70,11 +73,11 @@ namespace Graph.Qualifiers
 
         /// <inheritdoc/>
         [Pure]
-        public IEnumerator<(string Key, SerializableValue Value)> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, SerializableValue>> GetEnumerator()
         {
             foreach (var kvp in this.qualifications)
             {
-                yield return (kvp.Key, kvp.Value);
+                yield return kvp;
             }
         }
 
@@ -93,7 +96,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -106,7 +109,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -119,7 +122,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -132,7 +135,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -145,7 +148,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -158,7 +161,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -171,7 +174,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -184,7 +187,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -197,7 +200,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -210,7 +213,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -223,7 +226,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -236,7 +239,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -249,7 +252,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -262,7 +265,7 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications = this.qualifications.SetItem(name, (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }

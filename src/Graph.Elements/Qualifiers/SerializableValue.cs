@@ -8,7 +8,7 @@ using System.Diagnostics.Contracts;
 namespace Graph.Qualifiers
 {
     [DebuggerDisplay("{Value},  {TypeCode}")]
-    internal sealed class SerializableValue
+    public sealed class SerializableValue
         : ICloneable
         , IEquatable<SerializableValue>
         , IEqualityComparer<SerializableValue>

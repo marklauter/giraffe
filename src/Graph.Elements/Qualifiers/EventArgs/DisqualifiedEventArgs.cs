@@ -5,7 +5,7 @@ namespace Graph.Qualifiers
     public sealed class DisqualifiedEventArgs
         : EventArgs
     {
-        public DisqualifiedEventArgs(string name)
+        public DisqualifiedEventArgs(string name, SerializableValue value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -13,8 +13,11 @@ namespace Graph.Qualifiers
             }
 
             this.Name = name;
+            this.Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public string Name { get; }
+
+        public SerializableValue Value { get; }
     }
 }
