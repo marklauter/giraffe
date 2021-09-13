@@ -14,8 +14,10 @@ namespace Documents.Collections
 
         int Count { get; }
 
+        bool IsEmpty { get; }
+
         Task AddAsync(Document<TMember> document);
-        IEnumerable<Task> AddAsync(IEnumerable<Document<TMember>> documents);
+        Task AddAsync(IEnumerable<Document<TMember>> documents);
 
         Task ClearAsync();
 

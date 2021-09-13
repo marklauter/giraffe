@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Documents.Collections
@@ -27,6 +26,10 @@ namespace Documents.Collections
         /// <inheritdoc/>
         [Pure]
         public abstract int Count { get; }
+
+        [Pure]
+        public bool IsEmpty => this.Count == 0;
+
 
         /// <inheritdoc/>
         public async Task AddAsync([Pure] Document<TMember> document)
