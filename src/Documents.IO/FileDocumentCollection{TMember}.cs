@@ -1,4 +1,6 @@
 ﻿using Documents.Collections;
+using Documents.IO.Encoding;
+using Documents.IO.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,20 +15,16 @@ namespace Documents.IO
         private static readonly string TypeName = typeof(TMember).Name;
 
         private readonly string path;
-        private readonly TimeSpan fileLockTimeout;
-        private readonly IDocumentSerializer<TMember> serializer;
+
+        //public FileDocumentCollection(
+        //    string path,
+        //    TimeSpan fileLockTimeout)
+        //    : this(path, fileLockTimeout, null)
+        //{
+        //}
 
         public FileDocumentCollection(
-            string path,
-            TimeSpan fileLockTimeout)
-            : this(path, fileLockTimeout, null)
-        {
-        }
-
-        public FileDocumentCollection(
-            string path,
-            TimeSpan fileLockTimeout,
-            IDocumentSerializer<TMember> serializer)
+            string path            )
         {
             if (String.IsNullOrWhiteSpace(path))
             {
@@ -34,8 +32,6 @@ namespace Documents.IO
             }
 
             this.path = path;
-            this.fileLockTimeout = fileLockTimeout;
-            this.serializer = serializer ?? new JsonDocumentSerializer<TMember>();
         }
 
         public override int Count => Directory.EnumerateFiles(this.path).Count();
@@ -83,7 +79,7 @@ namespace Documents.IO
 
         private void DeleteFile(string fileName)
         {
-            ThreadSafeFile.Delete(fileName, this.fileLockTimeout);
+            ThreadSafeFileStatic.Delete(fileName, this.fileLockTimeout);
         }
 
         private Document<TMember> ReadDocumentWithKey(string key)
@@ -93,7 +89,7 @@ namespace Documents.IO
 
         private Document<TMember> ReadFile(string fileName)
         {
-            using var stream = ThreadSafeFile.Open(
+            using var stream = ThreadSafeFileStatic.Open(
                 fileName,
                 FileMode.Open,
                 FileAccess.Read,
@@ -105,7 +101,7 @@ namespace Documents.IO
 
         private void WriteFile(Document<TMember> document)
         {
-            using var stream = ThreadSafeFile.Open(
+            using var stream = ThreadSafeFileStatic.Open(
                 this.GetFileName(document.Key),
                 FileMode.OpenOrCreate,
                 FileAccess.Write,
