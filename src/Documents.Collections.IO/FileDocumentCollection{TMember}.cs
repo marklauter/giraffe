@@ -1,15 +1,12 @@
-﻿using Documents.Collections;
-using Documents.IO.Encoding;
+﻿using Documents.IO.Encoding;
 using Documents.IO.Files;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace Documents.IO
+namespace Documents.Collections.IO
 {
     public sealed class FileDocumentCollection<TMember>
         : DocumentCollection<TMember>

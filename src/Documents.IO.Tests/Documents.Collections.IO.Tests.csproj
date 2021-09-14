@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Documents.IO\Documents.Collections.IO.csproj" />
+    <ProjectReference Include="..\Documents.IO\Documents.IO.csproj" />
   </ItemGroup>
 
 </Project>

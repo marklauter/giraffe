@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Documents.Cache
 {
-
-    public interface IDocumentCache<T>
-        where T : class
+    public interface IDocumentCache<TMember>
+        : IDocumentCacheEventSource<TMember>
+        where TMember : class
     {
-        event EventHandler<CacheAccessedEventArgs> CacheAccessed;
-        event EventHandler<CacheItemEvictedEventArgs<T>> CacheItemEvicted;
-
         void Clear();
 
         void Evict(string key);
-        void Evict(Document<T> document);
+        void Evict(Document<TMember> document);
 
-        Document<T> Read(string key, Func<string, Document<T>> itemFactory);
+        void InsertOrUpdate(Document<TMember> document);
+        Task InsertOrUpdateAsync(IEnumerable<Document<TMember>> documents);
 
-        IEnumerable<Document<T>> Read(IEnumerable<string> keys, Func<string, Document<T>> itemFactory);
+        Document<TMember> Read(string key, Func<string, Document<TMember>> itemFactory);
+        IEnumerable<Document<TMember>> Read(IEnumerable<string> keys, Func<string, Document<TMember>> itemFactory);
+
+        Task<Document<TMember>> ReadAsync(string key, Func<string, Task<Document<TMember>>> asyncItemFactory);
+        Task<IEnumerable<Document<TMember>>> ReadAsync(IEnumerable<string> keys, Func<string, Task<Document<TMember>>> asyncItemFactory);
     }
 }
