@@ -21,6 +21,19 @@ namespace Collections.Concurrent
             }
         }
 
+        public void Read<TArg1, TArg2>(TArg1 arg1, TArg2 arg2, Action<TArg1, TArg2> action)
+        {
+            this.gate.EnterReadLock();
+            try
+            {
+                action(arg1, arg2);
+            }
+            finally
+            {
+                this.gate.ExitReadLock();
+            }
+        }
+
         public T Read<T>(Func<T> func)
         {
             this.gate.EnterReadLock();

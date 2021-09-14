@@ -63,7 +63,7 @@ namespace Collections.Concurrent
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            this.gate.Write(array, arrayIndex, this.hashset.CopyTo);
+            this.gate.Read(array, arrayIndex, this.hashset.CopyTo);
         }
 
         public void ExceptWith(IEnumerable<T> other)
