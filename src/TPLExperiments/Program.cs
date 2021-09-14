@@ -5,6 +5,8 @@ using System.Threading.Tasks.Dataflow;
 
 namespace TPLExperiments
 {
+
+    // https://michaelscodingspot.com/c-job-queues-part-3-with-tpl-dataflow-and-failure-handling/
     public sealed class TPLDataflowQueue
     {
         private readonly ActionBlock<string> jobs;
