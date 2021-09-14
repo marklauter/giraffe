@@ -144,5 +144,4 @@ namespace Documents.Cache.Tests
             Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.ReadType);
         }
     }
-
 }
