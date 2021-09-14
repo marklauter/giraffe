@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks.Dataflow;
 using Xunit;
 
 namespace Collections.Concurrent.Tests
@@ -9,6 +8,7 @@ namespace Collections.Concurrent.Tests
         [Fact]
         public void WriteSomeTests()
         {
+            Assert.True(false);
             throw new Exception("write some tests!");
         }
     }

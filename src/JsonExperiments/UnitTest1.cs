@@ -121,8 +121,9 @@ namespace JsonExperiments
         internal sealed class MetaModel
         {
             [JsonProperty("XXXX")]
-            [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "used for serialization")]
-            private readonly string x;
+            private readonly string x = "x";
+
+            public string X => this.x;
 
             [Required]
             [JsonProperty("hello")]

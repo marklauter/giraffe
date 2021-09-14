@@ -8,7 +8,8 @@ namespace Documents.IO.Tests
         [Fact]
         public void Test1()
         {
-
+            Assert.True(false);
+            throw new NotImplementedException("write some tests!");
         }
     }
 }

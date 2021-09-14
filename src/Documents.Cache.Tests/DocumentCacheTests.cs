@@ -56,8 +56,8 @@ namespace Documents.Cache.Tests
             using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
 
             var e = Assert.Raises<CacheAccessedEventArgs>(
-                handler => cache.CacheAccessed += handler, 
-                handler => cache.CacheAccessed -= handler, 
+                handler => cache.CacheAccessed += handler,
+                handler => cache.CacheAccessed -= handler,
                 () => hash.Add(cache.Read(key, this.DocumentFactory)));
 
             Assert.Equal(cache, e.Sender);
@@ -65,8 +65,8 @@ namespace Documents.Cache.Tests
             Assert.Equal(CacheAccessType.Miss, e.Arguments.ReadType);
 
             e = Assert.Raises<CacheAccessedEventArgs>(
-                handler => cache.CacheAccessed += handler, 
-                handler => cache.CacheAccessed -= handler, 
+                handler => cache.CacheAccessed += handler,
+                handler => cache.CacheAccessed -= handler,
                 () => hash.Add(cache.Read(key, this.DocumentFactory)));
 
             Assert.Equal(cache, e.Sender);

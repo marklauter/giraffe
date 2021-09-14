@@ -37,7 +37,6 @@ namespace Graph.Tests
         [Fact]
         public void DisqualifiedEventArgs_Constructor_Throws_ArgumentException()
         {
-            var value = (SerializableValue)1;
             var name = String.Empty;
             Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name));
 
@@ -88,9 +87,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = "y";
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -117,11 +122,17 @@ namespace Graph.Tests
 
             var name = "x";
             var value = "y";
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
 
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
             Assert.Contains(KeyValuePair.Create(name, (SerializableValue)value), collection);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             collection.Disqualify(name);
             Assert.False(collection.TryGetValue(name, out var v2));
@@ -151,9 +162,16 @@ namespace Graph.Tests
 
             var name = "x";
             var value = "y";
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
 
             Assert.True(collection.HasQuality(name));
+
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
         }
 
         [Fact]
@@ -202,12 +220,12 @@ namespace Graph.Tests
             var name = "x";
             var collection = QualificationCollection.Empty;
             collection.Qualify(name, value);
-            
+
             var args = Assert.Raises<DisqualifiedEventArgs>(
                 handler => collection.Disqualified += handler,
                 handler => collection.Disqualified -= handler,
                 () => collection.Disqualify(name));
-            
+
             Assert.Equal(collection, args.Sender);
             Assert.Equal(name, args.Arguments.Name);
         }
@@ -267,9 +285,16 @@ namespace Graph.Tests
 
             var name = "x";
             var value = false;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
+            
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
         }
 
         [Fact]
@@ -279,11 +304,19 @@ namespace Graph.Tests
 
             var name = "x";
             var value = true;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
+
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
+
         }
 
         [Fact]
@@ -293,9 +326,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = (sbyte)-1;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -307,9 +346,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = (byte)1;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -321,9 +366,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = (short)1;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -335,9 +386,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = (ushort)1;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -349,9 +406,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = 1;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -363,9 +426,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = 1u;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -377,9 +446,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = 1L;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -391,9 +466,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = 1UL;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -405,9 +486,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = 1.1f;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -419,9 +506,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = 1.1d;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -433,9 +526,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = (decimal)1.1;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }
@@ -447,9 +546,15 @@ namespace Graph.Tests
 
             var name = "x";
             var value = DateTime.Now;
-            var e = Assert.Raises<QualifiedEventArgs>(h => collection.Qualified += h, h => collection.Qualified -= h, () => collection.Qualify(name, value));
+            var e = Assert.Raises<QualifiedEventArgs>(
+                h => collection.Qualified += h, 
+                h => collection.Qualified -= h, 
+                () => collection.Qualify(name, value));
             Assert.True(collection.TryGetValue(name, out var v));
             Assert.Equal(value, v);
+            Assert.Equal(collection, e.Sender);
+            Assert.Equal(name, e.Arguments.Name);
+            Assert.Equal(value, e.Arguments.Value);
 
             Assert.Throws<ArgumentException>(() => collection.Qualify(null, value));
         }

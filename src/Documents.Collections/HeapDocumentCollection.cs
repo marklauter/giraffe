@@ -36,8 +36,8 @@ namespace Documents.Collections
 
         protected override Task RemoveDocumentAsync(string key)
         {
-            return this.documents.TryRemove(key, out var _) 
-                ? Task.CompletedTask 
+            return this.documents.TryRemove(key, out var _)
+                ? Task.CompletedTask
                 : throw new KeyNotFoundException(key);
         }
 
