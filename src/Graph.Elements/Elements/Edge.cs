@@ -90,6 +90,12 @@ namespace Graph.Elements
             return new Edge(this);
         }
 
+        [Pure]
+        public bool IsIncident(Guid nodeId)
+        {
+            return nodeId == this.SourceId || nodeId == this.TargetId;
+        }
+
         public void Decouple(Node node1, Node node2)
         {
             if (node1 is null)

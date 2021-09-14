@@ -53,9 +53,9 @@ namespace Graph.Qualifiers
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            if (this.qualifications.TryRemove(name, out var value))
+            if (this.qualifications.TryRemove(name, out var _))
             {
-                Disqualified?.Invoke(this, new DisqualifiedEventArgs(name, value));
+                Disqualified?.Invoke(this, new DisqualifiedEventArgs(name));
             }
 
             return this;

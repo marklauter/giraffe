@@ -486,8 +486,8 @@ namespace Documents.IO.Tests
             var document1 = await collection.ReadAsync(documents[0].Key);
             var document2 = await collection.ReadAsync(documents[1].Key);
 
-            document1.Member.Value = "x";
-            document2.Member.Value = "y";
+            ((Member)document1).Value = "x";
+            ((Member)document2).Value = "y";
 
             await collection.UpdateAsync(new Document<Member>[] { document1, document2 });
 
@@ -497,8 +497,8 @@ namespace Documents.IO.Tests
             Assert.Equal(document1, document3);
             Assert.Equal(document2, document4);
 
-            Assert.Equal("x", document3.Member.Value);
-            Assert.Equal("y", document4.Member.Value);
+            Assert.Equal("x", ((Member)document3).Value);
+            Assert.Equal("y", ((Member)document4).Value);
         }
 #pragma warning restore IDE1006 // Naming Styles
     }

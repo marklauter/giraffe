@@ -39,24 +39,20 @@ namespace Graph.Tests
         {
             var value = (SerializableValue)1;
             var name = String.Empty;
-            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name, value));
+            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name));
 
             name = " ";
-            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name, value));
+            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name));
 
             name = null;
-            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name, value));
-
-            name = "x";
-            Assert.Throws<ArgumentNullException>(() => new DisqualifiedEventArgs(name, null as SerializableValue));
+            Assert.Throws<ArgumentException>(() => new DisqualifiedEventArgs(name));
         }
 
         [Fact]
         public void DisqualifiedEventArgs_Constructor_Sets_Name_and_Value()
         {
-            var value = (SerializableValue)1;
             var name = "x";
-            var args = new DisqualifiedEventArgs(name, value);
+            var args = new DisqualifiedEventArgs(name);
             Assert.Equal(name, args.Name);
         }
 
@@ -214,7 +210,6 @@ namespace Graph.Tests
             
             Assert.Equal(collection, args.Sender);
             Assert.Equal(name, args.Arguments.Name);
-            Assert.Equal(value, args.Arguments.Value.Value);
         }
 
         [Fact]

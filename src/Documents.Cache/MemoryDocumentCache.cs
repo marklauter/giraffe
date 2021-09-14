@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Documents.Cache
 {
-    public sealed class DocumentCache<T>
+    public sealed class MemoryDocumentCache<T>
         : IDocumentCache<T>
         , IDisposable
         where T : class
@@ -14,7 +14,7 @@ namespace Documents.Cache
         private IMemoryCache cache;
         private bool disposedValue;
 
-        public DocumentCache(MemoryCacheEntryOptions cacheEntryOptions)
+        public MemoryDocumentCache(MemoryCacheEntryOptions cacheEntryOptions)
         {
             this.cache = new MemoryCache(new MemoryCacheOptions());
             this.cacheEntryOptions = cacheEntryOptions ?? throw new ArgumentNullException(nameof(cacheEntryOptions));

@@ -17,7 +17,7 @@ namespace Documents.Cache.Tests
         public void CacheExperiment_Proves_Single_Instance_of_Document()
         {
             var key = "1";
-            var cache = new DocumentCache<Value>(new MemoryCacheEntryOptions());
+            var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions());
             var document = cache.Read(key, this.DocumentFactory);
             var value = (Value)document;
             Assert.Equal("one", value.Text);
@@ -53,7 +53,7 @@ namespace Documents.Cache.Tests
         {
             var key = "1";
             var hash = new HashSet<Document<Value>>();
-            using var cache = new DocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
+            using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
 
             var e = Assert.Raises<CacheAccessedEventArgs>(handler => cache.CacheAccessed += handler, handler => cache.CacheAccessed -= handler, () =>
             {
@@ -80,7 +80,7 @@ namespace Documents.Cache.Tests
         public void Cache_Evict_Succeeds()
         {
             var key = "1";
-            using var cache = new DocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
+            using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
             Document<Value> v = null;
 
             var cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
@@ -114,7 +114,7 @@ namespace Documents.Cache.Tests
         public void Cache_Clear_Succeeds()
         {
             var key = "1";
-            using var cache = new DocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
+            using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
             Document<Value> v = null;
 
             var cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(

@@ -339,7 +339,6 @@ namespace Graph.Tests
                 () => node.Disqualify(name));
             Assert.Equal(node, args.Sender);
             Assert.Equal(name, args.Arguments.Name);
-            Assert.Equal(value, args.Arguments.Value.Value);
         }
 
         [Fact]

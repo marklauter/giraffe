@@ -16,8 +16,8 @@ namespace TPLExperiments
         {
             var options = new ExecutionDataflowBlockOptions
             {
-                EnsureOrdered = true,
-                MaxDegreeOfParallelism = 500,
+                EnsureOrdered = false,
+                MaxDegreeOfParallelism = 10,
                 SingleProducerConstrained = false,
                 CancellationToken = this.tokenSource.Token,
             };
@@ -38,18 +38,19 @@ namespace TPLExperiments
 
     internal class Program
     {
-        private static async Task Main(string[] args)
+        private static void Main(string[] args)
         {
             var queue = new TPLDataflowQueue();
 
-            var tasks = new Task[100];
+            //var tasks = new Task[100];
             for (var i = 0; i < 100; ++i)
             {
                 var job = i.ToString();
-                tasks[i] = Task.Run(() => queue.Enqueue(job));
+                //tasks[i] = Task.Run(() => queue.Enqueue(job));
+                queue.Enqueue(job);
             }
 
-            await Task.WhenAll(tasks);
+            //await Task.WhenAll(tasks);
 
             var wait = new SpinWait();
             while (true)
