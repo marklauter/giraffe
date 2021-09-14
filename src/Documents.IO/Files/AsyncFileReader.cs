@@ -24,31 +24,34 @@ namespace Documents.IO.Files
 
         public async Task<string> ReadAsync(string path)
         {
-            var wait = new SpinWait();
-            var start = DateTime.UtcNow;
-            var lastIoEx = default(IOException);
-            do
+            return await Task.Run(async () =>
             {
-                try
+                var wait = new SpinWait();
+                var start = DateTime.UtcNow;
+                var lastIoEx = default(IOException);
+                do
                 {
-                    using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    using var reader = new StreamReader(stream, this.encoding);
-                    return await reader.ReadToEndAsync();
-                }
-                catch (IOException ex)
-                {
-                    if (!IsFileLocked(ex))
+                    try
                     {
-                        throw;
+                        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                        using var reader = new StreamReader(stream, this.encoding);
+                        return await reader.ReadToEndAsync();
                     }
+                    catch (IOException ex)
+                    {
+                        if (!IsFileLocked(ex))
+                        {
+                            throw;
+                        }
 
-                    lastIoEx = ex;
-                    wait.SpinOnce();
+                        lastIoEx = ex;
+                        wait.SpinOnce();
+                    }
                 }
-            }
-            while (DateTime.UtcNow - start < this.Timeout);
+                while (DateTime.UtcNow - start < this.Timeout);
 
-            throw new TimeoutException(nameof(ReadAsync), lastIoEx);
+                throw new TimeoutException(nameof(ReadAsync), lastIoEx);
+            });
         }
     }
 }

@@ -16,30 +16,33 @@ namespace Documents.IO.Files
 
         public async Task DeleteAsync(string path)
         {
-            var wait = new SpinWait();
-            var start = DateTime.UtcNow;
-            var lastIoEx = default(IOException);
-            do
+            await Task.Run(async () =>
             {
-                try
+                var wait = new SpinWait();
+                var start = DateTime.UtcNow;
+                var lastIoEx = default(IOException);
+                do
                 {
-                    await Task.Run(() => File.Delete(path));
-                    return;
-                }
-                catch (IOException ex)
-                {
-                    if (!IsFileLocked(ex))
+                    try
                     {
-                        throw;
+                        await Task.Run(() => File.Delete(path));
+                        return;
                     }
+                    catch (IOException ex)
+                    {
+                        if (!IsFileLocked(ex))
+                        {
+                            throw;
+                        }
 
-                    lastIoEx = ex;
-                    wait.SpinOnce();
+                        lastIoEx = ex;
+                        wait.SpinOnce();
+                    }
                 }
-            }
-            while (DateTime.UtcNow - start < this.Timeout);
+                while (DateTime.UtcNow - start < this.Timeout);
 
-            throw new TimeoutException(nameof(DeleteAsync), lastIoEx);
+                throw new TimeoutException(nameof(DeleteAsync), lastIoEx);
+            });
         }
     }
 }
