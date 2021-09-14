@@ -23,10 +23,7 @@ namespace TPLExperiments
             };
 
 
-            this.jobs = new ActionBlock<string>((job) =>
-            {
-                Console.WriteLine(job);
-            },
+            this.jobs = new ActionBlock<string>((job) => Console.WriteLine(job),
             options);
         }
 

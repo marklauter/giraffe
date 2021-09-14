@@ -1,5 +1,5 @@
 using Documents.Collections;
-using Documents.IO.Encoding;
+using Documents.Collections.IO;
 using Documents.IO.Files;
 using System;
 using System.Collections.Generic;
@@ -427,7 +427,7 @@ namespace Documents.IO.Tests
 
             var member = new Member();
             var document1 = (Document<Member>)member;
-            await collection .AddAsync(document1);
+            await collection.AddAsync(document1);
 
             var document2 = (Document<Member>)member;
             member.Value = "x";
@@ -481,7 +481,7 @@ namespace Documents.IO.Tests
                 (Document<Member>)new Member(),
             };
 
-            await collection .AddAsync(documents);
+            await collection.AddAsync(documents);
 
             var document1 = await collection.ReadAsync(documents[0].Key);
             var document2 = await collection.ReadAsync(documents[1].Key);

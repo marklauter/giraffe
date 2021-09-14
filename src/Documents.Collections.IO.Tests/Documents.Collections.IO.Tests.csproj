@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Documents.Collections.IO\Documents.Collections.IO.csproj" />
     <ProjectReference Include="..\Documents.IO\Documents.IO.csproj" />
   </ItemGroup>
 

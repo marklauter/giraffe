@@ -316,13 +316,10 @@ namespace Graph.Tests
             var name = "x";
             var node = Node.New;
 
-            Assert.Throws<Xunit.Sdk.RaisesException>(() =>
-            {
-                _ = Assert.Raises<DisqualifiedEventArgs>(
+            Assert.Throws<Xunit.Sdk.RaisesException>(() => _ = Assert.Raises<DisqualifiedEventArgs>(
                     handler => node.Disqualified += handler,
                     handler => node.Disqualified -= handler,
-                    () => node.Disqualify(name));
-            });
+                    () => node.Disqualify(name)));
         }
 
         [Fact]

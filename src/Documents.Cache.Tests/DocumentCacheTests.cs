@@ -55,19 +55,19 @@ namespace Documents.Cache.Tests
             var hash = new HashSet<Document<Value>>();
             using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
 
-            var e = Assert.Raises<CacheAccessedEventArgs>(handler => cache.CacheAccessed += handler, handler => cache.CacheAccessed -= handler, () =>
-            {
-                hash.Add(cache.Read(key, this.DocumentFactory));
-            });
+            var e = Assert.Raises<CacheAccessedEventArgs>(
+                handler => cache.CacheAccessed += handler, 
+                handler => cache.CacheAccessed -= handler, 
+                () => hash.Add(cache.Read(key, this.DocumentFactory)));
 
             Assert.Equal(cache, e.Sender);
             Assert.Equal(key, e.Arguments.Key);
             Assert.Equal(CacheAccessType.Miss, e.Arguments.ReadType);
 
-            e = Assert.Raises<CacheAccessedEventArgs>(handler => cache.CacheAccessed += handler, handler => cache.CacheAccessed -= handler, () =>
-            {
-                hash.Add(cache.Read(key, this.DocumentFactory));
-            });
+            e = Assert.Raises<CacheAccessedEventArgs>(
+                handler => cache.CacheAccessed += handler, 
+                handler => cache.CacheAccessed -= handler, 
+                () => hash.Add(cache.Read(key, this.DocumentFactory)));
 
             Assert.Equal(cache, e.Sender);
             Assert.Equal(key, e.Arguments.Key);
@@ -86,10 +86,7 @@ namespace Documents.Cache.Tests
             var cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,
                 handler => cache.CacheAccessed -= handler,
-                () =>
-                {
-                    v = cache.Read(key, this.DocumentFactory);
-                });
+                () => v = cache.Read(key, this.DocumentFactory));
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);
@@ -100,10 +97,7 @@ namespace Documents.Cache.Tests
             cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,
                 handler => cache.CacheAccessed -= handler,
-                () =>
-                {
-                    v = cache.Read(key, this.DocumentFactory);
-                });
+                () => v = cache.Read(key, this.DocumentFactory));
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);
@@ -120,10 +114,7 @@ namespace Documents.Cache.Tests
             var cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,
                 handler => cache.CacheAccessed -= handler,
-                () =>
-                {
-                    v = cache.Read(key, this.DocumentFactory);
-                });
+                () => v = cache.Read(key, this.DocumentFactory));
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);
@@ -134,10 +125,7 @@ namespace Documents.Cache.Tests
             cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,
                 handler => cache.CacheAccessed -= handler,
-                () =>
-                {
-                    v = cache.Read(key, this.DocumentFactory);
-                });
+                () => v = cache.Read(key, this.DocumentFactory));
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);

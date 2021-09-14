@@ -4,26 +4,25 @@ using System.Threading.Tasks;
 
 namespace Documents.IO.Encoding
 {
-
-    internal sealed class JsonDocumentDecoder<TMember>
-        : IDocumentDecoder<TMember>
+    public sealed class JsonDocumentEncoder<TMember>
+        : IDocumentEncoder<TMember>
         where TMember : class
     {
         private readonly JsonSerializerSettings settings;
 
-        public JsonDocumentDecoder()
+        public JsonDocumentEncoder()
             : this(new JsonSerializerSettings())
         {
         }
 
-        public JsonDocumentDecoder(JsonSerializerSettings settings)
+        public JsonDocumentEncoder(JsonSerializerSettings settings)
         {
             this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
-        public Task<Document<TMember>> DeserializeAsync(string json)
+        public Task<string> SerializeAsync(Document<TMember> document)
         {
-            return Task.Run(() => JsonConvert.DeserializeObject<Document<TMember>>(json, this.settings));
+            return Task.Run(() => JsonConvert.SerializeObject(document, this.settings));
         }
     }
 }
