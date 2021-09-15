@@ -25,7 +25,7 @@ namespace Collections.Concurrent
             this.hashset = new(other);
         }
 
-        public ConcurrentHashSet(IEnumerable<T> items)
+        private ConcurrentHashSet(IEnumerable<T> items)
         {
             this.hashset = new(items);
         }

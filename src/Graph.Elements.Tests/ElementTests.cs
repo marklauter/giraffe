@@ -1,12 +1,11 @@
 ﻿using Graph.Classifiers;
-using Graph.Elements;
 using Graph.Qualifiers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Graph.Tests
+namespace Graph.Elements.Tests
 {
     public sealed class ElementTests
     {

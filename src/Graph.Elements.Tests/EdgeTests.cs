@@ -1,8 +1,7 @@
-﻿using Graph.Elements;
-using System;
+﻿using System;
 using Xunit;
 
-namespace Graph.Tests
+namespace Graph.Elements.Tests
 {
     public sealed class EdgeTests
     {

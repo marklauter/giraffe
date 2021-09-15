@@ -1,11 +1,11 @@
-﻿using Documents.Collections;
+﻿using Documents.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Documents.Tests
+namespace Documents.Collections.Tests
 {
     public sealed class HeapDocumentCollectionTests
     {

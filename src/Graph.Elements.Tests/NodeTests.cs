@@ -1,9 +1,8 @@
-﻿using Graph.Elements;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using Xunit;
 
-namespace Graph.Tests
+namespace Graph.Elements.Tests
 {
     public sealed class NodeSerializationTests
     {

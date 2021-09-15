@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Graph.Tests
+namespace Graph.Elements.Tests
 {
     public sealed class ClassifiersTests
     {

@@ -1,5 +1,3 @@
-using Documents.Collections;
-using Documents.Collections.IO;
 using Documents.IO.Encoding;
 using Documents.IO.Files;
 using System;
@@ -9,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Documents.IO.Tests
+namespace Documents.Collections.IO.Tests
 {
     public sealed class FileTestsFixture
         : IDisposable
