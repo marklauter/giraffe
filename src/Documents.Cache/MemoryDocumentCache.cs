@@ -50,6 +50,11 @@ namespace Documents.Cache
 
         public void InsertOrUpdate(Document<TMember> document)
         {
+            if (document is null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
             this.cache.Set(document.Key, document, this.cacheEntryOptions);
         }
 
@@ -90,11 +95,14 @@ namespace Documents.Cache
             return document;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "It's easy to read.")]
         public IEnumerable<Document<TMember>> Read(IEnumerable<string> keys, Func<string, Document<TMember>> itemFactory)
         {
-            return keys is null
-                ? throw new ArgumentNullException(nameof(keys))
-                : keys.Select(key => this.Read(key, itemFactory));
+            return itemFactory is null
+                ? throw new ArgumentNullException(nameof(itemFactory))
+                : keys is null
+                    ? throw new ArgumentNullException(nameof(keys))
+                    : keys.Select(key => this.Read(key, itemFactory));
         }
 
         public async Task<Document<TMember>> ReadAsync(string key, Func<string, Task<Document<TMember>>> asyncItemFactory)
