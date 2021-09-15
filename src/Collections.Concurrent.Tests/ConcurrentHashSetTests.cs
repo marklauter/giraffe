@@ -151,7 +151,6 @@ namespace Collections.Concurrent.Tests
         }
 
         [Fact]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Assertions", "xUnit2017:Do not use Contains() to check if a value exists in a collection", Justification = "Testing the custom implementation of Contains.")]
         public void ConcurrentHashSet_Set_Equals_Returns_True()
         {
             var value1 = "v1";
@@ -165,7 +164,6 @@ namespace Collections.Concurrent.Tests
         }
 
         [Fact]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Assertions", "xUnit2017:Do not use Contains() to check if a value exists in a collection", Justification = "Testing the custom implementation of Contains.")]
         public void ConcurrentHashSet_Except_Returns_Set_Difference()
         {
             var value1 = "v1";
@@ -177,7 +175,132 @@ namespace Collections.Concurrent.Tests
             Assert.True(set.Add(value2));
             var except = set.Except(new string[] { value2, value3 });
 
-            Assert.Contains(value3, except);
+            Assert.Contains(value1, except);
+            Assert.DoesNotContain(value2, except);
+            Assert.DoesNotContain(value3, except);
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_SymmetricExcept_Returns_Set_Difference()
+        {
+            var value1 = "v1";
+            var value2 = "v2";
+            var value3 = "v3";
+            var set = ConcurrentHashSet<string>.Empty;
+
+            Assert.True(set.Add(value1));
+            Assert.True(set.Add(value2));
+            set.SymmetricExceptWith(new string[] { value2, value3 });
+
+            Assert.Contains(value1, set);
+            Assert.DoesNotContain(value2, set);
+            Assert.Contains(value3, set);
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_Enumerator_Enumerates()
+        {
+            var value1 = "v1";
+            var value2 = "v2";
+            var set = ConcurrentHashSet<string>.Empty;
+
+            Assert.True(set.Add(value1));
+            Assert.True(set.Add(value2));
+
+            var i = 0;
+            foreach (var item in set)
+            {
+                ++i;
+            }
+
+            Assert.Equal(2, i);
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_As_IEnumerable_Enumerator_Enumerates()
+        {
+            var value1 = "v1";
+            var value2 = "v2";
+            var set = ConcurrentHashSet<string>.Empty;
+
+            Assert.True(set.Add(value1));
+            Assert.True(set.Add(value2));
+
+            var ienum = (set as IEnumerable<string>);
+            var e = ienum.GetEnumerator();
+            Assert.Null(e.Current);
+            Assert.True(e.MoveNext());
+            Assert.Equal(value1, e.Current);
+            Assert.True(e.MoveNext());
+            Assert.Equal(value2, e.Current);
+            Assert.False(e.MoveNext());
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_IsSubsetOf()
+        {
+            var value1 = "v1";
+            var value2 = "v2";
+            var value3 = "v3";
+            var set = ConcurrentHashSet<string>.Empty;
+
+            Assert.True(set.Add(value1));
+            Assert.True(set.Add(value2));
+            Assert.True(set.IsSubsetOf(new string[] { value1, value2, value3 }));
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_IsSupersetOf()
+        {
+            var value1 = "v1";
+            var value2 = "v2";
+            var value3 = "v3";
+            var set = ConcurrentHashSet<string>.Empty;
+
+            Assert.True(set.Add(value1));
+            Assert.True(set.Add(value2));
+            Assert.True(set.Add(value3));
+            Assert.True(set.IsSupersetOf(new string[] { value2 }));
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_IsProperSubsetOf()
+        {
+            var value1 = "v1";
+            var value2 = "v2";
+            var value3 = "v3";
+            var set = ConcurrentHashSet<string>.Empty;
+
+            Assert.True(set.Add(value1));
+            Assert.True(set.Add(value2));
+            Assert.True(set.IsProperSubsetOf(new string[] { value1, value2, value3 }));
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_IsProperSupersetOf()
+        {
+            var value1 = "v1";
+            var value2 = "v2";
+            var value3 = "v3";
+            var set = ConcurrentHashSet<string>.Empty;
+
+            Assert.True(set.Add(value1));
+            Assert.True(set.Add(value2));
+            Assert.True(set.Add(value3));
+            Assert.True(set.IsProperSupersetOf(new string[] { value2 }));
+        }
+
+        [Fact]
+        public void ConcurrentHashSet_Overlaps()
+        {
+            var value1 = "v1";
+            var value2 = "v2";
+            var value3 = "v3";
+            var set = ConcurrentHashSet<string>.Empty;
+
+            Assert.True(set.Add(value1));
+            Assert.True(set.Add(value2));
+            Assert.True(set.Overlaps(new string[] { value2, value3 }));
         }
     }
 }

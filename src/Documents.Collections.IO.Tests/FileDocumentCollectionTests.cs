@@ -1,5 +1,6 @@
 using Documents.IO.Encoding;
 using Documents.IO.Files;
+using Documents.IO.Tests;
 using System;
 using System.Collections.Generic;
 using System.IO;
