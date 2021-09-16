@@ -8,35 +8,15 @@ namespace Graph.Elements
 {
     public interface IElement<TId>
         : IIdentifiable<TId>
+        , IClassifierEventSource
+        , IQualifierEventSource
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        /// <summary>
-        /// Raised when item is assigned to a classification.
-        /// <see cref="ClassifiedEventArgs"/>
-        /// </summary>
-        /// <remarks>
-        /// <seealso cref="Declassified"/>
-        /// </remarks>
-        event EventHandler<ClassifiedEventArgs> Classified;
-
-        /// <summary>
-        /// Raised when item is removed from a classification.
-        /// <see cref="DeclassifiedEventArgs"/>
-        /// </summary>
-        /// <remarks>
-        /// <seealso cref="Classified"/>
-        /// </remarks>
-        event EventHandler<DeclassifiedEventArgs> Declassified;
-
-        event EventHandler<QualifiedEventArgs> Qualified;
-
-        event EventHandler<DisqualifiedEventArgs> Disqualified;
-
         /// <summary>
         /// Classifies this instance.
         /// </summary>
         /// <param name="label"></param>
-        /// <returns><see cref="IClassifiable"/></returns>
+        /// <returns><see cref="IClassifier"/></returns>
         /// <remarks>
         /// Raises event <see cref="Classified"/>
         /// <seealso cref="Declassify"/>
@@ -47,7 +27,7 @@ namespace Graph.Elements
         /// Declassifies this instance.
         /// </summary>
         /// <param name="label"></param>
-        /// <returns><see cref="IClassifiable"/></returns>
+        /// <returns><see cref="IClassifier"/></returns>
         /// <remarks>
         /// Raises event <see cref="Delassified"/>
         /// <see cref="DeclassifiedEventArgs"/>

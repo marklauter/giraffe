@@ -11,7 +11,7 @@ namespace Graph.Classifiers
     /// <inheritdoc/>
     [JsonArray]
     internal sealed class ClassificationCollection
-        : IClassifiable
+        : IClassifier
         , IEnumerable<string>
     {
         /// <inheritdoc/>
@@ -42,7 +42,7 @@ namespace Graph.Classifiers
         }
 
         /// <inheritdoc/>
-        public IClassifiable Classify(string label)
+        public IClassifier Classify(string label)
         {
             if (String.IsNullOrWhiteSpace(label))
             {
@@ -63,7 +63,7 @@ namespace Graph.Classifiers
         }
 
         /// <inheritdoc/>
-        public IClassifiable Declassify(string label)
+        public IClassifier Declassify(string label)
         {
             if (String.IsNullOrWhiteSpace(label))
             {

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Documents.Collections
 {
     public interface IDocumentCollection<TMember>
+        : IDocumentCollectionEventSource<TMember>
         where TMember : class
     {
-        event EventHandler<DocumentAddedEventArgs<TMember>> DocumentAdded;
-        event EventHandler<DocumentRemovedEventArgs<TMember>> DocumentRemoved;
-        event EventHandler<DocumentUpdatedEventArgs<TMember>> DocumentUpdated;
-        event EventHandler<EventArgs> Cleared;
-
         int Count { get; }
 
         bool IsEmpty { get; }

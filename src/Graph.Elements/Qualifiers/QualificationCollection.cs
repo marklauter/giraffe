@@ -11,7 +11,7 @@ namespace Graph.Qualifiers
     /// <inheritdoc/>
     [JsonArray]
     internal sealed class QualificationCollection
-        : IQualifiable
+        : IQualifier
         , IEnumerable<KeyValuePair<string, SerializableValue>>
     {
         /// <inheritdoc/>
@@ -46,7 +46,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Disqualify(string name)
+        public IQualifier Disqualify(string name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -88,7 +88,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, bool value)
+        public IQualifier Qualify(string name, bool value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -101,7 +101,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, sbyte value)
+        public IQualifier Qualify(string name, sbyte value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -114,7 +114,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, byte value)
+        public IQualifier Qualify(string name, byte value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -127,7 +127,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, short value)
+        public IQualifier Qualify(string name, short value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -140,7 +140,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, ushort value)
+        public IQualifier Qualify(string name, ushort value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -153,7 +153,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, int value)
+        public IQualifier Qualify(string name, int value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -166,7 +166,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, uint value)
+        public IQualifier Qualify(string name, uint value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -179,7 +179,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, long value)
+        public IQualifier Qualify(string name, long value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -192,7 +192,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, ulong value)
+        public IQualifier Qualify(string name, ulong value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -205,7 +205,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, float value)
+        public IQualifier Qualify(string name, float value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -218,7 +218,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, double value)
+        public IQualifier Qualify(string name, double value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -231,7 +231,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, decimal value)
+        public IQualifier Qualify(string name, decimal value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -244,7 +244,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, DateTime value)
+        public IQualifier Qualify(string name, DateTime value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -257,7 +257,7 @@ namespace Graph.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifiable Qualify(string name, string value)
+        public IQualifier Qualify(string name, string value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
