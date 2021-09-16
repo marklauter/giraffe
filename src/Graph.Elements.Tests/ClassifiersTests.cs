@@ -27,6 +27,11 @@ namespace Graph.Elements.Tests
             var label = "x";
             var args = new ClassifiedEventArgs(label);
             Assert.Equal(label, args.Label);
+
+            var id = Guid.NewGuid();
+            var typeArgs = new ClassifiedEventArgs<Guid>(label, id);
+            Assert.Equal(label, typeArgs.Label);
+            Assert.Equal(id, typeArgs.Id);
         }
 
         [Fact]
@@ -48,6 +53,11 @@ namespace Graph.Elements.Tests
             var label = "x";
             var args = new DeclassifiedEventArgs(label);
             Assert.Equal(label, args.Label);
+
+            var id = Guid.NewGuid();
+            var typeArgs = new DeclassifiedEventArgs<Guid>(label, id);
+            Assert.Equal(label, typeArgs.Label);
+            Assert.Equal(id, typeArgs.Id);
         }
 
         [Fact]
