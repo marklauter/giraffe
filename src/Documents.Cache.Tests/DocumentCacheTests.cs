@@ -295,5 +295,43 @@ namespace Documents.Cache.Tests
             Assert.Contains(key1, documents.Select(d => d.Key));
             Assert.Contains(key2, documents.Select(d => d.Key));
         }
+
+        [Fact]
+        public async Task Cache_InsertOrUpdate_Multiple_Throws_Async()
+        {
+            using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
+
+            await Assert.ThrowsAsync<ArgumentNullException>(()=> cache.InsertOrUpdateAsync(null as IEnumerable<Document<Value>>));
+        }
+
+        [Fact]
+        public async Task Cache_InsertOrUpdate_Multiple_Next_Reads_Are_Hit_Async()
+        {
+            var key1 = "1";
+            var v1 = this.DocumentFactory(key1);
+            var key2 = "12";
+            var v2 = this.DocumentFactory(key2);
+
+            using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
+            await cache.InsertOrUpdateAsync(new Document<Value>[] {v1, v2 });
+
+            var cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
+                handler => cache.CacheAccessed += handler,
+                handler => cache.CacheAccessed -= handler,
+                () => _ = cache.Read(key1, this.DocumentFactory));
+
+            Assert.Equal(cache, cacheAccessedEvent.Sender);
+            Assert.Equal(key1, cacheAccessedEvent.Arguments.Key);
+            Assert.Equal(CacheAccessType.Hit, cacheAccessedEvent.Arguments.ReadType);
+
+            cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
+                handler => cache.CacheAccessed += handler,
+                handler => cache.CacheAccessed -= handler,
+                () => _ = cache.Read(key2, this.DocumentFactory));
+
+            Assert.Equal(cache, cacheAccessedEvent.Sender);
+            Assert.Equal(key2, cacheAccessedEvent.Arguments.Key);
+            Assert.Equal(CacheAccessType.Hit, cacheAccessedEvent.Arguments.ReadType);
+        }
     }
 }
