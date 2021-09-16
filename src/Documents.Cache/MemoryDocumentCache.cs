@@ -60,13 +60,15 @@ namespace Documents.Cache
 
         public Task InsertOrUpdateAsync(IEnumerable<Document<TMember>> documents)
         {
-            return Task.Run(() =>
-            {
-                foreach (var document in documents)
+            return documents is null
+                ? throw new ArgumentNullException(nameof(documents))
+                : Task.Run(() =>
                 {
-                    this.InsertOrUpdate(document);
-                }
-            });
+                    foreach (var document in documents)
+                    {
+                        this.InsertOrUpdate(document);
+                    }
+                });
         }
 
         public Document<TMember> Read(string key, Func<string, Document<TMember>> itemFactory)
@@ -105,30 +107,14 @@ namespace Documents.Cache
                     : keys.Select(key => this.Read(key, itemFactory));
         }
 
-        public async Task<Document<TMember>> ReadAsync(string key, Func<string, Task<Document<TMember>>> asyncItemFactory)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "Don't be a little girl.")]
+        public Task<Document<TMember>> ReadAsync(string key, Func<string, Task<Document<TMember>>> asyncItemFactory)
         {
-            if (String.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
-
-            if (asyncItemFactory is null)
-            {
-                throw new ArgumentNullException(nameof(asyncItemFactory));
-            }
-
-            var readType = CacheAccessType.Hit;
-
-            var document = await this.cache.GetOrCreateAsync(key, entry =>
-            {
-                readType = CacheAccessType.Miss;
-                entry.SetOptions(this.cacheEntryOptions);
-                return asyncItemFactory(key);
-            });
-
-            this.CacheAccessed?.Invoke(this, new CacheAccessedEventArgs(key, readType));
-
-            return document;
+            return String.IsNullOrWhiteSpace(key)
+                ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
+                : asyncItemFactory is null
+                    ? throw new ArgumentNullException(nameof(asyncItemFactory))
+                    : this.InternalReadAsync(key, asyncItemFactory);
         }
 
         public async Task<IEnumerable<Document<TMember>>> ReadAsync(IEnumerable<string> keys, Func<string, Task<Document<TMember>>> asyncItemFactory)
@@ -160,6 +146,22 @@ namespace Documents.Cache
         {
             this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        private async Task<Document<TMember>> InternalReadAsync(string key, Func<string, Task<Document<TMember>>> asyncItemFactory)
+        {
+            var readType = CacheAccessType.Hit;
+
+            var document = await this.cache.GetOrCreateAsync(key, entry =>
+            {
+                readType = CacheAccessType.Miss;
+                entry.SetOptions(this.cacheEntryOptions);
+                return asyncItemFactory(key);
+            });
+
+            this.CacheAccessed?.Invoke(this, new CacheAccessedEventArgs(key, readType));
+
+            return document;
         }
     }
 }

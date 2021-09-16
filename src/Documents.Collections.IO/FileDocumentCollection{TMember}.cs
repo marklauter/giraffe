@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Documents.Collections.IO
 {
+    // todo: TPL would probably be useful for writes to the file system https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library
     public sealed class FileDocumentCollection<TMember>
         : DocumentCollection<TMember>
         where TMember : class

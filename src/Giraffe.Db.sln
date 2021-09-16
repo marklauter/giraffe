@@ -67,7 +67,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graph.Elements", "Graph.Ele
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graph.IO", "Graph.IO", "{3F004EBF-8E42-4D91-AE5D-1A743297CE9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.IO.Tests", "Documents.IO.Tests\Documents.IO.Tests.csproj", "{955D7C1E-6C80-4162-921A-F69757CA2431}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.IO.Tests", "Documents.IO.Tests\Documents.IO.Tests.csproj", "{955D7C1E-6C80-4162-921A-F69757CA2431}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
