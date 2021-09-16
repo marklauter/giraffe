@@ -50,20 +50,38 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.Collections.IO", "Documents.Collections.IO\Documents.Collections.IO.csproj", "{443E3D97-A70B-455F-A0E0-E4AD7EFD4BB4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{EA734156-2D69-4BB4-8022-2B87BAE5EF7B}"
+	ProjectSection(SolutionItems) = preProject
+		Documents.README.md = Documents.README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents.Cache", "Documents.Cache", "{577F9610-937C-44F9-B6E1-A14604F913C9}"
+	ProjectSection(SolutionItems) = preProject
+		Documents.Cache.README.md = Documents.Cache.README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents.Collections", "Documents.Collections", "{C26FEA02-71E5-4610-B11D-10442B9E4299}"
+	ProjectSection(SolutionItems) = preProject
+		Documents.Collections.README.md = Documents.Collections.README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents.IO", "Documents.IO", "{BC6C60C0-F7E0-4007-88C4-06E473054BB9}"
+	ProjectSection(SolutionItems) = preProject
+		Documents.IO.README.md = Documents.IO.README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents.Collections.IO", "Documents.Collections.IO", "{38DFEA46-03A3-492D-8300-425D391AF80A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Collections.Concurrent", "Collections.Concurrent", "{27600B67-1886-4E87-B2C1-E9512ED6F8F0}"
+	ProjectSection(SolutionItems) = preProject
+		Concurrent.Collections.README.md = Concurrent.Collections.README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graph", "Graph", "{338D15BA-2855-466E-8606-BF248EDEFF9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graph.Elements", "Graph.Elements", "{76CB35CC-85D9-42DC-8F29-513A75AA3C75}"
+	ProjectSection(SolutionItems) = preProject
+		Graph.Elements.README.md = Graph.Elements.README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graph.IO", "Graph.IO", "{3F004EBF-8E42-4D91-AE5D-1A743297CE9D}"
 EndProject
