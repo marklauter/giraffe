@@ -19,7 +19,7 @@ namespace Documents.IO.Files
         public AsyncFileWriter(TimeSpan timeout, System.Text.Encoding encoding)
             : base(timeout)
         {
-            this.encoding = encoding;
+            this.encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
         }
 
         public async Task WriteAsync(string path, string text)

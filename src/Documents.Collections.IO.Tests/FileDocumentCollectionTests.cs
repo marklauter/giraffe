@@ -3,46 +3,12 @@ using Documents.IO.Files;
 using Documents.IO.Tests;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Documents.Collections.IO.Tests
 {
-    public sealed class FileTestsFixture
-        : IDisposable
-    {
-        public static string Path { get; } = Guid.NewGuid().ToString();
-
-        public FileTestsFixture()
-        {
-            if (!Directory.Exists(Path))
-            {
-                Directory.CreateDirectory(Path);
-            }
-        }
-
-        public static string MakePath()
-        {
-            var path = System.IO.Path.Combine(Path, Guid.NewGuid().ToString());
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            return path;
-        }
-
-        public void Dispose()
-        {
-            if (Directory.Exists(Path))
-            {
-                Directory.Delete(Path, true);
-            }
-        }
-    }
-
     public sealed class FileDocumentCollectionTests
         : IClassFixture<FileTestsFixture>
     {

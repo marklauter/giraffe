@@ -13,6 +13,11 @@ namespace Documents.IO.Files
 
         protected AsyncSafeFileAccessor(TimeSpan timeout)
         {
+            if (timeout == TimeSpan.MinValue)
+            {
+                throw new ArgumentException($"{nameof(timeout)} must be greater than zero.");
+            }
+
             this.Timeout = timeout;
         }
 

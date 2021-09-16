@@ -30,22 +30,12 @@ namespace Documents.Collections
         [Pure]
         public bool IsEmpty => this.Count == 0;
 
-
         /// <inheritdoc/>
-        public async Task AddAsync([Pure] Document<TMember> document)
+        public Task AddAsync([Pure] Document<TMember> document)
         {
-            if (document is null)
-            {
-                throw new ArgumentNullException(nameof(document));
-            }
-
-            if (await this.ContainsAsync(document.Key))
-            {
-                throw new InvalidOperationException($"Document with key '{document.Key}' is already in the collection.");
-            }
-
-            await this.WriteDocumentAsync(document);
-            this.DocumentAdded?.Invoke(this, new DocumentAddedEventArgs<TMember>(document));
+            return document is null
+                ? throw new ArgumentNullException(nameof(document))
+                : this.InternalAddAsync(document);
         }
 
         /// <inheritdoc/>
@@ -96,25 +86,90 @@ namespace Documents.Collections
 
         /// <inheritdoc/>
         [Pure]
-        public async Task<IEnumerable<Document<TMember>>> ReadAsync(IEnumerable<string> keys)
+        public Task<IEnumerable<Document<TMember>>> ReadAsync(IEnumerable<string> keys)
         {
-            if (keys is null)
+            return keys is null
+                ? throw new ArgumentNullException(nameof(keys))
+                : this.InternalReadAsync(keys);
+        }
+
+        /// <inheritdoc/>
+        public Task RemoveAsync(string key)
+        {
+            return String.IsNullOrWhiteSpace(key)
+                ? throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key))
+                : this.InternalRemoveAsync(key);
+        }
+
+        /// <inheritdoc/>
+        public Task RemoveAsync(IEnumerable<string> keys)
+        {
+            return keys is null
+                ? throw new ArgumentNullException(nameof(keys))
+                : this.InternalRemoveAsync(keys);
+        }
+
+        /// <inheritdoc/>
+        public Task RemoveAsync([Pure] Document<TMember> document)
+        {
+            return document is null
+                ? throw new ArgumentNullException(nameof(document))
+                : this.InternalRemoveAsync(document);
+        }
+
+        /// <inheritdoc/>
+        public Task RemoveAsync([Pure] IEnumerable<Document<TMember>> documents)
+        {
+            return documents is null
+                ? throw new ArgumentNullException(nameof(documents))
+                : this.InternalRemoveAsync(documents);
+        }
+
+        /// <inheritdoc/>
+        public Task UpdateAsync([Pure] Document<TMember> document)
+        {
+            return document is null
+                ? throw new ArgumentNullException(nameof(document))
+                : this.InternalUpdateAsync(document);
+        }
+
+        /// <inheritdoc/>
+        public Task UpdateAsync([Pure] IEnumerable<Document<TMember>> documents)
+        {
+            return documents is null
+                ? throw new ArgumentNullException(nameof(documents))
+                : this.InternalUpdateAsync(documents);
+        }
+
+        protected abstract Task ClearCollectionAsync();
+
+        protected abstract Task<bool> ContainsDocumentAsync(string key);
+
+        protected abstract Task<Document<TMember>> ReadDocumentAsync(string key);
+
+        protected abstract Task RemoveDocumentAsync(string key);
+
+        protected abstract Task WriteDocumentAsync([Pure] Document<TMember> document);
+
+        private async Task InternalAddAsync([Pure] Document<TMember> document)
+        {
+            if (await this.ContainsAsync(document.Key))
             {
-                throw new ArgumentNullException(nameof(keys));
+                throw new InvalidOperationException($"Document with key '{document.Key}' is already in the collection.");
             }
 
+            await this.WriteDocumentAsync(document);
+            this.DocumentAdded?.Invoke(this, new DocumentAddedEventArgs<TMember>(document));
+        }
+
+        private async Task<IEnumerable<Document<TMember>>> InternalReadAsync(IEnumerable<string> keys)
+        {
             var tasks = keys.Select(key => this.ReadAsync(key));
             return await Task.WhenAll(tasks);
         }
 
-        /// <inheritdoc/>
-        public async Task RemoveAsync(string key)
+        private async Task InternalRemoveAsync(string key)
         {
-            if (String.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
-
             if (await this.ContainsAsync(key))
             {
                 var document = await this.ReadAsync(key);
@@ -123,54 +178,30 @@ namespace Documents.Collections
             }
         }
 
-        /// <inheritdoc/>
-        public async Task RemoveAsync(IEnumerable<string> keys)
+        private async Task InternalRemoveAsync(IEnumerable<string> keys)
         {
-            if (keys is null)
-            {
-                throw new ArgumentNullException(nameof(keys));
-            }
-
             var tasks = keys
                 .Select(key => this.RemoveAsync(key));
 
             await Task.WhenAll(tasks);
         }
 
-        /// <inheritdoc/>
-        public async Task RemoveAsync([Pure] Document<TMember> document)
+        private async Task InternalRemoveAsync([Pure] Document<TMember> document)
         {
-            if (document is null)
-            {
-                throw new ArgumentNullException(nameof(document));
-            }
-
             await this.RemoveDocumentAsync(document.Key);
             this.DocumentRemoved?.Invoke(this, new DocumentRemovedEventArgs<TMember>(document));
         }
 
-        /// <inheritdoc/>
-        public async Task RemoveAsync([Pure] IEnumerable<Document<TMember>> documents)
+        private async Task InternalRemoveAsync([Pure] IEnumerable<Document<TMember>> documents)
         {
-            if (documents is null)
-            {
-                throw new ArgumentNullException(nameof(documents));
-            }
-
             var tasks = documents
                 .Select(document => this.RemoveAsync(document));
 
             await Task.WhenAll(tasks);
         }
 
-        /// <inheritdoc/>
-        public async Task UpdateAsync([Pure] Document<TMember> document)
+        private async Task InternalUpdateAsync([Pure] Document<TMember> document)
         {
-            if (document is null)
-            {
-                throw new ArgumentNullException(nameof(document));
-            }
-
             if (!await this.ContainsAsync(document.Key))
             {
                 throw new KeyNotFoundException(document.Key);
@@ -186,28 +217,12 @@ namespace Documents.Collections
             this.DocumentUpdated?.Invoke(this, new DocumentUpdatedEventArgs<TMember>(document));
         }
 
-        /// <inheritdoc/>
-        public async Task UpdateAsync([Pure] IEnumerable<Document<TMember>> documents)
+        private async Task InternalUpdateAsync([Pure] IEnumerable<Document<TMember>> documents)
         {
-            if (documents is null)
-            {
-                throw new ArgumentNullException(nameof(documents));
-            }
-
             var tasks = documents
                 .Select(document => this.UpdateAsync(document));
 
             await Task.WhenAll(tasks);
         }
-
-        protected abstract Task ClearCollectionAsync();
-
-        protected abstract Task<bool> ContainsDocumentAsync(string key);
-
-        protected abstract Task<Document<TMember>> ReadDocumentAsync(string key);
-
-        protected abstract Task RemoveDocumentAsync(string key);
-
-        protected abstract Task WriteDocumentAsync([Pure] Document<TMember> document);
     }
 }
