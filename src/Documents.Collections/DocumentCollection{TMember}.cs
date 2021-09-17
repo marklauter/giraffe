@@ -23,6 +23,8 @@ namespace Documents.Collections
         /// <inheritdoc/>
         public event EventHandler<EventArgs> Cleared;
 
+        protected DocumentCollection() { }
+
         /// <inheritdoc/>
         [Pure]
         public abstract int Count { get; }

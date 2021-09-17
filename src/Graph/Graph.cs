@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Graphs.Data;
+using System;
 
 namespace Graphs
 {
-    public class Graph
+    public interface IGraph
     {
-        public Graph()
-        {
+        bool IsEmpty { get; }
+    }
 
+    public class Graph
+        : IGraph
+    {
+        private readonly GraphDocumentContext documentContext;
+
+        public Graph(GraphDocumentContext documentContext)
+        {
+            this.documentContext = documentContext ?? throw new ArgumentNullException(nameof(documentContext));
         }
+
+        public bool IsEmpty => this.documentContext.Nodes.IsEmpty;
     }
 }

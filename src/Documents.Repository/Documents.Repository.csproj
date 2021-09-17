@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Documents.Collections\Documents.Collections.csproj" />
+    <ProjectReference Include="..\Graph.Elements\Graphs.Elements.csproj" />
+  </ItemGroup>
+
 </Project>

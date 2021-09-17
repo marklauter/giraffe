@@ -15,6 +15,8 @@ namespace Documents.Collections
 
         public override int Count => this.documents.Count;
 
+        private HeapDocumentCollection() : base() { }
+
         protected override Task ClearCollectionAsync()
         {
             this.documents.Clear();
