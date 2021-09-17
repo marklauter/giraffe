@@ -1,9 +1,9 @@
-﻿using Graph.Qualifiers;
+﻿using Graphs.Qualifiers;
 using Newtonsoft.Json;
 using System;
 using Xunit;
 
-namespace Graph.Elements.Tests
+namespace Graphs.Elements.Tests
 {
     public sealed class SerializableValueTests
     {

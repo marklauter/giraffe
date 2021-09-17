@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Graph.Elements
+namespace Graphs.Elements
 {
     internal sealed class AdjacencyAndIncidenceIndex
         : ICloneable

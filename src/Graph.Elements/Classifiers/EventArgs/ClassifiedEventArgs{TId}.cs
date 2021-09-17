@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Graph.Classifiers
+namespace Graphs.Classifiers
 {
     public sealed class ClassifiedEventArgs<TId>
         : ClassifiedEventArgs

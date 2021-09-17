@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Graph\Graph.csproj" />
+    <ProjectReference Include="..\Graph\Graphs.csproj" />
   </ItemGroup>
 
 </Project>

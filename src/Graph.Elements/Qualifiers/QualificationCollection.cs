@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
-namespace Graph.Qualifiers
+namespace Graphs.Qualifiers
 {
     /// <inheritdoc/>
     [JsonArray]

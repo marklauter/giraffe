@@ -1,10 +1,10 @@
-﻿using Graph.Classifiers;
-using Graph.Identifiers;
-using Graph.Qualifiers;
+﻿using Graphs.Classifiers;
+using Graphs.Identifiers;
+using Graphs.Qualifiers;
 using System;
 using System.Collections.Generic;
 
-namespace Graph.Elements
+namespace Graphs.Elements
 {
     public interface IElement<TId>
         : IIdentifiable<TId>

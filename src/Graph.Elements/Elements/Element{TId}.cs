@@ -1,5 +1,5 @@
-﻿using Graph.Classifiers;
-using Graph.Qualifiers;
+﻿using Graphs.Classifiers;
+using Graphs.Qualifiers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
-namespace Graph.Elements
+namespace Graphs.Elements
 {
     [DebuggerDisplay("{Id}")]
     public abstract class Element<TId>

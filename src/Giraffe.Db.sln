@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{88364EE2-010
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonExperiments", "JsonExperiments\JsonExperiments.csproj", "{1B1E4929-1908-4923-82AF-2FC1A8CC25F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graph", "Graph\Graph.csproj", "{3D782BC1-27B2-4068-B4D4-1D2571923500}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graphs", "Graph\Graphs.csproj", "{3D782BC1-27B2-4068-B4D4-1D2571923500}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graph.Tests", "Graph.Tests\Graph.Tests.csproj", "{9C1816BE-BFC4-4F09-B574-895AAFA45113}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graphs.Tests", "Graph.Tests\Graphs.Tests.csproj", "{9C1816BE-BFC4-4F09-B574-895AAFA45113}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{69E3F924-46CF-4D88-8A83-204693AAAD06}"
 EndProject
@@ -27,11 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.IO", "Documents.I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.Tests", "Documents.Tests\Documents.Tests.csproj", "{2AD3C5A6-2FC3-4750-8EEB-21B5CB97B650}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graph.Elements", "Graph.Elements\Graph.Elements.csproj", "{B834D192-4D96-4750-9EF0-B8B310629B13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graphs.Elements", "Graph.Elements\Graphs.Elements.csproj", "{B834D192-4D96-4750-9EF0-B8B310629B13}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graph.Elements.Tests", "Graph.Elements.Tests\Graph.Elements.Tests.csproj", "{DD727E8B-3D10-4655-BD28-0644BA6256F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graphs.Elements.Tests", "Graph.Elements.Tests\Graphs.Elements.Tests.csproj", "{DD727E8B-3D10-4655-BD28-0644BA6256F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graph.IO.Tests", "Graph.IO.Tests\Graph.IO.Tests.csproj", "{CABEF3D8-EBDE-48BE-AB08-9912C7D5AB46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graphs.IO.Tests", "Graph.IO.Tests\Graphs.IO.Tests.csproj", "{CABEF3D8-EBDE-48BE-AB08-9912C7D5AB46}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.Collections.IO.Tests", "Documents.Collections.IO.Tests\Documents.Collections.IO.Tests.csproj", "{B1327941-A68C-4206-89E0-FA3F71BD56F4}"
 EndProject
@@ -79,14 +79,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Collections.Concurrent", "C
 		Concurrent.Collections.README.md = Concurrent.Collections.README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graph", "Graph", "{338D15BA-2855-466E-8606-BF248EDEFF9D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphs", "Graphs", "{338D15BA-2855-466E-8606-BF248EDEFF9D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graph.Elements", "Graph.Elements", "{76CB35CC-85D9-42DC-8F29-513A75AA3C75}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphs.Elements", "Graphs.Elements", "{76CB35CC-85D9-42DC-8F29-513A75AA3C75}"
 	ProjectSection(SolutionItems) = preProject
-		Graph.Elements.README.md = Graph.Elements.README.md
+		Graphs.Elements.README.md = Graphs.Elements.README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graph.IO", "Graph.IO", "{3F004EBF-8E42-4D91-AE5D-1A743297CE9D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphs.IO", "Graphs.IO", "{3F004EBF-8E42-4D91-AE5D-1A743297CE9D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.IO.Tests", "Documents.IO.Tests\Documents.IO.Tests.csproj", "{955D7C1E-6C80-4162-921A-F69757CA2431}"
 EndProject

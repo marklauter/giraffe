@@ -1,10 +1,10 @@
-using Graph.Classifiers;
+using Graphs.Classifiers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Graph.Elements.Tests
+namespace Graphs.Elements.Tests
 {
     public sealed class ClassifiersTests
     {

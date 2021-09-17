@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Graph.Identifiers
+namespace Graphs.Identifiers
 {
     public interface IIdentifiable<TId>
         : ICloneable
