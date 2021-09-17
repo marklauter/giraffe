@@ -1,6 +1,8 @@
+﻿using Documents.Cache;
 using Documents.IO.Encoding;
 using Documents.IO.Files;
 using Documents.IO.Tests;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +11,11 @@ using Xunit;
 
 namespace Documents.Collections.IO.Tests
 {
-    public sealed class FileDocumentCollectionTests
-        : IClassFixture<FileDocumentTestsFixture>
+    public sealed class CachedDocumentCollectionTests
+        : IClassFixture<CachedDocumentTestsFixture>
     {
 #pragma warning disable IDE1006 // Naming Styles
-        private static FileDocumentCollection<Member> GetCollection()
+        private static CachedDocumentCollection<Member> GetCollection()
         {
             var timeout = TimeSpan.FromSeconds(10);
 
@@ -22,14 +24,21 @@ namespace Documents.Collections.IO.Tests
             var reader = new AsyncFileReader(timeout);
             var writer = new AsyncFileWriter(timeout);
             var deleter = new AsyncFileDeleter(timeout);
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                SlidingExpiration = TimeSpan.FromMinutes(5)
+            };
 
-            return new FileDocumentCollection<Member>(
+            var documentCache = new MemoryDocumentCache<Member>(cacheOptions);
+            var fileDocumentCollection = new FileDocumentCollection<Member>(
                 FileDocumentTestsFixture.MakePath(),
                 encoder,
                 decoder,
                 reader,
                 writer,
                 deleter);
+
+            return new CachedDocumentCollection<Member>(fileDocumentCollection, documentCache);
         }
 
         [Fact]

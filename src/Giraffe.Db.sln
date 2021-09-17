@@ -70,6 +70,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents.IO", "Documents.I
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents.Collections.IO", "Documents.Collections.IO", "{38DFEA46-03A3-492D-8300-425D391AF80A}"
+	ProjectSection(SolutionItems) = preProject
+		Documents.Collections.IO.README.md = Documents.Collections.IO.README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Collections.Concurrent", "Collections.Concurrent", "{27600B67-1886-4E87-B2C1-E9512ED6F8F0}"
 	ProjectSection(SolutionItems) = preProject

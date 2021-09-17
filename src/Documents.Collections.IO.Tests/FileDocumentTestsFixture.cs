@@ -3,12 +3,12 @@ using System.IO;
 
 namespace Documents.Collections.IO.Tests
 {
-    internal sealed class FileTestsFixture
+    internal sealed class FileDocumentTestsFixture
         : IDisposable
     {
         public static string Path { get; } = Guid.NewGuid().ToString();
 
-        public FileTestsFixture()
+        public FileDocumentTestsFixture()
         {
             if (!Directory.Exists(Path))
             {
