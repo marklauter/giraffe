@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 namespace Graphs
 {
     public interface IGraph
+        : IElementSource<Guid>
+        , ITraversableSource<Guid>
     {
         bool IsEmpty { get; }
 
-        Task<Node> AddAsync();
+        Task<Node> NewNodeAsync();
         
-        Task<Node> AddAsync(Guid nodeId);
+        Task<Node> NewNodeAsync(Guid nodeId);
 
         Task AddAsync(Node node);
 
