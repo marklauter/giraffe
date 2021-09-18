@@ -7,18 +7,19 @@ using System.Diagnostics.Contracts;
 
 namespace Graphs.Elements
 {
+    // todo: Node: raise events on coupled and decoupled - create INodeEventSource
+
     [DebuggerDisplay("{Id}")]
     [JsonObject("node")]
     public sealed class Node
         : Element<Guid>
         , IElement<Guid>
+        , ITraversable<Guid>
         , IEquatable<Node>
         , IEqualityComparer<Node>
     {
         [JsonProperty("nodesAndEdges")]
         private readonly AdjacencyAndIncidenceIndex nodesAndEdges = AdjacencyAndIncidenceIndex.Empty;
-
-        // todo: raise events on coupled and decoupled 
 
         public static Node New => new(Guid.NewGuid());
 

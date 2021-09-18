@@ -1,11 +1,22 @@
 ﻿using Graphs.Data;
+using Graphs.Elements;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Graphs
 {
     public interface IGraph
     {
         bool IsEmpty { get; }
+
+        Task<Node> AddAsync();
+        
+        Task<Node> AddAsync(Guid nodeId);
+
+        Task AddAsync(Node node);
+
+        Task AddAsync(IEnumerable<Node> nodes);
     }
 
     public class Graph

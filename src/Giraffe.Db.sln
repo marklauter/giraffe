@@ -80,6 +80,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Collections.Concurrent", "C
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphs", "Graphs", "{338D15BA-2855-466E-8606-BF248EDEFF9D}"
+	ProjectSection(SolutionItems) = preProject
+		Graphs.READMME.md = Graphs.READMME.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphs.Elements", "Graphs.Elements", "{76CB35CC-85D9-42DC-8F29-513A75AA3C75}"
 	ProjectSection(SolutionItems) = preProject
