@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Graphs.Classifiers
+namespace Graphs.Elements.Classifiers
 {
     /// <summary>
     /// A class is a labeled collection of element references 

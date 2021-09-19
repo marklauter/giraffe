@@ -1,5 +1,6 @@
 ﻿using Graphs.Data;
 using Graphs.Elements;
+using Graphs.Elements.Traversables;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Graphs
         bool IsEmpty { get; }
 
         Task<Node> NewNodeAsync();
-        
+
         Task<Node> NewNodeAsync(Guid nodeId);
 
         Task AddAsync(Node node);

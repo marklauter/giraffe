@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Graphs.Qualifiers
+namespace Graphs.Elements.Qualifiers
 {
     public interface IQualifier
         : IQualifierEventSource

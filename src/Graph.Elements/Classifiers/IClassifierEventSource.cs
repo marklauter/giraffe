@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Graphs.Classifiers
+namespace Graphs.Elements.Classifiers
 {
     public interface IClassifierEventSource
     {

@@ -290,7 +290,7 @@ namespace Documents.Cache.Tests
             var key2 = "2";
             using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
 
-            var documents = await cache.ReadAsync(new string[] { key1, key2}, this.DocumentFactoryAsync);
+            var documents = await cache.ReadAsync(new string[] { key1, key2 }, this.DocumentFactoryAsync);
             Assert.NotNull(documents);
             Assert.Contains(key1, documents.Select(d => d.Key));
             Assert.Contains(key2, documents.Select(d => d.Key));
@@ -301,7 +301,7 @@ namespace Documents.Cache.Tests
         {
             using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
 
-            await Assert.ThrowsAsync<ArgumentNullException>(()=> cache.InsertOrUpdateAsync(null as IEnumerable<Document<Value>>));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => cache.InsertOrUpdateAsync(null));
         }
 
         [Fact]
@@ -313,7 +313,7 @@ namespace Documents.Cache.Tests
             var v2 = this.DocumentFactory(key2);
 
             using var cache = new MemoryDocumentCache<Value>(new MemoryCacheEntryOptions { SlidingExpiration = System.TimeSpan.FromSeconds(60) });
-            await cache.InsertOrUpdateAsync(new Document<Value>[] {v1, v2 });
+            await cache.InsertOrUpdateAsync(new Document<Value>[] { v1, v2 });
 
             var cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,

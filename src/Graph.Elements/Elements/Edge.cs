@@ -13,7 +13,6 @@ namespace Graphs.Elements
     [JsonObject("edge")]
     public sealed class Edge
         : Element<Guid>
-        , IElement<Guid>
         , IEquatable<Edge>
         , IEqualityComparer<Edge>
     {

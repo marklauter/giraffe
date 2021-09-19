@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Graphs.Elements.Queriables;
+using System;
 using System.Collections.Generic;
 
-namespace Graphs.Elements.Traversals
+namespace Graphs.Elements.Traversables
 {
     public interface ITraversable<TId>
-        : IElement<TId>
+        : IQueriable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         int Degree { get; }

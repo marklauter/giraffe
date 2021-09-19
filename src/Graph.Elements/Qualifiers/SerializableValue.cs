@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
-namespace Graphs.Qualifiers
+namespace Graphs.Elements.Qualifiers
 {
     [DebuggerDisplay("{Value},  {TypeCode}")]
     internal sealed class SerializableValue

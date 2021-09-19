@@ -1,4 +1,4 @@
-﻿using Graphs.Elements.Traversals;
+﻿using Graphs.Elements.Traversables;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,6 @@ namespace Graphs.Elements
     [JsonObject("node")]
     public sealed class Node
         : Element<Guid>
-        , IElement<Guid>
         , ITraversable<Guid>
         , IEquatable<Node>
         , IEqualityComparer<Node>

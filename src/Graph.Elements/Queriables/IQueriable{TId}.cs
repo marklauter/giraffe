@@ -1,34 +1,19 @@
-﻿using System;
+﻿using Graphs.Elements.Identifiers;
+using System;
 using System.Collections.Generic;
 
-namespace Graphs.Elements.Classifiers
+namespace Graphs.Elements.Queriables
 {
-    public interface IClassifier
-        : IClassifierEventSource
-        , ICloneable
+    public interface IQueriable<TId>
+        : IIdentifiable<TId>
+        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         /// <summary>
-        /// Classifies this instance.
+        /// Returns true if the instance contains the named attribute (quantity or quality).
         /// </summary>
-        /// <param name="label"></param>
-        /// <returns><see cref="IClassifier"/></returns>
-        /// <remarks>
-        /// Raises event <see cref="Classified"/>
-        /// <seealso cref="Declassify"/>
-        /// </remarks>
-        IClassifier Classify(string label);
-
-        /// <summary>
-        /// Declassifies this instance.
-        /// </summary>
-        /// <param name="label"></param>
-        /// <returns><see cref="IClassifier"/></returns>
-        /// <remarks>
-        /// Raises event <see cref="Delassified"/>
-        /// <see cref="DeclassifiedEventArgs"/>
-        /// <seealso cref="Classify"/>
-        /// </remarks>
-        IClassifier Declassify(string label);
+        /// <param name="name">Name of the attribute (quantity or quality).</param>
+        /// <returns><see cref="Boolean"/></returns>
+        bool HasProperty(string name);
 
         /// <summary>
         /// Returns true if the instance is a member of class referenced by label.
@@ -50,5 +35,15 @@ namespace Graphs.Elements.Classifiers
         /// <seealso cref="Is(String)"/>
         /// </remarks>
         bool Is(IEnumerable<string> labels);
+
+        /// <summary>
+        /// Returns the value of the named quality attribute.
+        /// </summary>
+        /// <param name="name">Name of the quality value to return.</param>
+        /// <returns><see cref="String"/></returns>
+        /// <remarks>
+        /// <seealso cref="HasQuality(String)"/>
+        /// </remarks>
+        bool TryGetProperty(string name, out object value);
     }
 }

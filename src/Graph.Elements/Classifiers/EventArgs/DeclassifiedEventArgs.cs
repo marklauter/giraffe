@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Graphs.Classifiers
+namespace Graphs.Elements.Classifiers
 {
     public class DeclassifiedEventArgs
         : EventArgs

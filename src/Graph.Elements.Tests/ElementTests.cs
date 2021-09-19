@@ -1,5 +1,5 @@
-﻿using Graphs.Classifiers;
-using Graphs.Qualifiers;
+﻿using Graphs.Elements.Classifiers;
+using Graphs.Elements.Qualifiers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -37,7 +37,7 @@ namespace Graphs.Elements.Tests
             var label = "x";
             var node = Node.New
                 .Classify(label);
-            Assert.True(node is IElement<Guid>);
+            Assert.True(node is IMutableElement<Guid>);
         }
 
         [Fact]
