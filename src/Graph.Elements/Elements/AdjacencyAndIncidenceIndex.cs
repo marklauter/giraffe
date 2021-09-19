@@ -7,22 +7,23 @@ using System.Diagnostics.Contracts;
 
 namespace Graphs.Elements
 {
-    internal sealed class AdjacencyAndIncidenceIndex
+    internal sealed class AdjacencyAndIncidenceIndex<TId>
         : ICloneable
+        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private readonly object gate = new();
 
         [JsonProperty("incidentEdges")]
-        private readonly ConcurrentHashSet<Guid> edges;
+        private readonly ConcurrentHashSet<TId> edges;
 
         [JsonProperty("adjacentNodes")]
-        private readonly ConcurrentDictionary<Guid, int> nodes;
+        private readonly ConcurrentDictionary<TId, int> nodes;
 
-        public static AdjacencyAndIncidenceIndex Empty => new();
+        public static AdjacencyAndIncidenceIndex<TId> Empty => new();
 
         [Pure]
         [JsonIgnore]
-        public IEnumerable<Guid> Edges => this.edges;
+        public IEnumerable<TId> Edges => this.edges;
 
         [Pure]
         [JsonIgnore]
@@ -34,7 +35,7 @@ namespace Graphs.Elements
 
         [Pure]
         [JsonIgnore]
-        public IEnumerable<Guid> Nodes => this.nodes.Keys;
+        public IEnumerable<TId> Nodes => this.nodes.Keys;
 
         [Pure]
         [JsonIgnore]
@@ -42,17 +43,17 @@ namespace Graphs.Elements
 
         private AdjacencyAndIncidenceIndex()
         {
-            this.edges = ConcurrentHashSet<Guid>.Empty;
+            this.edges = ConcurrentHashSet<TId>.Empty;
             this.nodes = new();
         }
 
-        private AdjacencyAndIncidenceIndex(AdjacencyAndIncidenceIndex other)
+        private AdjacencyAndIncidenceIndex(AdjacencyAndIncidenceIndex<TId> other)
         {
             this.edges = new(other.edges);
             this.nodes = new(other.nodes);
         }
 
-        public AdjacencyAndIncidenceIndex Add(Guid edgeId, Guid nodeId)
+        public AdjacencyAndIncidenceIndex<TId> Add(TId edgeId, TId nodeId)
         {
             lock (this.gate)
             {
@@ -74,30 +75,30 @@ namespace Graphs.Elements
         [Pure]
         public object Clone()
         {
-            return new AdjacencyAndIncidenceIndex(this);
+            return new AdjacencyAndIncidenceIndex<TId>(this);
         }
 
         [Pure]
-        public bool ContainsNode(Guid id)
+        public bool ContainsNode(TId id)
         {
             return this.nodes.ContainsKey(id);
         }
 
         [Pure]
-        public bool ContainsEdge(Guid id)
+        public bool ContainsEdge(TId id)
         {
             return this.edges.Contains(id);
         }
 
         [Pure]
-        public int NodeReferenceCount(Guid nodeId)
+        public int NodeReferenceCount(TId nodeId)
         {
             return this.nodes.TryGetValue(nodeId, out var count)
                 ? count
                 : 0;
         }
 
-        public AdjacencyAndIncidenceIndex Remove(Guid edgeId, Guid nodeId)
+        public AdjacencyAndIncidenceIndex<TId> Remove(TId edgeId, TId nodeId)
         {
             lock (this.gate)
             {

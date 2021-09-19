@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Graphs.Elements.Mutables;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ namespace Graphs.Elements
     [DebuggerDisplay("{SourceId} : {TargetId}")]
     [JsonObject("edge")]
     public sealed class Edge
-        : Element<Guid>
+        : Mutable<Guid>
         , IEquatable<Edge>
         , IEqualityComparer<Edge>
     {

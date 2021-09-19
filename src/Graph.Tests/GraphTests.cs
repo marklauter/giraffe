@@ -11,7 +11,7 @@ namespace Graphs.Tests
         [Fact]
         public void Graph_Constructor_Throws_On_Nulls()
         {
-            Assert.Throws<ArgumentNullException>(() => new Graph(null));
+            Assert.Throws<ArgumentNullException>(() => new Graph<Guid>(null));
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Graphs.Tests
                 HeapDocumentCollection<Node>.Empty,
                 HeapDocumentCollection<Edge>.Empty);
 
-            var graph = new Graph(context);
+            var graph = new Graph<Guid>(context);
             Assert.True(graph.IsEmpty);
         }
     }

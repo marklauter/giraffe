@@ -3,9 +3,9 @@ using Graphs.Elements.Qualifiers;
 using Graphs.Elements.Queriables;
 using System;
 
-namespace Graphs.Elements
+namespace Graphs.Elements.Mutables
 {
-    public interface IMutableElement<TId>
+    public interface IMutable<TId>
         : IQueriable<TId>
         , IClassifierEventSource
         , IQualifierEventSource
@@ -20,7 +20,7 @@ namespace Graphs.Elements
         /// Raises event <see cref="Classified"/>
         /// <seealso cref="Declassify"/>
         /// </remarks>
-        IMutableElement<TId> Classify(string label);
+        IMutable<TId> Classify(string label);
 
         /// <summary>
         /// Declassifies this instance.
@@ -32,170 +32,170 @@ namespace Graphs.Elements
         /// <see cref="DeclassifiedEventArgs"/>
         /// <seealso cref="Classify"/>
         /// </remarks>
-        IMutableElement<TId> Declassify(string label);
+        IMutable<TId> Declassify(string label);
 
         /// <summary>
         /// Removes a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality to remove.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Qualify(String, String)"/>
         /// </remarks>
-        IMutableElement<TId> Disqualify(string name);
+        IMutable<TId> Disqualify(string name);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, bool value);
+        IMutable<TId> Qualify(string name, bool value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, sbyte value);
+        IMutable<TId> Qualify(string name, sbyte value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, byte value);
+        IMutable<TId> Qualify(string name, byte value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, short value);
+        IMutable<TId> Qualify(string name, short value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, ushort value);
+        IMutable<TId> Qualify(string name, ushort value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, int value);
+        IMutable<TId> Qualify(string name, int value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, uint value);
+        IMutable<TId> Qualify(string name, uint value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, long value);
+        IMutable<TId> Qualify(string name, long value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, ulong value);
+        IMutable<TId> Qualify(string name, ulong value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, float value);
+        IMutable<TId> Qualify(string name, float value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, double value);
+        IMutable<TId> Qualify(string name, double value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, decimal value);
+        IMutable<TId> Qualify(string name, decimal value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, DateTime value);
+        IMutable<TId> Qualify(string name, DateTime value);
 
         /// <summary>
         /// Adds a quality attribute.
         /// </summary>
         /// <param name="name">Name of the quality.</param>
         /// <param name="value">Value of the quality.</param>
-        /// <returns><see cref="IMutableElement{TId}"/></returns>
+        /// <returns><see cref="IMutable{TId}"/></returns>
         /// <remarks>
         /// <seealso cref="Disqualify(String)"/>
         /// </remarks>
-        IMutableElement<TId> Qualify(string name, string value);
+        IMutable<TId> Qualify(string name, string value);
     }
 }

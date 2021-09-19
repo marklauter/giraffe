@@ -1,5 +1,4 @@
-﻿using Graphs.Elements.Queriables;
-using Graphs.Elements.Traversables;
+﻿using Graphs.Elements.Traversables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +10,11 @@ namespace Graphs.Traversals
         : ITraversal<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        private readonly ITraversableSource<TId> traversableSource;
-        private readonly IQueriableSource<TId> queriableSource;
+        private readonly ITraversalSource<TId> source;
 
-        public Traversal(ITraversableSource<TId> traversableSource, IQueriableSource<TId> queriableSource)
+        public Traversal(ITraversalSource<TId> source)
         {
-            this.traversableSource = traversableSource ?? throw new ArgumentNullException(nameof(traversableSource));
-            this.queriableSource = queriableSource ?? throw new ArgumentNullException(nameof(queriableSource));
+            this.source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
         public async IAsyncEnumerable<ITraversable<TId>> TraverseAsync(ITraversable<TId> origin, int depth)
@@ -71,7 +68,7 @@ namespace Graphs.Traversals
 
         private async Task<IEnumerable<ITraversable<TId>>> ReadFrontierAsync(IEnumerable<TId> ids)
         {
-            var tasks = ids.Select(id => this.traversableSource.GetTraversableAsync<ITraversable<TId>>(id)).ToArray();
+            var tasks = ids.Select(id => this.source.GetTraversableAsync<ITraversable<TId>>(id)).ToArray();
             return await Task.WhenAll(tasks);
         }
 

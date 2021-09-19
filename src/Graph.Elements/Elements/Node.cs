@@ -1,4 +1,6 @@
-﻿using Graphs.Elements.Traversables;
+﻿using Graphs.Elements.Identifiers;
+using Graphs.Elements.Mutables;
+using Graphs.Elements.Traversables;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,19 +11,33 @@ using System.Diagnostics.Contracts;
 namespace Graphs.Elements
 {
     // todo: Node: raise events on coupled and decoupled - create INodeEventSource
+    public interface ICoupledEventSource
+    {
+
+    }
+
+    public interface INode<TId>
+        : IMutable<TId>
+        , ITraversable<TId>
+        , IEquatable<INode<TId>>
+        , IEqualityComparer<INode<TId>>
+        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
+    {
+    }
 
     [DebuggerDisplay("{Id}")]
     [JsonObject("node")]
-    public sealed class Node
-        : Element<Guid>
-        , ITraversable<Guid>
-        , IEquatable<Node>
-        , IEqualityComparer<Node>
+    public sealed class Node<TId>
+        : Mutable<TId>
+        , INode<TId>
+        , IEquatable<Node<TId>>
+        , IEqualityComparer<Node<TId>>
+        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         [JsonProperty("nodesAndEdges")]
-        private readonly AdjacencyAndIncidenceIndex nodesAndEdges = AdjacencyAndIncidenceIndex.Empty;
+        private readonly AdjacencyAndIncidenceIndex<TId> nodesAndEdges = AdjacencyAndIncidenceIndex<TId>.Empty;
 
-        public static Node New => new(Guid.NewGuid());
+        public static Node<TId> New(IIdGenerator<TId> idGenerator) => new(idGenerator.New()); 
 
         [Pure]
         [JsonIgnore]
@@ -29,47 +45,80 @@ namespace Graphs.Elements
 
         [Pure]
         [JsonIgnore]
-        public IEnumerable<Guid> Neighbors => this.nodesAndEdges.Nodes;
+        public IEnumerable<TId> Neighbors => this.nodesAndEdges.Nodes;
 
         [Pure]
         [JsonIgnore]
-        public IEnumerable<Guid> IncidentEdges => this.nodesAndEdges.Edges;
+        public IEnumerable<TId> IncidentEdges => this.nodesAndEdges.Edges;
 
         [JsonConstructor]
-        private Node(Guid id)
+        private Node(TId id)
             : base(id)
         { }
 
-        private Node([DisallowNull, Pure] Node other)
+        private Node([DisallowNull, Pure] Node<TId> other)
             : base(other)
         {
-            this.nodesAndEdges = other.nodesAndEdges.Clone() as AdjacencyAndIncidenceIndex;
+            this.nodesAndEdges = other.nodesAndEdges.Clone() as AdjacencyAndIncidenceIndex<TId>;
         }
 
         [Pure]
         public override object Clone()
         {
-            return new Node(this);
+            return new Node<TId>(this);
         }
 
         [Pure]
-        public bool Equals([Pure] Node other)
+        public bool IsAdjacent(TId targetId)
         {
-            return other != null
-                && other.Id == this.Id;
+            return this.nodesAndEdges.ContainsNode(targetId);
         }
 
         [Pure]
-        public bool Equals([Pure] Node x, [Pure] Node y)
+        public bool IsAdjacent([DisallowNull, Pure] Node<TId> node)
         {
-            return x != null && x.Equals(y);
+            return node is null
+                ? throw new ArgumentNullException(nameof(node))
+                : this.IsAdjacent(node.Id);
+        }
+
+        [Pure]
+        public bool IsIncident(TId edgeId)
+        {
+            return this.nodesAndEdges.ContainsEdge(edgeId);
         }
 
         [Pure]
         public override bool Equals([Pure] object obj)
         {
-            return obj is Node node
+            return obj is Node<TId> node
                 && this.Equals(node);
+        }
+
+        [Pure]
+        public bool Equals([Pure] Node<TId> other)
+        {
+            return other != null
+                && other.Id.Equals(this.Id);
+        }
+
+        [Pure]
+        public bool Equals([Pure] Node<TId> x, [Pure] Node<TId> y)
+        {
+            return x != null && x.Equals(y);
+        }
+
+        [Pure]
+        public bool Equals(INode<TId> other)
+        {
+            return other != null
+                && other.Id.Equals(this.Id);
+        }
+
+        [Pure]
+        public bool Equals(INode<TId> x, INode<TId> y)
+        {
+            return x != null && x.Equals(y);
         }
 
         [Pure]
@@ -79,7 +128,7 @@ namespace Graphs.Elements
         }
 
         [Pure]
-        public int GetHashCode([DisallowNull, Pure] Node obj)
+        public int GetHashCode([DisallowNull] INode<TId> obj)
         {
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))
@@ -87,80 +136,223 @@ namespace Graphs.Elements
         }
 
         [Pure]
-        public bool IsAdjacent(Guid nodeId)
+        public int GetHashCode([DisallowNull, Pure] Node<TId> obj)
         {
-            return this.nodesAndEdges.ContainsNode(nodeId);
+            return obj is null
+                ? throw new ArgumentNullException(nameof(obj))
+                : obj.GetHashCode();
         }
 
-        [Pure]
-        public bool IsAdjacent([DisallowNull, Pure] Node node)
-        {
-            return node is null
-                ? throw new ArgumentNullException(nameof(node))
-                : this.IsAdjacent(node.Id);
-        }
+        //[Pure]
+        //public bool IsIncident([DisallowNull, Pure] Edge edge)
+        //{
+        //    return edge is null
+        //        ? throw new ArgumentNullException(nameof(edge))
+        //        : this.IsIncident(edge.Id);
+        //}
 
-        [Pure]
-        public bool IsIncident(Guid edgeId)
-        {
-            return this.nodesAndEdges.ContainsEdge(edgeId);
-        }
+        ///// <summary>
+        ///// Couples the nodes and returns the resulting edge.
+        ///// </summary>
+        ///// <param name = "source" >< see cref= "Node<TId>" /></ param >
+        ///// < param name= "target" >< see cref= "Node<TId>" /></ param >
+        ///// < returns >< see cref= "Edge" /></ returns >
+        //public static Edge operator +(INode<TId> source, INode<TId> target)
+        //{
+        //    return Edge.Couple(source, target);
+        //}
 
-        [Pure]
-        public bool IsIncident([DisallowNull, Pure] Edge edge)
-        {
-            return edge is null
-                ? throw new ArgumentNullException(nameof(edge))
-                : this.IsIncident(edge.Id);
-        }
+        //internal void Couple([DisallowNull, Pure] Edge edge)
+        //{
+        //    if (edge is null)
+        //    {
+        //        throw new ArgumentNullException(nameof(edge));
+        //    }
 
-        /// <summary>
-        /// Couples the nodes and returns the resulting edge.
-        /// </summary>
-        /// <param name="source"><see cref="Node"/></param>
-        /// <param name="target"><see cref="Node"/></param>
-        /// <returns><see cref="Edge"/></returns>
-        public static Edge operator +(Node source, Node target)
-        {
-            return Edge.Couple(source, target);
-        }
+        //    if (edge.SourceId != this.Id && edge.TargetId != this.Id)
+        //    {
+        //        throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}'does not point to a node with id {this.Id}.");
+        //    }
 
-        internal void Couple([DisallowNull, Pure] Edge edge)
-        {
-            if (edge is null)
-            {
-                throw new ArgumentNullException(nameof(edge));
-            }
+        //    var otherNodeId = edge.SourceId == this.Id
+        //        ? edge.TargetId
+        //        : edge.SourceId;
 
-            if (edge.SourceId != this.Id && edge.TargetId != this.Id)
-            {
-                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}'does not point to a node with id {this.Id}.");
-            }
+        //    this.nodesAndEdges.Add(edge.Id, otherNodeId);
+        //}
 
-            var otherNodeId = edge.SourceId == this.Id
-                ? edge.TargetId
-                : edge.SourceId;
+        //internal void Decouple([DisallowNull, Pure] Edge edge)
+        //{
+        //    if (edge is null)
+        //    {
+        //        throw new ArgumentNullException(nameof(edge));
+        //    }
 
-            this.nodesAndEdges.Add(edge.Id, otherNodeId);
-        }
+        //    if (edge.SourceId != this.Id && edge.TargetId != this.Id)
+        //    {
+        //        throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}' does not point to node with id '{this.Id}'.");
+        //    }
 
-        internal void Decouple([DisallowNull, Pure] Edge edge)
-        {
-            if (edge is null)
-            {
-                throw new ArgumentNullException(nameof(edge));
-            }
+        //    var otherNodeId = edge.SourceId == this.Id
+        //        ? edge.TargetId
+        //        : edge.SourceId;
 
-            if (edge.SourceId != this.Id && edge.TargetId != this.Id)
-            {
-                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}' does not point to node with id '{this.Id}'.");
-            }
-
-            var otherNodeId = edge.SourceId == this.Id
-                ? edge.TargetId
-                : edge.SourceId;
-
-            this.nodesAndEdges.Remove(edge.Id, otherNodeId);
-        }
+        //    this.nodesAndEdges.Remove(edge.Id, otherNodeId);
+        //}
     }
+
+
+    //[DebuggerDisplay("{Id}")]
+    //[JsonObject("node")]
+    //public sealed class Node
+    //    : Mutable<Guid>
+    //    , ITraversable<Guid>
+    //    , IEquatable<Node>
+    //    , IEqualityComparer<Node>
+    //{
+    //    [JsonProperty("nodesAndEdges")]
+    //    private readonly AdjacencyAndIncidenceIndex nodesAndEdges = AdjacencyAndIncidenceIndex.Empty;
+
+    //    public static Node New => new(Guid.NewGuid());
+
+    //     [Pure]
+    //    [JsonIgnore]
+    //    public int Degree => this.nodesAndEdges.NodeCount;
+
+    //    [Pure]
+    //    [JsonIgnore]
+    //    public IEnumerable<Guid> Neighbors => this.nodesAndEdges.Nodes;
+
+    //    [Pure]
+    //    [JsonIgnore]
+    //    public IEnumerable<Guid> IncidentEdges => this.nodesAndEdges.Edges;
+
+    //    [JsonConstructor]
+    //    private Node(Guid id)
+    //        : base(id)
+    //    { }
+
+    //    private Node([DisallowNull, Pure] Node other)
+    //        : base(other)
+    //    {
+    //        this.nodesAndEdges = other.nodesAndEdges.Clone() as AdjacencyAndIncidenceIndex;
+    //    }
+
+    //    [Pure]
+    //    public override object Clone()
+    //    {
+    //        return new Node(this);
+    //    }
+
+    //    [Pure]
+    //    public bool Equals([Pure] Node other)
+    //    {
+    //        return other != null
+    //            && other.Id == this.Id;
+    //    }
+
+    //    [Pure]
+    //    public bool Equals([Pure] Node x, [Pure] Node y)
+    //    {
+    //        return x != null && x.Equals(y);
+    //    }
+
+    //    [Pure]
+    //    public override bool Equals([Pure] object obj)
+    //    {
+    //        return obj is Node node
+    //            && this.Equals(node);
+    //    }
+
+    //    [Pure]
+    //    public override int GetHashCode()
+    //    {
+    //        return HashCode.Combine(this.Id);
+    //    }
+
+    //    [Pure]
+    //    public int GetHashCode([DisallowNull, Pure] Node obj)
+    //    {
+    //        return obj is null
+    //            ? throw new ArgumentNullException(nameof(obj))
+    //            : obj.GetHashCode();
+    //    }
+
+    //    [Pure]
+    //    public bool IsAdjacent(Guid nodeId)
+    //    {
+    //        return this.nodesAndEdges.ContainsNode(nodeId);
+    //    }
+
+    //    [Pure]
+    //    public bool IsAdjacent([DisallowNull, Pure] Node node)
+    //    {
+    //        return node is null
+    //            ? throw new ArgumentNullException(nameof(node))
+    //            : this.IsAdjacent(node.Id);
+    //    }
+
+    //    [Pure]
+    //    public bool IsIncident(Guid edgeId)
+    //    {
+    //        return this.nodesAndEdges.ContainsEdge(edgeId);
+    //    }
+
+    //    [Pure]
+    //    public bool IsIncident([DisallowNull, Pure] Edge edge)
+    //    {
+    //        return edge is null
+    //            ? throw new ArgumentNullException(nameof(edge))
+    //            : this.IsIncident(edge.Id);
+    //    }
+
+    //    /// <summary>
+    //    /// Couples the nodes and returns the resulting edge.
+    //    /// </summary>
+    //    /// <param name="source"><see cref="Node"/></param>
+    //    /// <param name="target"><see cref="Node"/></param>
+    //    /// <returns><see cref="Edge"/></returns>
+    //    public static Edge operator +(Node source, Node target)
+    //    {
+    //        return Edge.Couple(source, target);
+    //    }
+
+    //    internal void Couple([DisallowNull, Pure] Edge edge)
+    //    {
+    //        if (edge is null)
+    //        {
+    //            throw new ArgumentNullException(nameof(edge));
+    //        }
+
+    //        if (edge.SourceId != this.Id && edge.TargetId != this.Id)
+    //        {
+    //            throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}'does not point to a node with id {this.Id}.");
+    //        }
+
+    //        var otherNodeId = edge.SourceId == this.Id
+    //            ? edge.TargetId
+    //            : edge.SourceId;
+
+    //        this.nodesAndEdges.Add(edge.Id, otherNodeId);
+    //    }
+
+    //    internal void Decouple([DisallowNull, Pure] Edge edge)
+    //    {
+    //        if (edge is null)
+    //        {
+    //            throw new ArgumentNullException(nameof(edge));
+    //        }
+
+    //        if (edge.SourceId != this.Id && edge.TargetId != this.Id)
+    //        {
+    //            throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}' does not point to node with id '{this.Id}'.");
+    //        }
+
+    //        var otherNodeId = edge.SourceId == this.Id
+    //            ? edge.TargetId
+    //            : edge.SourceId;
+
+    //        this.nodesAndEdges.Remove(edge.Id, otherNodeId);
+    //    }
+    //}
 }

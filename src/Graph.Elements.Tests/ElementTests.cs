@@ -37,7 +37,7 @@ namespace Graphs.Elements.Tests
             var label = "x";
             var node = Node.New
                 .Classify(label);
-            Assert.True(node is IMutableElement<Guid>);
+            Assert.True(node is IMutable<Guid>);
         }
 
         [Fact]
