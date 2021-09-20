@@ -1,6 +1,4 @@
 ﻿using Graphs.Elements.Identifiers;
-using Graphs.Elements.Mutables;
-using Graphs.Elements.Traversables;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,25 +8,10 @@ using System.Diagnostics.Contracts;
 
 namespace Graphs.Elements
 {
-    // todo: Node: raise events on coupled and decoupled - create INodeEventSource
-    public interface ICoupledEventSource
-    {
-
-    }
-
-    public interface INode<TId>
-        : IMutable<TId>
-        , ITraversable<TId>
-        , IEquatable<INode<TId>>
-        , IEqualityComparer<INode<TId>>
-        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
-    {
-    }
-
     [DebuggerDisplay("{Id}")]
     [JsonObject("node")]
     public sealed class Node<TId>
-        : Mutable<TId>
+        : MutableElement<TId>
         , INode<TId>
         , IEquatable<Node<TId>>
         , IEqualityComparer<Node<TId>>
@@ -37,7 +20,13 @@ namespace Graphs.Elements
         [JsonProperty("nodesAndEdges")]
         private readonly AdjacencyAndIncidenceIndex<TId> nodesAndEdges = AdjacencyAndIncidenceIndex<TId>.Empty;
 
-        public static Node<TId> New(IIdGenerator<TId> idGenerator) => new(idGenerator.New()); 
+        public event EventHandler<CoupledEventArgs<TId>> Coupled;
+        public event EventHandler<DecoupledEventArgs<TId>> Decoupled;
+
+        public static Node<TId> New(IIdGenerator<TId> idGenerator)
+        {
+            return new(idGenerator.New());
+        }
 
         [Pure]
         [JsonIgnore]

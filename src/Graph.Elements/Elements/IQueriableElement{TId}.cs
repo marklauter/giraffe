@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace Graphs.Elements.Queriables
+namespace Graphs.Elements
 {
-    public interface IQueriable<TId>
+    public interface IQueriableElement<TId>
         : IIdentifiable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
@@ -44,6 +44,6 @@ namespace Graphs.Elements.Queriables
         /// <remarks>
         /// <seealso cref="HasQuality(String)"/>
         /// </remarks>
-        bool TryGetProperty(string name, out object value);
+        bool TryGetValue(string name, out object value);
     }
 }

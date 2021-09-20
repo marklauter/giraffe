@@ -1,12 +1,11 @@
 ﻿using Graphs.Elements.Classifiers;
 using Graphs.Elements.Qualifiers;
-using Graphs.Elements.Queriables;
 using System;
 
-namespace Graphs.Elements.Mutables
+namespace Graphs.Elements
 {
     public interface IMutable<TId>
-        : IQueriable<TId>
+        : IQueriableElement<TId>
         , IClassifierEventSource
         , IQualifierEventSource
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable

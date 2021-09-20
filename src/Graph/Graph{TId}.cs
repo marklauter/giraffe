@@ -1,6 +1,4 @@
 ﻿using Graphs.Data;
-using Graphs.Elements.Mutables;
-using Graphs.Elements.Queriables;
 using Graphs.Elements.Traversables;
 using Graphs.Traversals;
 using System;
@@ -42,7 +40,7 @@ namespace Graphs
             throw new NotImplementedException();
         }
 
-        public Task<TQueriable> GetQueriableAsync<TQueriable>(TId id) where TQueriable : IQueriable<TId>
+        public Task<TQueriable> GetQueriableAsync<TQueriable>(TId id) where TQueriable : IQueriableElement<TId>
         {
             throw new NotImplementedException();
         }

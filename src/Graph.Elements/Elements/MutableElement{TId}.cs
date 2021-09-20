@@ -8,10 +8,10 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
-namespace Graphs.Elements.Mutables
+namespace Graphs.Elements
 {
     [DebuggerDisplay("{Id}")]
-    public abstract class Mutable<TId>
+    public abstract class MutableElement<TId>
         : IMutable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
@@ -21,7 +21,7 @@ namespace Graphs.Elements.Mutables
         [JsonProperty]
         private readonly QualificationCollection qualifications = QualificationCollection.Empty;
 
-        protected Mutable()
+        protected MutableElement()
         {
             this.classifications.Classified += this.Classifications_Classified;
             this.classifications.Declassified += this.Classifications_Declassified;
@@ -29,13 +29,13 @@ namespace Graphs.Elements.Mutables
             this.qualifications.Qualified += this.Qualifications_Qualified;
         }
 
-        protected Mutable(TId id)
+        protected MutableElement(TId id)
             : this()
         {
             this.Id = id;
         }
 
-        protected Mutable([DisallowNull, Pure] Mutable<TId> other)
+        protected MutableElement([DisallowNull, Pure] MutableElement<TId> other)
             : this()
         {
             this.classifications = other.classifications.Clone() as ClassificationCollection;
@@ -136,7 +136,7 @@ namespace Graphs.Elements.Mutables
 
         /// <inheritdoc/>
         [Pure]
-        public bool TryGetProperty(string name, out object value)
+        public bool TryGetValue(string name, out object value)
         {
             return String.IsNullOrWhiteSpace(name)
                 ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
