@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Graphs.Elements.Identifiers
+namespace Graphs.Elements
 {
-    public interface IIdentifiable<TId>
+    public interface IIdentifiableElement<TId>
         : ICloneable
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {

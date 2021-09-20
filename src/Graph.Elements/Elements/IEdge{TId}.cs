@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Graphs.Elements
 {
     public interface IEdge<TId>
-        : IMutable<TId>
+        : IMutableElement<TId>
         , IEquatable<IEdge<TId>>
         , IEqualityComparer<IEdge<TId>>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable

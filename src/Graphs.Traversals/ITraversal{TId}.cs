@@ -1,4 +1,4 @@
-﻿using Graphs.Elements.Traversables;
+﻿using Graphs.Elements;
 using System;
 using System.Collections.Generic;
 
@@ -7,8 +7,8 @@ namespace Graphs.Traversals
     public interface ITraversal<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        IAsyncEnumerable<ITraversable<TId>> TraverseAsync(ITraversable<TId> origin, int depth);
+        IAsyncEnumerable<ITraversableElement<TId>> TraverseAsync(ITraversableElement<TId> origin, int depth);
 
-        IAsyncEnumerable<ITraversable<TId>> TraverseAsync(ITraversable<TId> origin, int depth, Func<ITraversable<TId>, bool> predicate);
+        IAsyncEnumerable<ITraversableElement<TId>> TraverseAsync(ITraversableElement<TId> origin, int depth, Func<ITraversableElement<TId>, bool> predicate);
     }
 }

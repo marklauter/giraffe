@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Graphs.Elements.Traversables
+namespace Graphs.Elements
 {
-    public interface ITraversable<TId>
+    public interface ITraversableElement<TId>
         : IQueriableElement<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {

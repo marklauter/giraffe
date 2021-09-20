@@ -1,11 +1,10 @@
-﻿using Graphs.Elements.Identifiers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Graphs.Elements
 {
     public interface IQueriableElement<TId>
-        : IIdentifiable<TId>
+        : IIdentifiableElement<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         /// <summary>

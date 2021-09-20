@@ -12,7 +12,7 @@ namespace Graphs.Elements
 {
     [DebuggerDisplay("{Id}")]
     public abstract class MutableElement<TId>
-        : IMutable<TId>
+        : IMutableElement<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         [JsonProperty]
@@ -68,7 +68,7 @@ namespace Graphs.Elements
         public event EventHandler<DisqualifiedEventArgs> Disqualified;
 
         /// <inheritdoc/>
-        public IMutable<TId> Classify(string label)
+        public IMutableElement<TId> Classify(string label)
         {
             if (String.IsNullOrWhiteSpace(label))
             {
@@ -84,7 +84,7 @@ namespace Graphs.Elements
         public abstract object Clone();
 
         /// <inheritdoc/>
-        public IMutable<TId> Declassify(string label)
+        public IMutableElement<TId> Declassify(string label)
         {
             if (String.IsNullOrWhiteSpace(label))
             {
@@ -96,7 +96,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Disqualify(string name)
+        public IMutableElement<TId> Disqualify(string name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -144,7 +144,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, bool value)
+        public IMutableElement<TId> Qualify(string name, bool value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -156,7 +156,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, sbyte value)
+        public IMutableElement<TId> Qualify(string name, sbyte value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -168,7 +168,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, byte value)
+        public IMutableElement<TId> Qualify(string name, byte value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -180,7 +180,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, short value)
+        public IMutableElement<TId> Qualify(string name, short value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -192,7 +192,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, ushort value)
+        public IMutableElement<TId> Qualify(string name, ushort value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -204,7 +204,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, int value)
+        public IMutableElement<TId> Qualify(string name, int value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -216,7 +216,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, uint value)
+        public IMutableElement<TId> Qualify(string name, uint value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -228,7 +228,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, long value)
+        public IMutableElement<TId> Qualify(string name, long value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -240,7 +240,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, ulong value)
+        public IMutableElement<TId> Qualify(string name, ulong value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -252,7 +252,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, float value)
+        public IMutableElement<TId> Qualify(string name, float value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -264,7 +264,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, double value)
+        public IMutableElement<TId> Qualify(string name, double value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -276,7 +276,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, decimal value)
+        public IMutableElement<TId> Qualify(string name, decimal value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -288,7 +288,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, DateTime value)
+        public IMutableElement<TId> Qualify(string name, DateTime value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -300,7 +300,7 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        public IMutable<TId> Qualify(string name, string value)
+        public IMutableElement<TId> Qualify(string name, string value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {

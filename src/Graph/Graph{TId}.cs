@@ -1,5 +1,5 @@
 ﻿using Graphs.Data;
-using Graphs.Elements.Traversables;
+using Graphs.Elements;
 using Graphs.Traversals;
 using System;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Graphs
 {
     public interface IGraph<TId>
-        : IMutableSource<TId>
+        : IMutableElementSource<TId>
         , ITraversalSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
@@ -26,16 +26,16 @@ namespace Graphs
         : IGraph<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        private readonly GraphDocumentContext documentContext;
+        private readonly GraphDocumentContext<TId> documentContext;
 
-        public Graph(GraphDocumentContext documentContext)
+        public Graph(GraphDocumentContext<TId> documentContext)
         {
             this.documentContext = documentContext ?? throw new ArgumentNullException(nameof(documentContext));
         }
 
         public bool IsEmpty => this.documentContext.Nodes.IsEmpty;
 
-        public Task<TElement> GetMutableAsync<TElement>(TId id) where TElement : IMutable<TId>
+        public Task<TElement> GetMutableAsync<TElement>(TId id) where TElement : IMutableElement<TId>
         {
             throw new NotImplementedException();
         }
@@ -45,7 +45,7 @@ namespace Graphs
             throw new NotImplementedException();
         }
 
-        public Task<TTraversable> GetTraversableAsync<TTraversable>(TId id) where TTraversable : ITraversable<TId>
+        public Task<TTraversable> GetTraversableAsync<TTraversable>(TId id) where TTraversable : ITraversableElement<TId>
         {
             throw new NotImplementedException();
         }
