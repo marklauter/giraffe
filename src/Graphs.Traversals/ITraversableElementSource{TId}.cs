@@ -3,9 +3,9 @@ using System;
 
 namespace Graphs.Traversals
 {
-    public interface ITraversalSource<TId>
-        : ITraversableElementSource<TId>
-        , IQueriableElementSource<TId>
+    public interface ITraversableElementSource<TId>
+        : INodeSource<TId>
+        , IEdgeSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
     }

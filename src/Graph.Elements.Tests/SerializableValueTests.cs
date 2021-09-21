@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Graphs.Elements.Qualifiers;
+using Newtonsoft.Json;
 using System;
 using Xunit;
 
@@ -334,7 +335,7 @@ namespace Graphs.Elements.Tests
         {
             var value = 1;
             var q1 = (SerializableValue)value;
-            var q2 = Node.New;
+            var q2 = Node<Guid>.New(new GuidGenerator());
 
             Assert.False(q1.Equals(q2));
         }

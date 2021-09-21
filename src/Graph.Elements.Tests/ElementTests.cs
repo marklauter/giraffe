@@ -12,14 +12,14 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_New_Sets_Id()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
             Assert.NotEqual(Guid.Empty, node.Id);
         }
 
         [Fact]
         public void Element_Classify_Throws_ArgumentException()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var label = String.Empty;
             Assert.Throws<ArgumentException>(() => node.Classify(label));
@@ -53,7 +53,7 @@ namespace Graphs.Elements.Tests
         public void Element_Classify_Raises_ClassifiedEventArgs()
         {
             var label = "x";
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
             var e = Assert.Raises<ClassifiedEventArgs>(
                 handler => node.Classified += handler,
                 handler => node.Classified -= handler,
@@ -65,7 +65,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Declassify_Throws_ArgumentException()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var label = String.Empty;
             Assert.Throws<ArgumentException>(() => node.Declassify(label));
@@ -106,7 +106,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Is_Throws_ArgumentException()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var label = String.Empty;
             Assert.Throws<ArgumentException>(() => node.Is(label));
@@ -121,7 +121,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Is_Enumerable_Throws_ArgumentNullException()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             List<string> labels = null;
             Assert.Throws<ArgumentNullException>(() => node.Is(labels));
@@ -186,7 +186,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Throws_ArgumentException()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = String.Empty;
             var value = "x";
@@ -204,7 +204,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = "y";
@@ -216,7 +216,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Disqualify_Throws_ArgumentException()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = String.Empty;
             Assert.Throws<ArgumentException>(() => node.Disqualify(name));
@@ -248,7 +248,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_HasProperty_Throws_ArgumentException()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = String.Empty;
             Assert.Throws<ArgumentException>(() => node.HasProperty(name));
@@ -275,14 +275,14 @@ namespace Graphs.Elements.Tests
         public void Element_HasProperty_Returns_False()
         {
             var name = "x";
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
             Assert.False(node.HasProperty(name));
         }
 
         [Fact]
         public void Element_Quality_Throws_ArgumentException()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = String.Empty;
             Assert.Throws<ArgumentException>(() => node.TryGetProperty(name, out var _));
@@ -299,7 +299,7 @@ namespace Graphs.Elements.Tests
         {
             var name = "x";
             var value = "y";
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
             var args = Assert.Raises<QualifiedEventArgs>(
                 handler => node.Qualified += handler,
                 handler => node.Qualified -= handler,
@@ -313,7 +313,7 @@ namespace Graphs.Elements.Tests
         public void Element_Disqualify_Does_Not_Raise_DisqualifiedEventArgs()
         {
             var name = "x";
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             Assert.Throws<Xunit.Sdk.RaisesException>(() => _ = Assert.Raises<DisqualifiedEventArgs>(
                     handler => node.Disqualified += handler,
@@ -326,7 +326,7 @@ namespace Graphs.Elements.Tests
         {
             var value = 1;
             var name = "x";
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
             node.Qualify(name, value);
 
             var args = Assert.Raises<DisqualifiedEventArgs>(
@@ -386,7 +386,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Bool_False_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = false;
@@ -398,7 +398,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Bool_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = true;
@@ -410,7 +410,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_SByte_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = (sbyte)-1;
@@ -422,7 +422,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Byte_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = (byte)1;
@@ -434,7 +434,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Short_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = (short)1;
@@ -446,7 +446,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_UShort_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = (ushort)1;
@@ -458,7 +458,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Int_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = 1;
@@ -470,7 +470,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_UInt_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = 1u;
@@ -482,7 +482,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Long_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = 1L;
@@ -494,7 +494,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_ULong_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = 1UL;
@@ -506,7 +506,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Float_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = 1.1f;
@@ -518,7 +518,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Double_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = 1.1d;
@@ -530,7 +530,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_Decimal_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = (decimal)1.1;
@@ -542,7 +542,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Element_Qualify_DateTime_True_Sets_Name_and_Value()
         {
-            var node = Node.New;
+            var node = Node<Guid>.New(new GuidGenerator());
 
             var name = "x";
             var value = DateTime.Now;

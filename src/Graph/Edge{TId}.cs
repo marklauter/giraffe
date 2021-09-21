@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Graphs.Elements
 {
@@ -17,42 +18,73 @@ namespace Graphs.Elements
         , IEqualityComparer<Edge<TId>>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        ///// <summary>
-        ///// Creates an edge from two nodes. Defaults to directed edge.
-        ///// </summary>
-        ///// <param name="source"><see cref="Node"/></param>
-        ///// <param name="target"><see cref="Node"/></param>
-        ///// <returns><see cref="Edge"/></returns>
-        //public static Edge Couple(Node source, Node target)
-        //{
-        //    return Couple(source, target, true);
-        //}
+        /// <summary>
+        /// Creates an edge from two nodes. Defaults to directed edge.
+        /// </summary>
+        /// <param name="source"><see cref="Node"/></param>
+        /// <param name="target"><see cref="Node"/></param>
+        /// <returns><see cref="Edge"/></returns>
+        internal static Edge<TId> Couple(IIdGenerator<TId> idGenerator, Node<TId> source, Node<TId> target)
+        {
+            return Couple(idGenerator, source, target, true);
+        }
 
-        ///// <summary>
-        ///// Creates an edge from two nodes.
-        ///// </summary>
-        ///// <param name="source"><see cref="Node"/></param>
-        ///// <param name="target"><see cref="Node"/></param>
-        ///// <param name="isDirected"><see cref="Boolean"/></param>
-        ///// <returns><see cref="Edge"/></returns>
-        //public static Edge Couple(Node source, Node target, bool isDirected)
-        //{
-        //    if (source is null)
-        //    {
-        //        throw new ArgumentNullException(nameof(source));
-        //    }
+        /// <summary>
+        /// Creates an edge from two nodes.
+        /// </summary>
+        /// <param name="source"><see cref="Node"/></param>
+        /// <param name="target"><see cref="Node"/></param>
+        /// <param name="isDirected"><see cref="Boolean"/></param>
+        /// <returns><see cref="Edge"/></returns>
+        internal static Edge<TId> Couple(IIdGenerator<TId> idGenerator, Node<TId> source, Node<TId> target, bool isDirected)
+        {
+            if (idGenerator is null)
+            {
+                throw new ArgumentNullException(nameof(idGenerator));
+            }
 
-        //    if (target is null)
-        //    {
-        //        throw new ArgumentNullException(nameof(target));
-        //    }
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
 
-        //    var edge = new Edge(Guid.NewGuid(), source.Id, target.Id, isDirected);
-        //    source.Couple(edge);
-        //    target.Couple(edge);
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
 
-        //    return edge;
-        //}
+            var edge = new Edge<TId>(idGenerator.NewId(), source.Id, target.Id, isDirected);
+            source.Couple(edge);
+            target.Couple(edge);
+
+            return edge;
+        }
+
+        internal void Decouple(Node<TId> node1, Node<TId> node2)
+        {
+            if (node1 is null)
+            {
+                throw new ArgumentNullException(nameof(node1));
+            }
+
+            if (node2 is null)
+            {
+                throw new ArgumentNullException(nameof(node2));
+            }
+
+            if (!this.Nodes.Contains(node1.Id))
+            {
+                throw new InvalidOperationException($"{nameof(Node<TId>)} with id '{node1.Id}' is not incident to edge with id '{this.Id}'.");
+            }
+
+            if (!this.Nodes.Contains(node2.Id))
+            {
+                throw new InvalidOperationException($"{nameof(Node<TId>)} with id '{node2.Id}' is not incident to edge with id '{this.Id}'.");
+            }
+
+            node1.Decouple(this);
+            node2.Decouple(this);
+        }
 
         [Required]
         [JsonProperty("directed")]
@@ -107,32 +139,6 @@ namespace Graphs.Elements
             return this.SourceId.Equals(nodeId) || this.TargetId.Equals(nodeId);
         }
 
-        //public void Decouple(Node node1, Node node2)
-        //{
-        //    if (node1 is null)
-        //    {
-        //        throw new ArgumentNullException(nameof(node1));
-        //    }
-
-        //    if (node2 is null)
-        //    {
-        //        throw new ArgumentNullException(nameof(node2));
-        //    }
-
-        //    if (!this.Nodes.Contains(node1.Id))
-        //    {
-        //        throw new InvalidOperationException($"{nameof(Node)} with id '{node1.Id}' is not incident to edge with id '{this.Id}'.");
-        //    }
-
-        //    if (!this.Nodes.Contains(node2.Id))
-        //    {
-        //        throw new InvalidOperationException($"{nameof(Node)} with id '{node2.Id}' is not incident to edge with id '{this.Id}'.");
-        //    }
-
-        //    node1.Decouple(this);
-        //    node2.Decouple(this);
-        //}
-
         [Pure]
         public bool Equals([Pure] Edge<TId> other)
         {
@@ -153,30 +159,6 @@ namespace Graphs.Elements
         public override bool Equals([Pure] object obj)
         {
             return obj is Edge<TId> edge && this.Equals(edge);
-        }
-
-        [Pure]
-        public bool Equals([Pure] IEdge<TId> other)
-        {
-            return other != null
-                && this.Id.Equals(other.Id)
-                && this.SourceId.Equals(other.SourceId)
-                && this.TargetId.Equals(other.TargetId)
-                && this.IsDirected == other.IsDirected;
-        }
-
-        [Pure]
-        public bool Equals([Pure] IEdge<TId> x, [Pure] IEdge<TId> y)
-        {
-            return x != null && x.Equals(y);
-        }
-
-        [Pure]
-        public int GetHashCode([DisallowNull, Pure] IEdge<TId> obj)
-        {
-            return obj is null
-                ? throw new ArgumentNullException(nameof(obj))
-                : obj.GetHashCode();
         }
 
         [Pure]

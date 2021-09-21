@@ -17,16 +17,16 @@ namespace Graphs.Tests
         [Fact]
         public void GraphDocumentContext_Constructor_Throws_On_Nulls()
         {
-            Assert.Throws<ArgumentNullException>(() => new GraphDocumentContext(HeapDocumentCollection<Node>.Empty, null));
-            Assert.Throws<ArgumentNullException>(() => new GraphDocumentContext(null, HeapDocumentCollection<Edge>.Empty));
+            Assert.Throws<ArgumentNullException>(() => new DocumentContext<Guid>(HeapDocumentCollection<Node<Guid>>.Empty, null));
+            Assert.Throws<ArgumentNullException>(() => new DocumentContext<Guid>(null, HeapDocumentCollection<Edge<Guid>>.Empty));
         }
 
         [Fact]
         public void GraphDocumentContext_Constructor_Sets_Collections()
         {
-            var nodes = HeapDocumentCollection<Node>.Empty;
-            var edges = HeapDocumentCollection<Edge>.Empty;
-            var context = new GraphDocumentContext(nodes, edges);
+            var nodes = HeapDocumentCollection<Node<Guid>>.Empty;
+            var edges = HeapDocumentCollection<Edge<Guid>>.Empty;
+            var context = new DocumentContext<Guid>(nodes, edges);
             Assert.Equal(nodes, context.Nodes);
             Assert.Equal(edges, context.Edges);
         }
@@ -34,9 +34,9 @@ namespace Graphs.Tests
         [Fact]
         public void Graph_New_Is_Empty()
         {
-            var context = new GraphDocumentContext(
-                HeapDocumentCollection<Node>.Empty,
-                HeapDocumentCollection<Edge>.Empty);
+            var context = new DocumentContext<Guid>(
+                HeapDocumentCollection<Node<Guid>>.Empty,
+                HeapDocumentCollection<Edge<Guid>>.Empty);
 
             var graph = new Graph<Guid>(context);
             Assert.True(graph.IsEmpty);
