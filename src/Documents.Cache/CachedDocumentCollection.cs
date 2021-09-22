@@ -1,9 +1,9 @@
-﻿using Documents.Cache;
+﻿using Documents.Collections;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Documents.Collections.IO
+namespace Documents.Cache
 {
     public sealed class CachedDocumentCollection<TMember>
         : IDocumentCollection<TMember>

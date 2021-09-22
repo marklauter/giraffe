@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Documents.Collections\Documents.Collections.csproj" />
     <ProjectReference Include="..\Graph.Elements\Graphs.Elements.csproj" />
     <ProjectReference Include="..\Graphs.Traversals\Graphs.Traversals.csproj" />
   </ItemGroup>

@@ -120,7 +120,7 @@ namespace Documents.Tests
         [Fact]
         public void Document_Keys_Caches_Keys()
         {
-            Assert.Contains("Id", Document<Member>.KeyProperties.Select(pi => pi.Name));
+            Assert.Contains("Id", KeyBuilder<Member>.KeyProperties.Select(pi => pi.Name));
         }
     }
 }

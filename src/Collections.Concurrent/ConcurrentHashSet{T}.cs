@@ -15,6 +15,11 @@ namespace Collections.Concurrent
 
         public static ConcurrentHashSet<T> Empty => new();
 
+        public ConcurrentHashSet(IEnumerable<T> items)
+        {
+            this.hashset = new(items);
+        }
+
         private ConcurrentHashSet()
         {
             this.hashset = new();
@@ -23,11 +28,6 @@ namespace Collections.Concurrent
         private ConcurrentHashSet(ConcurrentHashSet<T> other)
         {
             this.hashset = new(other);
-        }
-
-        public ConcurrentHashSet(IEnumerable<T> items)
-        {
-            this.hashset = new(items);
         }
 
         public int Count => this.gate.Read(() => this.hashset.Count);
