@@ -1,7 +1,4 @@
-﻿using Documents.Cache;
-using Documents.IO.Encoding;
-using Documents.IO.Files;
-using Documents.IO.Tests;
+﻿using Documents.Collections;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -9,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Documents.Collections.IO.Tests
+namespace Documents.Cache.Tests
 {
     public sealed class CachedDocumentCollectionTests
         : IClassFixture<CachedDocumentTestsFixture>
@@ -17,28 +14,15 @@ namespace Documents.Collections.IO.Tests
 #pragma warning disable IDE1006 // Naming Styles
         private static CachedDocumentCollection<Member> GetCollection()
         {
-            var timeout = TimeSpan.FromSeconds(10);
-
-            var encoder = new JsonDocumentEncoder<Member>();
-            var decoder = new JsonDocumentDecoder<Member>();
-            var reader = new AsyncFileReader(timeout);
-            var writer = new AsyncFileWriter(timeout);
-            var deleter = new AsyncFileDeleter(timeout);
             var cacheOptions = new MemoryCacheEntryOptions
             {
                 SlidingExpiration = TimeSpan.FromMinutes(5)
             };
 
             var documentCache = new MemoryDocumentCache<Member>(cacheOptions);
-            var fileDocumentCollection = new FileDocumentCollection<Member>(
-                FileDocumentTestsFixture.MakePath(),
-                encoder,
-                decoder,
-                reader,
-                writer,
-                deleter);
+            var documentCollection = HeapDocumentCollection<Member>.Empty;
 
-            return new CachedDocumentCollection<Member>(fileDocumentCollection, documentCache);
+            return new CachedDocumentCollection<Member>(documentCollection, documentCache);
         }
 
         [Fact]

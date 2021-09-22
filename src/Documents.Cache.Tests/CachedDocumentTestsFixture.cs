@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Documents.Collections.IO.Tests
+namespace Documents.Cache.Tests
 {
     internal sealed class CachedDocumentTestsFixture
         : IDisposable
