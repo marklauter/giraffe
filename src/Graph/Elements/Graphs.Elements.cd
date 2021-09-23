@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Graphs.Elements.CoupledEventArgs&lt;TId&gt;" Collapsed="true">
+  <Class Name="Graphs.Elements.ConnectedEventArgs&lt;TId&gt;" Collapsed="true">
     <Position X="2" Y="12" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Elements\Nodes\EventArgs\CoupledEventArgs{TId}.cs</FileName>
+      <FileName>Elements\Nodes\EventArgs\ConnectedEventArgs{TId}.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Graphs.Elements.DecoupledEventArgs&lt;TId&gt;" Collapsed="true">
+  <Class Name="Graphs.Elements.DisconnectedEventArgs&lt;TId&gt;" Collapsed="true">
     <Position X="4.5" Y="12" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Elements\Nodes\EventArgs\DecoupledEventArgs{TId}.cs</FileName>
+      <FileName>Elements\Nodes\EventArgs\DisconnectedEventArgs{TId}.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Graphs.Elements.AdjacencyAndIncidenceIndex&lt;TId&gt;" BaseTypeListCollapsed="true">
@@ -25,7 +25,7 @@
   <Class Name="Graphs.Elements.Node&lt;TId&gt;">
     <Position X="10.25" Y="11.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAQAEACAAgAAAAAAQABIAAIAAIEAAAQAAABA=</HashCode>
+      <HashCode>AAAQAAAAAAAEQCAAgAAAAAAQABIAAIAAIEAAAwAAABA=</HashCode>
       <FileName>Elements\Nodes\Node{TId}.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -53,21 +53,21 @@
     <Position X="17.5" Y="1.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Qualifiers\EventArgs\DisqualifiedEventArgs.cs</FileName>
+      <FileName>Elements\Qualifiers\EventArgs\DisqualifiedEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Graphs.Elements.Qualifiers.QualifiedEventArgs" Collapsed="true">
     <Position X="15.5" Y="1.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
-      <FileName>Qualifiers\EventArgs\QualifiedEventArgs.cs</FileName>
+      <FileName>Elements\Qualifiers\EventArgs\QualifiedEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Graphs.Elements.Qualifiers.QualificationCollection" BaseTypeListCollapsed="true">
     <Position X="21.5" Y="11.75" Width="3.5" />
     <TypeIdentifier>
       <HashCode>CAAAAAAIAAAAABBACAIAQAAAAIAAACAEAAAAAAAAABA=</HashCode>
-      <FileName>Qualifiers\QualificationCollection.cs</FileName>
+      <FileName>Elements\Qualifiers\QualificationCollection.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Field Name="qualifications" />
@@ -78,7 +78,7 @@
     <Position X="26.75" Y="11.75" Width="3.5" />
     <TypeIdentifier>
       <HashCode>ABoEgAAAAAAAAAYAgAYAAQBAAgAAAIgAAEEgAFAAABA=</HashCode>
-      <FileName>Qualifiers\SerializableValue.cs</FileName>
+      <FileName>Elements\Qualifiers\SerializableValue.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -86,35 +86,35 @@
     <Position X="6" Y="1.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classifiers\EventArgs\ClassifiedEventArgs.cs</FileName>
+      <FileName>Elements\Classifiers\EventArgs\ClassifiedEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Graphs.Elements.Classifiers.ClassifiedEventArgs&lt;TId&gt;" Collapsed="true">
     <Position X="6" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classifiers\EventArgs\ClassifiedEventArgs{TId}.cs</FileName>
+      <FileName>Elements\Classifiers\EventArgs\ClassifiedEventArgs{TId}.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Graphs.Elements.Classifiers.DeclassifiedEventArgs" Collapsed="true">
     <Position X="8.5" Y="1.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classifiers\EventArgs\DeclassifiedEventArgs.cs</FileName>
+      <FileName>Elements\Classifiers\EventArgs\DeclassifiedEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Graphs.Elements.Classifiers.DeclassifiedEventArgs&lt;TId&gt;" Collapsed="true">
     <Position X="8.5" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classifiers\EventArgs\DeclassifiedEventArgs{TId}.cs</FileName>
+      <FileName>Elements\Classifiers\EventArgs\DeclassifiedEventArgs{TId}.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Graphs.Elements.Classifiers.ClassificationCollection" BaseTypeListCollapsed="true">
     <Position X="17.5" Y="11.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAEAABABAAIAAACAAEBAAEAEAAAAAAAAABA=</HashCode>
-      <FileName>Classifiers\ClassificationCollection.cs</FileName>
+      <FileName>Elements\Classifiers\ClassificationCollection.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -126,11 +126,11 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Interface Name="Graphs.Elements.ICoupledEventSource&lt;TId&gt;">
-    <Position X="7" Y="11.75" Width="2.25" />
+  <Interface Name="Graphs.Elements.IConnectionsEventSource&lt;TId&gt;">
+    <Position X="7" Y="11.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
-      <FileName>Elements\Nodes\EventSources\ICoupledEventSource{TId}.cs</FileName>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Elements\Nodes\EventSources\IConnectionsEventSource{TId}.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Graphs.Elements.INodeSource&lt;TId&gt;">
@@ -179,28 +179,28 @@
     <Position X="14.75" Y="3.75" Width="2" />
     <TypeIdentifier>
       <HashCode>CAAAAAAIAAAAAABAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Qualifiers\IQualifier.cs</FileName>
+      <FileName>Elements\Qualifiers\IQualifier.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Graphs.Elements.Qualifiers.IQualifierEventSource">
     <Position X="13.25" Y="1" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAACAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Qualifiers\IQualifierEventSource.cs</FileName>
+      <FileName>Elements\Qualifiers\IQualifierEventSource.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Graphs.Elements.Classifiers.IClassifier">
     <Position X="10.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAEBAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classifiers\IClassifier.cs</FileName>
+      <FileName>Elements\Classifiers\IClassifier.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Graphs.Elements.Classifiers.IClassifierEventSource&lt;TId&gt;">
     <Position X="3" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classifiers\IClassifierEventSource{TId}.cs</FileName>
+      <FileName>Elements\Classifiers\IClassifierEventSource{TId}.cs</FileName>
       <NewMemberFileName>Classifiers\IClassifierEventSource.cs</NewMemberFileName>
     </TypeIdentifier>
   </Interface>
@@ -208,7 +208,7 @@
     <Position X="3" Y="4.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAEAAAAAAAAAAAAACAAEAAAAAAAAAAAAAQAAA=</HashCode>
-      <FileName>Classifiers\IClass{TId}.cs</FileName>
+      <FileName>Elements\Classifiers\IClass{TId}.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Graphs.Elements.IIdGenerator&lt;TId&gt;">
@@ -222,7 +222,7 @@
     <Position X="11.25" Y="1" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classifiers\IClassifierEventSource.cs</FileName>
+      <FileName>Elements\Classifiers\IClassifierEventSource.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

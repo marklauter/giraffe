@@ -11,8 +11,4 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Graph.Elements\Graphs.Elements.csproj" />
-  </ItemGroup>
-
 </Project>

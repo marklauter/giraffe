@@ -1,9 +1,7 @@
 ﻿using Graphs.Elements.Classifiers;
 using Graphs.Elements.Qualifiers;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
@@ -15,10 +13,8 @@ namespace Graphs.Elements
         : IElement<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        [JsonProperty]
         private readonly ClassificationCollection classifications = ClassificationCollection.Empty;
 
-        [JsonProperty]
         private readonly QualificationCollection qualifications = QualificationCollection.Empty;
 
         protected Element()
@@ -50,9 +46,6 @@ namespace Graphs.Elements
         }
 
         /// <inheritdoc/>
-        [Key]
-        [Required]
-        [JsonProperty("id")]
         public TId Id { get; }
 
         /// <inheritdoc/>

@@ -1,16 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Linq;
 
 namespace Graphs.Elements
 {
     [DebuggerDisplay("{SourceId} : {TargetId}")]
-    [JsonObject("edge")]
     public sealed class Edge<TId>
         : Element<TId>
         , IEdge<TId>
@@ -21,28 +17,23 @@ namespace Graphs.Elements
         /// <summary>
         /// Creates an edge from two nodes. Defaults to directed edge.
         /// </summary>
-        /// <param name="source"><see cref="Node"/></param>
-        /// <param name="target"><see cref="Node"/></param>
+        /// <param name="source"><see cref="INode"/></param>
+        /// <param name="target"><see cref="INode"/></param>
         /// <returns><see cref="Edge"/></returns>
-        internal static Edge<TId> Couple(IIdGenerator<TId> idGenerator, Node<TId> source, Node<TId> target)
+        internal static IEdge<TId> Connect(TId id, INode<TId> source, INode<TId> target)
         {
-            return Couple(idGenerator, source, target, true);
+            return Connect(id, source, target, true);
         }
 
         /// <summary>
         /// Creates an edge from two nodes.
         /// </summary>
-        /// <param name="source"><see cref="Node"/></param>
-        /// <param name="target"><see cref="Node"/></param>
+        /// <param name="source"><see cref="INode"/></param>
+        /// <param name="target"><see cref="INode"/></param>
         /// <param name="isDirected"><see cref="Boolean"/></param>
         /// <returns><see cref="Edge"/></returns>
-        internal static Edge<TId> Couple(IIdGenerator<TId> idGenerator, Node<TId> source, Node<TId> target, bool isDirected)
+        internal static IEdge<TId> Connect(TId id, INode<TId> source, INode<TId> target, bool isDirected)
         {
-            if (idGenerator is null)
-            {
-                throw new ArgumentNullException(nameof(idGenerator));
-            }
-
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
@@ -53,45 +44,16 @@ namespace Graphs.Elements
                 throw new ArgumentNullException(nameof(target));
             }
 
-            var edge = new Edge<TId>(idGenerator.NewId(), source.Id, target.Id, isDirected);
-            source.Couple(edge);
-            target.Couple(edge);
+            var edge = new Edge<TId>(id, source.Id, target.Id, isDirected);
+            source.Connect(edge);
+            target.Connect(edge);
 
             return edge;
         }
 
-        internal void Decouple(Node<TId> node1, Node<TId> node2)
-        {
-            if (node1 is null)
-            {
-                throw new ArgumentNullException(nameof(node1));
-            }
-
-            if (node2 is null)
-            {
-                throw new ArgumentNullException(nameof(node2));
-            }
-
-            if (!this.Nodes.Contains(node1.Id))
-            {
-                throw new InvalidOperationException($"{nameof(Node<TId>)} with id '{node1.Id}' is not incident to edge with id '{this.Id}'.");
-            }
-
-            if (!this.Nodes.Contains(node2.Id))
-            {
-                throw new InvalidOperationException($"{nameof(Node<TId>)} with id '{node2.Id}' is not incident to edge with id '{this.Id}'.");
-            }
-
-            node1.Decouple(this);
-            node2.Decouple(this);
-        }
-
-        [Required]
-        [JsonProperty("directed")]
         public bool IsDirected { get; }
 
         [Pure]
-        [JsonIgnore]
         public IEnumerable<TId> Nodes
         {
             get
@@ -101,17 +63,11 @@ namespace Graphs.Elements
             }
         }
 
-        [Required]
-        [JsonProperty("source")]
         public TId SourceId { get; }
 
-        [Required]
-        [JsonProperty("target")]
         public TId TargetId { get; }
 
-        // internal for testing
-        [JsonConstructor]
-        internal Edge(TId id, TId sourceId, TId targetId, bool isDirected)
+        private Edge(TId id, TId sourceId, TId targetId, bool isDirected)
             : base(id)
         {
             this.SourceId = sourceId;
@@ -133,10 +89,36 @@ namespace Graphs.Elements
             return new Edge<TId>(this);
         }
 
+        public IEdge<TId> Disconnect(INode<TId> node1, INode<TId> node2)
+        {
+            if (!this.IsIncident(node1))
+            {
+                throw new InvalidOperationException($"{nameof(Node<TId>)} with id '{node1.Id}' is not incident to edge with id '{this.Id}'.");
+            }
+
+            if (!this.IsIncident(node2))
+            {
+                throw new InvalidOperationException($"{nameof(Node<TId>)} with id '{node2.Id}' is not incident to edge with id '{this.Id}'.");
+            }
+
+            node1.Disconnect(this);
+            node2.Disconnect(this);
+
+            return this;
+        }
+
         [Pure]
         public bool IsIncident(TId nodeId)
         {
             return this.SourceId.Equals(nodeId) || this.TargetId.Equals(nodeId);
+        }
+
+        [Pure]
+        public bool IsIncident(INode<TId> node)
+        {
+            return node is null 
+                ? throw new ArgumentNullException(nameof(node)) 
+                : this.IsIncident(node.Id);
         }
 
         [Pure]

@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -8,41 +7,29 @@ using System.Diagnostics.Contracts;
 namespace Graphs.Elements
 {
     [DebuggerDisplay("{Id}")]
-    [JsonObject("node")]
     public sealed class Node<TId>
         : Element<TId>
         , INode<TId>
-        , ICoupledEventSource<TId>
         , IEquatable<Node<TId>>
         , IEqualityComparer<Node<TId>>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        [JsonProperty("nodesAndEdges")]
         private readonly AdjacencyAndIncidenceIndex<TId> nodesAndEdges = AdjacencyAndIncidenceIndex<TId>.Empty;
 
-        public event EventHandler<CoupledEventArgs<TId>> Coupled;
-        public event EventHandler<DecoupledEventArgs<TId>> Decoupled;
-
-        internal static Node<TId> New(IIdGenerator<TId> idGenerator)
+        internal static INode<TId> New(TId id)
         {
-            return idGenerator is null 
-                ? throw new ArgumentNullException(nameof(idGenerator)) 
-                : (new(idGenerator.NewId()));
+            return new Node<TId>(id);
         }
 
         [Pure]
-        [JsonIgnore]
         public int Degree => this.nodesAndEdges.NodeCount;
 
         [Pure]
-        [JsonIgnore]
         public IEnumerable<TId> Neighbors => this.nodesAndEdges.Nodes;
 
         [Pure]
-        [JsonIgnore]
         public IEnumerable<TId> IncidentEdges => this.nodesAndEdges.Edges;
 
-        [JsonConstructor]
         private Node(TId id)
             : base(id)
         { }
@@ -59,6 +46,36 @@ namespace Graphs.Elements
             return new Node<TId>(this);
         }
 
+        public INode<TId> Connect([DisallowNull, Pure] IEdge<TId> edge)
+        {
+            if (!this.IsIncident(edge))
+            {
+                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}' is not incident to node with id {this.Id}.");
+            }
+
+            var otherNodeId = this.Id.Equals(edge.SourceId)
+                ? edge.TargetId
+                : edge.SourceId;
+
+            this.nodesAndEdges.Add(edge.Id, otherNodeId);
+            return this;
+        }
+
+        public INode<TId> Disconnect([DisallowNull, Pure] IEdge<TId> edge)
+        {
+            if (!this.IsIncident(edge))
+            {
+                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}' is not incident to node with id {this.Id}.");
+            }
+
+            var otherNodeId = this.Id.Equals(edge.SourceId)
+                ? edge.TargetId
+                : edge.SourceId;
+
+            this.nodesAndEdges.Remove(edge.Id, otherNodeId);
+            return this;
+        }
+
         [Pure]
         public bool IsAdjacent(TId targetId)
         {
@@ -66,7 +83,7 @@ namespace Graphs.Elements
         }
 
         [Pure]
-        public bool IsAdjacent([DisallowNull, Pure] Node<TId> node)
+        public bool IsAdjacent([DisallowNull, Pure] INode<TId> node)
         {
             return node is null
                 ? throw new ArgumentNullException(nameof(node))
@@ -80,11 +97,11 @@ namespace Graphs.Elements
         }
 
         [Pure]
-        public bool IsIncident([DisallowNull, Pure] Edge<TId> edge)
+        public bool IsIncident([DisallowNull, Pure] IEdge<TId> edge)
         {
             return edge is null
                 ? throw new ArgumentNullException(nameof(edge))
-                : this.IsIncident(edge.Id);
+                : this.Id.Equals(edge.SourceId) || this.Id.Equals(edge.TargetId) || this.IsIncident(edge.Id);
         }
 
         [Pure]
@@ -119,46 +136,6 @@ namespace Graphs.Elements
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))
                 : obj.GetHashCode();
-        }
-
-        internal void Couple([DisallowNull, Pure] Edge<TId> edge)
-        {
-            if (edge is null)
-            {
-                throw new ArgumentNullException(nameof(edge));
-            }
-
-            if (!this.Id.Equals(edge.SourceId)  && !this.Id.Equals(edge.TargetId))
-            {
-                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}'does not point to a node with id {this.Id}.");
-            }
-
-            var otherNodeId = this.Id.Equals(edge.SourceId)
-                ? edge.TargetId
-                : edge.SourceId;
-
-            this.nodesAndEdges.Add(edge.Id, otherNodeId);
-            this.Coupled?.Invoke(this, new CoupledEventArgs<TId>(this, edge));
-        }
-
-        internal void Decouple([DisallowNull, Pure] Edge<TId> edge)
-        {
-            if (edge is null)
-            {
-                throw new ArgumentNullException(nameof(edge));
-            }
-
-            if (!this.Id.Equals(edge.SourceId) && !this.Id.Equals(edge.TargetId))
-            {
-                throw new InvalidOperationException($"{nameof(edge)} with id '{edge.Id}' does not point to node with id '{this.Id}'.");
-            }
-
-            var otherNodeId = this.Id.Equals(edge.SourceId)
-                ? edge.TargetId
-                : edge.SourceId;
-
-            this.nodesAndEdges.Remove(edge.Id, otherNodeId);
-            this.Decoupled?.Invoke(this, new DecoupledEventArgs<TId>(this, edge));
         }
     }
 }

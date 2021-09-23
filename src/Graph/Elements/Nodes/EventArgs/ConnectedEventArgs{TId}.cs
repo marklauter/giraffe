@@ -3,11 +3,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Graphs.Elements
 {
-    public class DecoupledEventArgs<TId>
+    public class ConnectedEventArgs<TId>
         : EventArgs
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public DecoupledEventArgs([DisallowNull] INode<TId> source, [DisallowNull] IEdge<TId> edge)
+        public ConnectedEventArgs([DisallowNull] INode<TId> source, [DisallowNull] IEdge<TId> edge)
         {
             this.Edge = edge ?? throw new ArgumentNullException(nameof(edge));
             this.Source = source ?? throw new ArgumentNullException(nameof(source));
