@@ -1,7 +1,6 @@
-﻿using Graphs.Elements;
-using System;
+﻿using System;
 
-namespace Graphs.Traversals
+namespace Graphs.Elements
 {
     public interface IElementSource<TId>
         : INodeSource<TId>

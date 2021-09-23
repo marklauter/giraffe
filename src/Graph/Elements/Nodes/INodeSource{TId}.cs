@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Graphs.Elements
 {
-    public interface IElementSource<TId>
-        : INodeSource<TId>
-        , IEdgeSource<TId>
+    public interface INodeSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
+        Task<INode<TId>> GetNodeAsync(TId id);
     }
 }
