@@ -134,7 +134,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Graphs.Elements.INodeSource&lt;TId&gt;">
-    <Position X="18.25" Y="4.75" Width="2.25" />
+    <Position X="18.5" Y="3.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
       <FileName>Elements\Nodes\INodeSource{TId}.cs</FileName>
@@ -148,7 +148,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Graphs.Elements.IEdgeSource&lt;TId&gt;">
-    <Position X="21.5" Y="4.75" Width="2.25" />
+    <Position X="21.25" Y="3.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Elements\Edges\IEdgeSource{TId}.cs</FileName>
@@ -168,8 +168,8 @@
       <FileName>Elements\IElement{TId}.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Graphs.Traversals.ITraversableElementSource&lt;TId&gt;" Collapsed="true">
-    <Position X="19.5" Y="2" Width="2.5" />
+  <Interface Name="Graphs.Traversals.IElementSource&lt;TId&gt;" Collapsed="true">
+    <Position X="20.25" Y="5.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Elements\IElementSource{TId}.cs</FileName>

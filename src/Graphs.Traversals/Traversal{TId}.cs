@@ -10,9 +10,9 @@ namespace Graphs.Traversals
         : ITraversal<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        private readonly ITraversableElementSource<TId> source;
+        private readonly IElementSource<TId> source;
 
-        public Traversal(ITraversableElementSource<TId> source)
+        public Traversal(IElementSource<TId> source)
         {
             this.source = source ?? throw new ArgumentNullException(nameof(source));
         }
