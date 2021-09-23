@@ -58,7 +58,7 @@ namespace Graphs.Elements.Qualifiers
 
         public bool Equals(SerializableValue x, SerializableValue y)
         {
-            return SerializableValue.AreEqual(x, y);
+            return AreEqual(x, y);
         }
 
         public int GetHashCode([DisallowNull] SerializableValue obj)

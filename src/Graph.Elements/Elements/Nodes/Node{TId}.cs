@@ -10,7 +10,7 @@ namespace Graphs.Elements
     [DebuggerDisplay("{Id}")]
     [JsonObject("node")]
     public sealed class Node<TId>
-        : MutableElement<TId>
+        : Element<TId>
         , INode<TId>
         , ICoupledEventSource<TId>
         , IEquatable<Node<TId>>

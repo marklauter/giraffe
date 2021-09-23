@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Graphs.Elements
 {
     public interface IEdge<TId>
-        : IMutableElement<TId>
+        : IElement<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         bool IsDirected { get; }

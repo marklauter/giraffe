@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Graphs.Elements
 {
     public interface INode<TId>
-        : IMutableElement<TId>
+        : IElement<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         int Degree { get; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Graphs.Data
 {
     public interface IGraphContext<TElement, TId>
-        where TElement : IMutableElement<TId>
+        where TElement : IElement<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         Task AddAsync(TElement element);

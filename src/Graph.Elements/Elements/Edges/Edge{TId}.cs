@@ -12,7 +12,7 @@ namespace Graphs.Elements
     [DebuggerDisplay("{SourceId} : {TargetId}")]
     [JsonObject("edge")]
     public sealed class Edge<TId>
-        : MutableElement<TId>
+        : Element<TId>
         , IEdge<TId>
         , IEquatable<Edge<TId>>
         , IEqualityComparer<Edge<TId>>
