@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Documents.Cache.CacheAccessedEventArgs">
+    <Position X="6.75" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs\CacheAccessedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Documents.Cache.CacheItemEvictedEventArgs&lt;TMember&gt;">
+    <Position X="3.75" Y="6" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs\CacheItemEvictedEventArgs{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Documents.Cache.CachedDocumentCollection&lt;TMember&gt;" BaseTypeListCollapsed="true">
+    <Position X="10.75" Y="5.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AQBgAAAAAgAAABEAAAgCAAegAAAAACgAAAECAQAEBAA=</HashCode>
+      <FileName>CachedDocumentCollection{TMember}.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.Cache.MemoryDocumentCache&lt;TMember&gt;" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="5.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>CCBgAAAUACAAAAAAAAAAAECgAAAAAAEAAIAAAgBAAAA=</HashCode>
+      <FileName>MemoryDocumentCache{TMember}.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.DocumentEventArgs&lt;TMember&gt;">
+    <Position X="3.75" Y="8" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="Documents.Cache.IDocumentCache&lt;TMember&gt;">
+    <Position X="0.5" Y="2.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAQAAAAAAAAAAAAAEAgAAAAAAAAAIAAAABAAAA=</HashCode>
+      <FileName>IDocumentCache{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Documents.Cache.IDocumentCacheEventSource&lt;TMember&gt;">
+    <Position X="0.5" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDocumentCacheEventSource{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Documents.Cache.CacheAccessType">
+    <Position X="9" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CacheAccessType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Documents.IO.Encoding.JsonDocumentDecoder&lt;TMember&gt;" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="7.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Encoding\JsonDocumentDecoder{TMember}.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.IO.Encoding.JsonDocumentEncoder&lt;TMember&gt;" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="7.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Encoding\JsonDocumentEncoder{TMember}.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.IO.Files.AsyncFileDeleter">
+    <Position X="12" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Files\AsyncFileDeleter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.IO.Files.AsyncFileReader">
+    <Position X="2.25" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Files\AsyncFileReader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.IO.Files.AsyncFileWriter">
+    <Position X="7.5" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Files\AsyncFileWriter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.IO.Files.AsyncSafeFileAccessor">
+    <Position X="2.25" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAQAAAAAQAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Files\AsyncSafeFileAccessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Documents.IO.Encoding.IDocumentDecoder&lt;TMember&gt;">
+    <Position X="1" Y="7.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Encoding\IDocumentDecoder{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Documents.IO.Encoding.IDocumentEncoder&lt;TMember&gt;">
+    <Position X="7.5" Y="7.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Encoding\IDocumentEncoder{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Documents.IO.Files.IAsyncFileDeleter">
+    <Position X="10.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Files\IAsyncFileDeleter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Documents.IO.Files.IAsyncFileReader">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Files\IAsyncFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Documents.IO.Files.IAsyncFileWriter">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Files\IAsyncFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

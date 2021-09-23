@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 namespace Documents.Collections
 {
     public interface IDocumentCollection
+        : IDocumentCollectionEventSource
     {
         int Count { get; }
         bool IsEmpty { get; }

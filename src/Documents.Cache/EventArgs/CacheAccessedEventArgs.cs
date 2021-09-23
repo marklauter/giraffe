@@ -13,11 +13,11 @@ namespace Documents.Cache
             }
 
             this.Key = key;
-            this.ReadType = accessType;
+            this.AccessType = accessType;
         }
 
         public string Key { get; }
 
-        public CacheAccessType ReadType { get; }
+        public CacheAccessType AccessType { get; }
     }
 }

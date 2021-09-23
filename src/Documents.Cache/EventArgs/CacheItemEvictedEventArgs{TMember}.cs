@@ -2,11 +2,11 @@
 
 namespace Documents.Cache
 {
-    public class CacheItemEvictedEventArgs<T>
-        : DocumentEventArgs<T>
-        where T : class
+    public class CacheItemEvictedEventArgs<TMember>
+        : DocumentEventArgs<TMember>
+        where TMember : class
     {
-        public CacheItemEvictedEventArgs(Document<T> document, EvictionReason reason)
+        public CacheItemEvictedEventArgs(Document<TMember> document, EvictionReason reason)
             : base(document)
         {
             this.Reason = reason;

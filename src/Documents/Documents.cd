@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Documents.Collections.DocumentAddedEventArgs&lt;TMember&gt;">
+    <Position X="11" Y="6.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Collections\EventArgs\DocumentAddedEventArgs{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Documents.Collections.DocumentRemovedEventArgs&lt;TMember&gt;">
+    <Position X="14.5" Y="6.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Collections\EventArgs\DocumentRemovedEventArgs{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Documents.Collections.DocumentUpdatedEventArgs&lt;TMember&gt;">
+    <Position X="18" Y="6.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Collections\EventArgs\DocumentUpdatedEventArgs{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Documents.Collections.DocumentCollection&lt;TMember&gt;">
+    <Position X="4.25" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAFgAAAEAgAgAAEAAAgAEAcgAAAAEAgAAgABAQAEACA=</HashCode>
+      <FileName>Collections\DocumentCollection{TMember}.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.Collections.HeapDocumentCollection&lt;TMember&gt;">
+    <Position X="4.25" Y="12.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAgAAAAAAIAAAQAAAIAEAAAAAABAAAAAAA=</HashCode>
+      <FileName>Collections\HeapDocumentCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Documents.ETagMismatchException">
+    <Position X="7.25" Y="6.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Collections\ETagMismatchException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Documents.DocumentEventArgs&lt;TMember&gt;">
+    <Position X="11.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>DocumentEventArgs{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Documents.Document&lt;TMember&gt;" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="2.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAGAAAAAAAAAAAQAkAAAAAAAAAAIAIAAAAAAAAAAABA=</HashCode>
+      <FileName>Document{TMember}.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Documents.KeyBuilder&lt;TMember&gt;">
+    <Position X="18" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAQAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>KeyBuilder{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Documents.Collections.IDocumentCollection">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAgAAAAAAAAgAAAYAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Collections\IDocumentCollection.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Documents.Collections.IDocumentCollection&lt;TMember&gt;">
+    <Position X="0.5" Y="6" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAgAAAAAAAAgAAAEAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Collections\IDocumentCollection{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Documents.Collections.IDocumentCollectionEventSource">
+    <Position X="3.25" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Collections\IDocumentCollectionEventSource.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Documents.Collections.IDocumentCollectionEventSource&lt;TMember&gt;">
+    <Position X="3.25" Y="2.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAgAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Collections\IDocumentCollectionEventSource{TMember}.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

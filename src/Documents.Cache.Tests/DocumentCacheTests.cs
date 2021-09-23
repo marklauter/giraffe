@@ -12,12 +12,12 @@ namespace Documents.Cache.Tests
     {
         private Document<Value> DocumentFactory(string key)
         {
-            return Document.FromMember(new Value(Int32.Parse(key)) { Text = "one" });
+            return (Document<Value>)new Value(Int32.Parse(key)) { Text = "one" };
         }
 
         private Task<Document<Value>> DocumentFactoryAsync(string key)
         {
-            return Task.FromResult(Document.FromMember(new Value(Int32.Parse(key)) { Text = key }));
+            return Task.FromResult((Document<Value>)new Value(Int32.Parse(key)) { Text = key });
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Documents.Cache.Tests
 
             var readArgs = new CacheAccessedEventArgs(document.Key, CacheAccessType.Hit);
             Assert.Equal(document.Key, readArgs.Key);
-            Assert.Equal(CacheAccessType.Hit, readArgs.ReadType);
+            Assert.Equal(CacheAccessType.Hit, readArgs.AccessType);
 
             Assert.Throws<ArgumentNullException>(() => _ = new CacheItemEvictedEventArgs<Member>(null, EvictionReason.None));
             Assert.Throws<ArgumentException>(() => _ = new CacheAccessedEventArgs(null, CacheAccessType.Hit));
@@ -74,7 +74,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, e.Sender);
             Assert.Equal(key, e.Arguments.Key);
-            Assert.Equal(CacheAccessType.Miss, e.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Miss, e.Arguments.AccessType);
 
             e = Assert.Raises<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,
@@ -83,7 +83,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, e.Sender);
             Assert.Equal(key, e.Arguments.Key);
-            Assert.Equal(CacheAccessType.Hit, e.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Hit, e.Arguments.AccessType);
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);
-            Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.AccessType);
 
             cache.Evict(v);
 
@@ -111,7 +111,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);
-            Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.AccessType);
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);
-            Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.AccessType);
 
             cache.Clear();
 
@@ -139,7 +139,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);
-            Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Miss, cacheAccessedEvent.Arguments.AccessType);
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key, cacheAccessedEvent.Arguments.Key);
-            Assert.Equal(CacheAccessType.Hit, cacheAccessedEvent.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Hit, cacheAccessedEvent.Arguments.AccessType);
         }
 
         [Fact]
@@ -215,7 +215,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, e.Sender);
             Assert.Equal(key1, e.Arguments.Key);
-            Assert.Equal(CacheAccessType.Hit, e.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Hit, e.Arguments.AccessType);
 
             e = Assert.Raises<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,
@@ -224,7 +224,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, e.Sender);
             Assert.Equal(key1, e.Arguments.Key);
-            Assert.Equal(CacheAccessType.Hit, e.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Hit, e.Arguments.AccessType);
         }
 
         [Fact]
@@ -260,7 +260,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, e.Sender);
             Assert.Equal(key, e.Arguments.Key);
-            Assert.Equal(CacheAccessType.Miss, e.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Miss, e.Arguments.AccessType);
 
             e = await Assert.RaisesAsync<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,
@@ -269,7 +269,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, e.Sender);
             Assert.Equal(key, e.Arguments.Key);
-            Assert.Equal(CacheAccessType.Hit, e.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Hit, e.Arguments.AccessType);
         }
 
         [Fact]
@@ -322,7 +322,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key1, cacheAccessedEvent.Arguments.Key);
-            Assert.Equal(CacheAccessType.Hit, cacheAccessedEvent.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Hit, cacheAccessedEvent.Arguments.AccessType);
 
             cacheAccessedEvent = Assert.Raises<CacheAccessedEventArgs>(
                 handler => cache.CacheAccessed += handler,
@@ -331,7 +331,7 @@ namespace Documents.Cache.Tests
 
             Assert.Equal(cache, cacheAccessedEvent.Sender);
             Assert.Equal(key2, cacheAccessedEvent.Arguments.Key);
-            Assert.Equal(CacheAccessType.Hit, cacheAccessedEvent.Arguments.ReadType);
+            Assert.Equal(CacheAccessType.Hit, cacheAccessedEvent.Arguments.AccessType);
         }
     }
 }
