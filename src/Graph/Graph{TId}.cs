@@ -1,5 +1,7 @@
 ﻿using Graphs.Elements;
-using Graphs.Elements.Classifiers;
+using Graphs.Elements.Edges;
+using Graphs.Elements.Nodes;
+using Graphs.Events;
 using System;
 using System.Threading.Tasks;
 
@@ -7,14 +9,14 @@ namespace Graphs
 {
     public interface IGraph<TId>
         : IElementSource<TId>
-        , IClassifierEventSource<TId>
+        , IGraphEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         bool IsEmpty { get; }
 
-        Task<Node<TId>> NewNodeAsync();
+        Task<INode<TId>> NewNode();
 
-        Task<Edge<TId>> Connect(Node<TId> source, Node<TId> target);
+        Task<IEdge<TId>> Connect(INode<TId> source, INode<TId> target);
     }
 
     //public class Graph<TId>

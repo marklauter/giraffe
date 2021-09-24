@@ -1,11 +1,10 @@
 ﻿using Collections.Concurrent;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Graphs.Elements
+namespace Graphs.Elements.Nodes
 {
     internal sealed class AdjacencyAndIncidenceIndex<TId>
         : ICloneable
@@ -13,32 +12,25 @@ namespace Graphs.Elements
     {
         private readonly object gate = new();
 
-        [JsonProperty("incidentEdges")]
         private readonly ConcurrentHashSet<TId> edges;
 
-        [JsonProperty("adjacentNodes")]
         private readonly ConcurrentDictionary<TId, int> nodes;
 
         public static AdjacencyAndIncidenceIndex<TId> Empty => new();
 
         [Pure]
-        [JsonIgnore]
         public IEnumerable<TId> Edges => this.edges;
 
         [Pure]
-        [JsonIgnore]
         public int EdgeCount => this.edges.Count;
 
         [Pure]
-        [JsonIgnore]
         public bool IsEmpty => this.edges.IsEmpty;
 
         [Pure]
-        [JsonIgnore]
         public IEnumerable<TId> Nodes => this.nodes.Keys;
 
         [Pure]
-        [JsonIgnore]
         public int NodeCount => this.nodes.Count;
 
         private AdjacencyAndIncidenceIndex()

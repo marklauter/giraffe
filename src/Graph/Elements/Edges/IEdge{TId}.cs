@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Graphs.Elements.Nodes;
+using System;
 using System.Collections.Generic;
 
-namespace Graphs.Elements
+namespace Graphs.Elements.Edges
 {
     public interface IEdge<TId>
         : IElement<TId>

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Graphs.Elements.Edges;
+using System;
 using System.Collections.Generic;
 
-namespace Graphs.Elements
+namespace Graphs.Elements.Nodes
 {
     public interface INode<TId>
         : IElement<TId>
@@ -10,7 +11,7 @@ namespace Graphs.Elements
         int Degree { get; }
 
         IEnumerable<TId> Neighbors { get; }
-        IEnumerable<TId> IncidentEdges { get; }
+        IEnumerable<TId> Edges { get; }
 
         INode<TId> Connect(IEdge<TId> edge);
         INode<TId> Disconnect(IEdge<TId> edge);

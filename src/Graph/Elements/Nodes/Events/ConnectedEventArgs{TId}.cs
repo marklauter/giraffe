@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Graphs.Elements.Edges;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Graphs.Elements
+namespace Graphs.Elements.Nodes
 {
     public class ConnectedEventArgs<TId>
         : EventArgs

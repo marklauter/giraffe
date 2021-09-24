@@ -28,7 +28,7 @@ namespace Graphs.Elements
         public IEnumerable<TId> Neighbors => this.nodesAndEdges.Nodes;
 
         [Pure]
-        public IEnumerable<TId> IncidentEdges => this.nodesAndEdges.Edges;
+        public IEnumerable<TId> Edges => this.nodesAndEdges.Edges;
 
         private Node(TId id)
             : base(id)

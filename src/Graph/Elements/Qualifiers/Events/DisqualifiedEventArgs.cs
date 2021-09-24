@@ -2,10 +2,10 @@
 
 namespace Graphs.Elements.Qualifiers
 {
-    public sealed class QualifiedEventArgs
+    public class DisqualifiedEventArgs
         : EventArgs
     {
-        public QualifiedEventArgs(string name, object value)
+        public DisqualifiedEventArgs(string name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -13,11 +13,8 @@ namespace Graphs.Elements.Qualifiers
             }
 
             this.Name = name;
-            this.Value = value;
         }
 
         public string Name { get; }
-
-        public object Value { get; }
     }
 }
