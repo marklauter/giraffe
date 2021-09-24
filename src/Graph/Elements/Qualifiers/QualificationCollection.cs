@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,7 +8,6 @@ using System.Diagnostics.Contracts;
 namespace Graphs.Elements.Qualifiers
 {
     /// <inheritdoc/>
-    [JsonArray]
     internal sealed class QualificationCollection
         : IQualifier
         , IEnumerable<KeyValuePair<string, SerializableValue>>
@@ -31,7 +29,6 @@ namespace Graphs.Elements.Qualifiers
             this.qualifications = new(other.qualifications);
         }
 
-        [JsonConstructor]
         [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used by serialization.")]
         private QualificationCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, SerializableValue>> qualifications)
         {

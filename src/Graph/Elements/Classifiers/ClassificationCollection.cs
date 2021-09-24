@@ -1,5 +1,4 @@
 ﻿using Collections.Concurrent;
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +8,6 @@ using System.Diagnostics.Contracts;
 namespace Graphs.Elements.Classifiers
 {
     /// <inheritdoc/>
-    [JsonArray]
     internal sealed class ClassificationCollection
         : IClassifier
         , IEnumerable<string>
@@ -34,7 +32,6 @@ namespace Graphs.Elements.Classifiers
             this.classes = new(other.classes);
         }
 
-        [JsonConstructor]
         [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used for serialization.")]
         private ClassificationCollection([DisallowNull, Pure] IEnumerable<string> labels)
         {

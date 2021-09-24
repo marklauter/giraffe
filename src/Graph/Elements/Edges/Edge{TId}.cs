@@ -117,8 +117,8 @@ namespace Graphs.Elements.Edges
         [Pure]
         public bool IsIncident(INode<TId> node)
         {
-            return node is null 
-                ? throw new ArgumentNullException(nameof(node)) 
+            return node is null
+                ? throw new ArgumentNullException(nameof(node))
                 : this.IsIncident(node.Id);
         }
 

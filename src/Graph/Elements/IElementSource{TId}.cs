@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Graphs.Elements.Edges;
+using Graphs.Elements.Nodes;
+using System;
 
 namespace Graphs.Elements
 {

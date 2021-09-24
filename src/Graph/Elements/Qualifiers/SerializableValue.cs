@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -13,7 +12,6 @@ namespace Graphs.Elements.Qualifiers
         , IEquatable<SerializableValue>
         , IEqualityComparer<SerializableValue>
     {
-        [JsonConstructor]
         internal SerializableValue(TypeCode typeCode, object value)
         {
             this.TypeCode = typeCode;

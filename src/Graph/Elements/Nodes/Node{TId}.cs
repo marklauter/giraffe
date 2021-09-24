@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Graphs.Elements.Edges;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
-namespace Graphs.Elements
+namespace Graphs.Elements.Nodes
 {
     [DebuggerDisplay("{Id}")]
     public sealed class Node<TId>

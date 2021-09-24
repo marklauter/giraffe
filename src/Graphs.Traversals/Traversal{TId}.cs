@@ -1,4 +1,5 @@
 ﻿using Graphs.Elements;
+using Graphs.Elements.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
