@@ -17,6 +17,27 @@ namespace Graphs.Elements
 
         private readonly QualificationCollection qualifications = QualificationCollection.Empty;
 
+        /// <inheritdoc/>
+        public event EventHandler<ClassifiedEventArgs> Classified;
+
+        /// <inheritdoc/>
+        public event EventHandler<DeclassifiedEventArgs> Declassified;
+
+        /// <inheritdoc/>
+        public event EventHandler<QualifiedEventArgs> Qualified;
+
+        /// <inheritdoc/>
+        public event EventHandler<DisqualifiedEventArgs> Disqualified;
+
+        /// <inheritdoc/>
+        public IEnumerable<string> Classifications => this.classifications;
+
+        /// <inheritdoc/>
+        public TId Id { get; }
+
+        /// <inheritdoc/>
+        public IEnumerable<KeyValuePair<string, object>> Qualifications => this.qualifications;
+
         protected Element()
         {
             this.classifications.Classified += this.Classifications_Classified;
@@ -32,7 +53,6 @@ namespace Graphs.Elements
         }
 
         protected Element([DisallowNull, Pure] Element<TId> other)
-            : this()
         {
             this.classifications = other.classifications.Clone() as ClassificationCollection;
             this.classifications.Classified += this.Classifications_Classified;
@@ -45,20 +65,31 @@ namespace Graphs.Elements
             this.Id = other.Id;
         }
 
-        /// <inheritdoc/>
-        public TId Id { get; }
+        protected Element(
+            TId id,
+            [DisallowNull, Pure] IEnumerable<string> classifications,
+            [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications)
+        {
+            if (classifications is null)
+            {
+                throw new ArgumentNullException(nameof(classifications));
+            }
 
-        /// <inheritdoc/>
-        public event EventHandler<ClassifiedEventArgs> Classified;
+            if (qualifications is null)
+            {
+                throw new ArgumentNullException(nameof(qualifications));
+            }
 
-        /// <inheritdoc/>
-        public event EventHandler<DeclassifiedEventArgs> Declassified;
+            this.Id = id;
 
-        /// <inheritdoc/>
-        public event EventHandler<QualifiedEventArgs> Qualified;
+            this.classifications = new ClassificationCollection(classifications);
+            this.classifications.Classified += this.Classifications_Classified;
+            this.classifications.Declassified += this.Classifications_Declassified;
 
-        /// <inheritdoc/>
-        public event EventHandler<DisqualifiedEventArgs> Disqualified;
+            this.qualifications = new QualificationCollection(qualifications);
+            this.qualifications.Disqualified += this.Qualifications_Disqualified;
+            this.qualifications.Qualified += this.Qualifications_Qualified;
+        }
 
         /// <inheritdoc/>
         public IElement<TId> Classify(string label)

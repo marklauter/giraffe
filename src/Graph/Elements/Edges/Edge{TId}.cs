@@ -84,6 +84,20 @@ namespace Graphs.Elements.Edges
             this.IsDirected = other.IsDirected;
         }
 
+        public Edge(
+            TId id,
+            [DisallowNull, Pure] IEnumerable<string> classifications,
+            [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications,
+            TId sourceId,
+            TId targetId,
+            bool isDirected)
+            : base(id, classifications, qualifications)
+        {
+            this.SourceId = sourceId;
+            this.TargetId = targetId;
+            this.IsDirected = isDirected;
+        }
+
         [Pure]
         public override object Clone()
         {

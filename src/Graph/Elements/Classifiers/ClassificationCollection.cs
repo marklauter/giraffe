@@ -32,8 +32,7 @@ namespace Graphs.Elements.Classifiers
             this.classes = new(other.classes);
         }
 
-        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used for serialization.")]
-        private ClassificationCollection([DisallowNull, Pure] IEnumerable<string> labels)
+        internal ClassificationCollection([DisallowNull, Pure] IEnumerable<string> labels)
         {
             this.classes = new(labels);
         }

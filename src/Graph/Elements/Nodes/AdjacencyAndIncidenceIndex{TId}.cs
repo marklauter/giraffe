@@ -14,7 +14,7 @@ namespace Graphs.Elements.Nodes
 
         private readonly ConcurrentHashSet<TId> edges;
 
-        private readonly ConcurrentDictionary<TId, int> nodes;
+        internal readonly ConcurrentDictionary<TId, int> nodes;
 
         public static AdjacencyAndIncidenceIndex<TId> Empty => new();
 
@@ -31,6 +31,9 @@ namespace Graphs.Elements.Nodes
         public IEnumerable<TId> Nodes => this.nodes.Keys;
 
         [Pure]
+        public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.nodes;
+
+        [Pure]
         public int NodeCount => this.nodes.Count;
 
         private AdjacencyAndIncidenceIndex()
@@ -43,6 +46,14 @@ namespace Graphs.Elements.Nodes
         {
             this.edges = new(other.edges);
             this.nodes = new(other.nodes);
+        }
+
+        internal AdjacencyAndIncidenceIndex(
+            IEnumerable<KeyValuePair<TId, int>> nodes,
+            IEnumerable<TId> edges)
+        {
+            this.nodes = new(nodes);
+            this.edges = new(edges);
         }
 
         public AdjacencyAndIncidenceIndex<TId> Add(TId edgeId, TId nodeId)

@@ -10,7 +10,7 @@ namespace Graphs.Elements.Qualifiers
     /// <inheritdoc/>
     internal sealed class QualificationCollection
         : IQualifier
-        , IEnumerable<KeyValuePair<string, SerializableValue>>
+        , IEnumerable<KeyValuePair<string, object>>
     {
         /// <inheritdoc/>
         public event EventHandler<QualifiedEventArgs> Qualified;
@@ -18,19 +18,21 @@ namespace Graphs.Elements.Qualifiers
         /// <inheritdoc/>
         public event EventHandler<DisqualifiedEventArgs> Disqualified;
 
-        private readonly ConcurrentDictionary<string, SerializableValue> qualifications = new();
+        private readonly ConcurrentDictionary<string, object> qualifications;
 
         public static QualificationCollection Empty => new();
 
-        private QualificationCollection() { }
+        private QualificationCollection()
+        {
+            this.qualifications = new();
+        }
 
         private QualificationCollection([DisallowNull, Pure] QualificationCollection other)
         {
             this.qualifications = new(other.qualifications);
         }
 
-        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used by serialization.")]
-        private QualificationCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, SerializableValue>> qualifications)
+        internal QualificationCollection([DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications)
         {
             this.qualifications = new(qualifications);
         }
@@ -69,7 +71,7 @@ namespace Graphs.Elements.Qualifiers
 
         /// <inheritdoc/>
         [Pure]
-        public IEnumerator<KeyValuePair<string, SerializableValue>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
             foreach (var kvp in this.qualifications)
             {
@@ -85,183 +87,14 @@ namespace Graphs.Elements.Qualifiers
         }
 
         /// <inheritdoc/>
-        public IQualifier Qualify(string name, bool value)
+        public IQualifier Qualify(string name, object value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, sbyte value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, byte value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, short value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, ushort value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, int value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, uint value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, long value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, ulong value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, float value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, double value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, decimal value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, DateTime value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
-            Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IQualifier Qualify(string name, string value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.AddOrUpdate(name, (SerializableValue)value, (name, original) => (SerializableValue)value);
+            this.qualifications.AddOrUpdate(name, value, (name, original) => value);
             Qualified?.Invoke(this, new QualifiedEventArgs(name, value));
             return this;
         }
@@ -276,9 +109,9 @@ namespace Graphs.Elements.Qualifiers
             }
 
             value = null;
-            if (this.qualifications.TryGetValue(name, out var serializableValue))
+            if (this.qualifications.TryGetValue(name, out var obj))
             {
-                value = serializableValue.Value;
+                value = obj;
                 return true;
             }
 

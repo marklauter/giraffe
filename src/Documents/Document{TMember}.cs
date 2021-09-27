@@ -13,6 +13,18 @@ namespace Documents
         , IEqualityComparer<Document<TMember>>
         where TMember : class
     {
+        [Pure]
+        [JsonProperty]
+        public int ETag { get; }
+
+        [Pure]
+        [JsonProperty]
+        public string Key { get; }
+
+        [Pure]
+        [JsonProperty]
+        public TMember Member { get; }
+
         private Document([Pure] Document<TMember> other)
             : this(other.Member, other.Key, other.ETag)
         {
@@ -25,18 +37,6 @@ namespace Documents
             this.Key = key;
             this.ETag = etag;
         }
-
-        [Pure]
-        [JsonProperty]
-        public int ETag { get; }
-
-        [Pure]
-        [JsonProperty]
-        public string Key { get; }
-
-        [Pure]
-        [JsonProperty]
-        internal TMember Member { get; }
 
         [Pure]
         public object Clone()

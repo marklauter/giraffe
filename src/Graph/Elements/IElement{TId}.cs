@@ -13,6 +13,10 @@ namespace Graphs.Elements
     {
         TId Id { get; }
 
+        IEnumerable<string> Classifications { get; }
+
+        IEnumerable<KeyValuePair<string, object>> Qualifications { get; }
+
         /// <summary>
         /// Classifies this instance.
         /// </summary>

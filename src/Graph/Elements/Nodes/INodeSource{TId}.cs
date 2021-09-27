@@ -6,6 +6,6 @@ namespace Graphs.Elements.Nodes
     public interface INodeSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        Task<INode<TId>> GetNodeAsync(TId id);
+        Task<Node<TId>> GetNodeAsync(TId id);
     }
 }

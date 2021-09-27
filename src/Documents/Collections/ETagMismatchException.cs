@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Documents
+namespace Documents.Collections
 {
     [Serializable]
     public class ETagMismatchException

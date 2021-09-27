@@ -28,6 +28,8 @@ namespace Graphs.Elements.Nodes
         [Pure]
         public IEnumerable<TId> Neighbors => this.nodesAndEdges.Nodes;
 
+        public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.nodesAndEdges.ReferenceCountedNodes;
+
         [Pure]
         public IEnumerable<TId> Edges => this.nodesAndEdges.Edges;
 
@@ -39,6 +41,27 @@ namespace Graphs.Elements.Nodes
             : base(other)
         {
             this.nodesAndEdges = other.nodesAndEdges.Clone() as AdjacencyAndIncidenceIndex<TId>;
+        }
+
+        public Node(
+            TId id,
+            [DisallowNull, Pure] IEnumerable<string> classifications,
+            [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications,
+            [DisallowNull, Pure] IEnumerable<KeyValuePair<TId, int>> nodes,
+            [DisallowNull, Pure] IEnumerable<TId> edges)
+            : base(id, classifications, qualifications)
+        {
+            if (nodes is null)
+            {
+                throw new ArgumentNullException(nameof(nodes));
+            }
+
+            if (edges is null)
+            {
+                throw new ArgumentNullException(nameof(edges));
+            }
+
+            this.nodesAndEdges = new AdjacencyAndIncidenceIndex<TId>(nodes, edges);
         }
 
         [Pure]
