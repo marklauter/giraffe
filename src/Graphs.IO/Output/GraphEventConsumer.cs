@@ -1,19 +1,31 @@
-﻿using Graphs.Events;
+﻿using Documents.Collections;
+using Graphs.Elements.Classifiers;
+using Graphs.Elements.Nodes;
+using Graphs.Elements.Qualifiers;
+using Graphs.Events;
 using System;
 
 namespace Graphs.IO.Output
 {
+    // todo: this implementation requires TPL
     public sealed class GraphEventConsumer<TId>
         : IDisposable
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private readonly IGraphEventSource<TId> eventSource;
+        private readonly IDocumentCollection<NodeState<TId>> nodeCollection;
+        private readonly IDocumentCollection<EdgeState<TId>> edgeCollection;
         private bool disposedValue;
 
-        public GraphEventConsumer(IGraphEventSource<TId> eventSource)
+        public GraphEventConsumer(
+            IGraphEventSource<TId> eventSource,
+            IDocumentCollection<NodeState<TId>> nodeCollection,
+            IDocumentCollection<EdgeState<TId>> edgeCollection)
         {
             this.eventSource = eventSource ?? throw new ArgumentNullException(nameof(eventSource));
-
+            this.nodeCollection = nodeCollection ?? throw new ArgumentNullException(nameof(nodeCollection));
+            this.edgeCollection = edgeCollection ?? throw new ArgumentNullException(nameof(edgeCollection));
+            
             this.eventSource.Classified += this.EventSource_Classified;
             this.eventSource.Declassified += this.EventSource_Declassified;
 
@@ -29,6 +41,7 @@ namespace Graphs.IO.Output
 
         private void EventSource_NodeRemoved(object sender, EventArgs e)
         {
+            // todo: remove node from collection
             throw new NotImplementedException();
         }
 
@@ -37,32 +50,32 @@ namespace Graphs.IO.Output
             throw new NotImplementedException();
         }
 
-        private void EventSource_Disqualified(object sender, Elements.Qualifiers.DisqualifiedEventArgs<TId> e)
+        private void EventSource_Disqualified(object sender, DisqualifiedEventArgs<TId> e)
         {
             throw new NotImplementedException();
         }
 
-        private void EventSource_Qualified(object sender, Elements.Qualifiers.QualifiedEventArgs<TId> e)
+        private void EventSource_Qualified(object sender, QualifiedEventArgs<TId> e)
         {
             throw new NotImplementedException();
         }
 
-        private void EventSource_Disconnected(object sender, Elements.Nodes.DisconnectedEventArgs<TId> e)
+        private void EventSource_Disconnected(object sender, DisconnectedEventArgs<TId> e)
         {
             throw new NotImplementedException();
         }
 
-        private void EventSource_Connected(object sender, Elements.Nodes.ConnectedEventArgs<TId> e)
+        private void EventSource_Connected(object sender, ConnectedEventArgs<TId> e)
         {
             throw new NotImplementedException();
         }
 
-        private void EventSource_Declassified(object sender, Elements.Classifiers.DeclassifiedEventArgs<TId> e)
+        private void EventSource_Declassified(object sender, DeclassifiedEventArgs<TId> e)
         {
             throw new NotImplementedException();
         }
 
-        private void EventSource_Classified(object sender, Elements.Classifiers.ClassifiedEventArgs<TId> e)
+        private void EventSource_Classified(object sender, ClassifiedEventArgs<TId> e)
         {
             throw new NotImplementedException();
         }

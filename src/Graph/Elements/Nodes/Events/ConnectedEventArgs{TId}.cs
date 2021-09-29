@@ -8,13 +8,14 @@ namespace Graphs.Elements.Nodes
         : EventArgs
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public ConnectedEventArgs([DisallowNull] INode<TId> source, [DisallowNull] IEdge<TId> edge)
+        public ConnectedEventArgs([DisallowNull] Node<TId> source, [DisallowNull] Edge<TId> edge)
         {
             this.Edge = edge ?? throw new ArgumentNullException(nameof(edge));
             this.Source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
-        public IEdge<TId> Edge { get; }
-        public INode<TId> Source { get; }
+        public Edge<TId> Edge { get; }
+        
+        public Node<TId> Source { get; }
     }
 }
