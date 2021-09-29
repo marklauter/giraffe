@@ -6,18 +6,18 @@ using Graphs.Elements.Nodes;
 using System;
 using System.Threading.Tasks;
 
-namespace Graphs.IO
+namespace Graphs.IO.Input
 {
     public sealed class ElementSource<TId>
         : IElementSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        private readonly IDocumentCollection<NodeEntry<TId>> nodeCollection;
-        private readonly IDocumentCollection<Edge<TId>> edgeCollection;
+        private readonly IDocumentCollection<NodeState<TId>> nodeCollection;
+        private readonly IDocumentCollection<EdgeState<TId>> edgeCollection;
 
         public ElementSource(
-            IDocumentCollection<NodeEntry<TId>> nodeCollection,
-            IDocumentCollection<Edge<TId>> edgeCollection)
+            IDocumentCollection<NodeState<TId>> nodeCollection,
+            IDocumentCollection<EdgeState<TId>> edgeCollection)
         {
             this.nodeCollection = nodeCollection ?? throw new ArgumentNullException(nameof(nodeCollection));
             this.edgeCollection = edgeCollection ?? throw new ArgumentNullException(nameof(edgeCollection));
@@ -26,7 +26,7 @@ namespace Graphs.IO
         public async Task<Edge<TId>> GetEdgeAsync(TId id)
         {
             var document = await this.edgeCollection.ReadAsync(KeyBuilder.GetKey(id));
-            return document.Member;
+            return (Edge<TId>)document.Member;
         }
 
         public async Task<Node<TId>> GetNodeAsync(TId id)

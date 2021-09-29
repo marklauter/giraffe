@@ -8,8 +8,8 @@ using System.Diagnostics.Contracts;
 namespace Graphs.IO
 {
     [JsonObject("node")]
-    public sealed class NodeEntry<TId>
-        : ElementEntry<TId>
+    public sealed class NodeState<TId>
+        : ElementState<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private readonly Node<TId> node;
@@ -20,14 +20,14 @@ namespace Graphs.IO
         [JsonProperty("nodes")]
         public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.node.ReferenceCountedNodes;
 
-        private NodeEntry(Node<TId> node)
+        private NodeState(Node<TId> node)
             : base(node)
         {
             this.node = node ?? throw new ArgumentNullException(nameof(node));
         }
 
         [JsonConstructor]
-        internal NodeEntry(
+        internal NodeState(
             TId id,
             [DisallowNull, Pure] IEnumerable<string> classifications,
             [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications,
@@ -42,14 +42,14 @@ namespace Graphs.IO
                 edges);
         }
 
-        public static explicit operator Node<TId>(NodeEntry<TId> nodeEntry)
+        public static explicit operator NodeState<TId>([DisallowNull, Pure] Node<TId> node)
         {
-            return nodeEntry.node;
+            return new NodeState<TId>(node);
         }
 
-        public static explicit operator NodeEntry<TId>([DisallowNull, Pure] Node<TId> node)
+        public static explicit operator Node<TId>(NodeState<TId> nodeEntry)
         {
-            return new NodeEntry<TId>(node);
+            return nodeEntry.node;
         }
     }
 }

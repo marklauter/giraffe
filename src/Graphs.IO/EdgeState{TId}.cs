@@ -8,28 +8,29 @@ using System.Diagnostics.Contracts;
 namespace Graphs.IO
 {
     [JsonObject("edge")]
-    public sealed class EdgeEntry<TId>
-        : ElementEntry<TId>
+    public sealed class EdgeState<TId>
+        : ElementState<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private readonly Edge<TId> edge;
 
-        [JsonProperty("directed")]
+        [JsonProperty("isDirected")]
         public bool IsDirected => this.edge.IsDirected;
 
-        [JsonProperty("source")]
+        [JsonProperty("sourceId")]
         public TId SourceId => this.edge.SourceId;
 
-        [JsonProperty("target")]
+        [JsonProperty("targetId")]
         public TId TargetId => this.edge.TargetId;
 
-        private EdgeEntry(Edge<TId> edge)
+        private EdgeState(Edge<TId> edge)
             : base(edge)
         {
             this.edge = edge ?? throw new ArgumentNullException(nameof(edge));
         }
 
-        internal EdgeEntry(
+        [JsonConstructor]
+        internal EdgeState(
             TId id,
             [DisallowNull, Pure] IEnumerable<string> classifications,
             [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications,
@@ -38,22 +39,22 @@ namespace Graphs.IO
             bool isDirected)
         {
             this.edge = new Edge<TId>(
-                id, 
+                id,
                 classifications,
                 qualifications,
-                sourceId, 
+                sourceId,
                 targetId,
                 isDirected);
         }
 
-        public static explicit operator Edge<TId>(EdgeEntry<TId> edgeEntry)
+        public static explicit operator EdgeState<TId>([DisallowNull, Pure] Edge<TId> edge)
         {
-            return edgeEntry.edge;
+            return new EdgeState<TId>(edge);
         }
 
-        public static explicit operator EdgeEntry<TId>([DisallowNull, Pure] Edge<TId> edge)
+        public static explicit operator Edge<TId>(EdgeState<TId> edgeEntry)
         {
-            return new EdgeEntry<TId>(edge);
+            return edgeEntry.edge;
         }
     }
 }

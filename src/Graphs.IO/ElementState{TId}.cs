@@ -7,14 +7,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Graphs.IO
 {
-    public class ElementEntry<TId>
+    public abstract class ElementState<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private readonly IElement<TId> element;
 
-        protected ElementEntry() { }
+        protected ElementState() { }
 
-        protected ElementEntry(IElement<TId> element)
+        protected ElementState(IElement<TId> element)
         {
             this.element = element ?? throw new ArgumentNullException(nameof(element));
         }
@@ -27,13 +27,13 @@ namespace Graphs.IO
         public IEnumerable<string> Classifications => this.element.Classifications;
 
         [JsonProperty("qualifications")]
-        public IEnumerable<KeyValuePair<string, TypedValue>> Qualifications
+        public IEnumerable<KeyValuePair<string, SerializableValue>> Qualifications
         {
             get
             {
                 foreach (var kvp in this.element.Qualifications)
                 {
-                    yield return KeyValuePair.Create(kvp.Key, (TypedValue)kvp.Value);
+                    yield return KeyValuePair.Create(kvp.Key, (SerializableValue)kvp.Value);
                 }
             }
         }
