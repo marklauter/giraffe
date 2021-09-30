@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace Documents.Collections
@@ -43,7 +42,7 @@ namespace Documents.Collections
                 : throw new KeyNotFoundException(key);
         }
 
-        protected override Task WriteDocumentAsync([Pure] Document<TMember> document)
+        protected override Task WriteDocumentAsync(Document<TMember> document)
         {
             this.documents[document.Key] = document;
             return Task.CompletedTask;

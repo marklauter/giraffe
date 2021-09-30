@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 
 namespace Documents
 {
@@ -41,7 +39,7 @@ namespace Documents
         [JsonProperty("value")]
         public object Value { get; }
 
-        [Pure]
+
         public object Clone()
         {
             return new SerializableValue(this);
@@ -64,7 +62,7 @@ namespace Documents
             return AreEqual(x, y);
         }
 
-        public int GetHashCode([DisallowNull] SerializableValue obj)
+        public int GetHashCode(SerializableValue obj)
         {
             return obj.GetHashCode();
         }

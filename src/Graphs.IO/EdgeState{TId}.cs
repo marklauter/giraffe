@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 
 namespace Graphs.IO
 {
@@ -32,8 +30,8 @@ namespace Graphs.IO
         [JsonConstructor]
         internal EdgeState(
             TId id,
-            [DisallowNull, Pure] IEnumerable<string> classifications,
-            [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications,
+            IEnumerable<string> classifications,
+            IEnumerable<KeyValuePair<string, object>> qualifications,
             TId sourceId,
             TId targetId,
             bool isDirected)
@@ -47,7 +45,7 @@ namespace Graphs.IO
                 isDirected);
         }
 
-        public static explicit operator EdgeState<TId>([DisallowNull, Pure] Edge<TId> edge)
+        public static explicit operator EdgeState<TId>(Edge<TId> edge)
         {
             return new EdgeState<TId>(edge);
         }

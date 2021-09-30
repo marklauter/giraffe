@@ -1,7 +1,6 @@
 ﻿using Documents.IO.Encoding;
 using Documents.IO.Files;
 using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,7 +67,7 @@ namespace Documents.Collections.IO
             return this.DeleteFileAsync(this.GetFileName(key));
         }
 
-        protected override Task WriteDocumentAsync([Pure] Document<TMember> document)
+        protected override Task WriteDocumentAsync(Document<TMember> document)
         {
             return this.WriteFileAsync(document);
         }
@@ -89,7 +88,7 @@ namespace Documents.Collections.IO
             return await this.decoder.DeserializeAsync(json);
         }
 
-        private async Task WriteFileAsync([Pure] Document<TMember> document)
+        private async Task WriteFileAsync(Document<TMember> document)
         {
             var json = await this.encoder.SerializeAsync(document);
             await this.writer.WriteAsync(this.GetFileName(document.Key), json);

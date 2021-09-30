@@ -1,7 +1,4 @@
 ﻿using Documents.Collections;
-using Graphs.Elements.Classifiers;
-using Graphs.Elements.Nodes;
-using Graphs.Elements.Qualifiers;
 using Graphs.Events;
 using System;
 
@@ -25,7 +22,7 @@ namespace Graphs.IO.Output
             this.eventSource = eventSource ?? throw new ArgumentNullException(nameof(eventSource));
             this.nodeCollection = nodeCollection ?? throw new ArgumentNullException(nameof(nodeCollection));
             this.edgeCollection = edgeCollection ?? throw new ArgumentNullException(nameof(edgeCollection));
-            
+
             this.eventSource.Classified += this.EventSource_Classified;
             this.eventSource.Declassified += this.EventSource_Declassified;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Graphs.Elements.Qualifiers
+namespace Graphs.Events
 {
     public interface IQualifierEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable

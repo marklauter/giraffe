@@ -1,358 +1,135 @@
-﻿using Graphs.Elements.Classifiers;
-using Graphs.Elements.Qualifiers;
+﻿using Graphs.Events;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Graphs.Elements
 {
     [DebuggerDisplay("{Id}")]
-    public abstract class Element<TId>
-        : IElement<TId>
+    public class Element<TId>
+        : IQualifier
+        , IQualifierEventSource<TId>
+        , IClassifier
+        , IClassifierEventSource<TId>
+        , ICloneable
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        private readonly ClassificationCollection classifications = ClassificationCollection.Empty;
+        private ImmutableHashSet<string> labels = ImmutableHashSet<string>.Empty;
+        private ImmutableDictionary<string, object> attributes = ImmutableDictionary<string, object>.Empty;
 
-        private readonly QualificationCollection qualifications = QualificationCollection.Empty;
+        public event EventHandler<QualifiedEventArgs<TId>> Qualified;
+        public event EventHandler<DisqualifiedEventArgs<TId>> Disqualified;
 
-        /// <inheritdoc/>
-        public event EventHandler<ClassifiedEventArgs> Classified;
+        public event EventHandler<ClassifiedEventArgs<TId>> Classified;
+        public event EventHandler<DeclassifiedEventArgs<TId>> Declassified;
 
-        /// <inheritdoc/>
-        public event EventHandler<DeclassifiedEventArgs> Declassified;
-
-        /// <inheritdoc/>
-        public event EventHandler<QualifiedEventArgs> Qualified;
-
-        /// <inheritdoc/>
-        public event EventHandler<DisqualifiedEventArgs> Disqualified;
-
-        /// <inheritdoc/>
-        public IEnumerable<string> Classifications => this.classifications;
-
-        /// <inheritdoc/>
         public TId Id { get; }
 
-        /// <inheritdoc/>
-        public IEnumerable<KeyValuePair<string, object>> Qualifications => this.qualifications;
+        public IEnumerable<string> Labels => this.labels;
 
-        protected Element()
-        {
-            this.classifications.Classified += this.Classifications_Classified;
-            this.classifications.Declassified += this.Classifications_Declassified;
-            this.qualifications.Disqualified += this.Qualifications_Disqualified;
-            this.qualifications.Qualified += this.Qualifications_Qualified;
-        }
+        public IEnumerable<KeyValuePair<string, object>> Attributes => this.attributes;
 
         protected Element(TId id)
-            : this()
         {
             this.Id = id;
         }
 
-        protected Element([DisallowNull, Pure] Element<TId> other)
+        protected Element(Element<TId> other)
         {
-            this.classifications = other.classifications.Clone() as ClassificationCollection;
-            this.classifications.Classified += this.Classifications_Classified;
-            this.classifications.Declassified += this.Classifications_Declassified;
-
-            this.qualifications = other.qualifications.Clone() as QualificationCollection;
-            this.qualifications.Disqualified += this.Qualifications_Disqualified;
-            this.qualifications.Qualified += this.Qualifications_Qualified;
-
-            this.Id = other.Id;
+            this.labels = other.labels;
+            this.attributes = other.attributes;
         }
 
         protected Element(
-            TId id,
-            [DisallowNull, Pure] IEnumerable<string> classifications,
-            [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications)
+            IEnumerable<string> labels,
+            IEnumerable<KeyValuePair<string, object>> attributes)
         {
-            if (classifications is null)
-            {
-                throw new ArgumentNullException(nameof(classifications));
-            }
-
-            if (qualifications is null)
-            {
-                throw new ArgumentNullException(nameof(qualifications));
-            }
-
-            this.Id = id;
-
-            this.classifications = new ClassificationCollection(classifications);
-            this.classifications.Classified += this.Classifications_Classified;
-            this.classifications.Declassified += this.Classifications_Declassified;
-
-            this.qualifications = new QualificationCollection(qualifications);
-            this.qualifications.Disqualified += this.Qualifications_Disqualified;
-            this.qualifications.Qualified += this.Qualifications_Qualified;
+            this.labels = labels.ToImmutableHashSet();
+            this.attributes = attributes.ToImmutableDictionary();
         }
 
-        /// <inheritdoc/>
-        public IElement<TId> Classify(string label)
+        public object Clone()
+        {
+            return new Element<TId>(this);
+        }
+
+        public void Classify(string label)
         {
             if (String.IsNullOrWhiteSpace(label))
             {
                 throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
             }
 
-            _ = this.classifications.Classify(label);
-            return this;
+            this.labels = this.labels.Add(label);
+
+            this.Classified?.Invoke(this, new ClassifiedEventArgs<TId>(label, this.Id));
         }
 
-        /// <inheritdoc/>
-        [Pure]
-        public abstract object Clone();
-
-        /// <inheritdoc/>
-        public IElement<TId> Declassify(string label)
+        public void Declassify(string label)
         {
             if (String.IsNullOrWhiteSpace(label))
             {
                 throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
             }
 
-            _ = this.classifications.Declassify(label);
-            return this;
+            this.labels = this.labels.Remove(label);
+
+            this.Classified?.Invoke(this, new DeclassifiedEventArgs<TId>(label, this.Id));
         }
 
-        /// <inheritdoc/>
-        public IElement<TId> Disqualify(string name)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            _ = this.qualifications.Disqualify(name);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        [Pure]
-        public bool HasProperty(string name)
-        {
-            return String.IsNullOrWhiteSpace(name)
-                ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
-                : this.qualifications.HasQuality(name);
-        }
-
-        /// <inheritdoc/>
-        [Pure]
         public bool Is(string label)
         {
             return String.IsNullOrWhiteSpace(label)
                 ? throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label))
-                : this.classifications.Is(label);
+                : this.labels.Contains(label);
         }
 
-        /// <inheritdoc/>
-        [Pure]
         public bool Is(IEnumerable<string> labels)
         {
             return labels is null
                 ? throw new ArgumentNullException(nameof(labels))
-                : this.classifications.Is(labels);
+                : labels.All(l => this.Is(l));
         }
 
-        /// <inheritdoc/>
-        [Pure]
+        public void Qualify(string name, object value)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            this.attributes = this.attributes.SetItem(name, value);
+            this.Qualified?.Invoke(this, new QualifiedEventArgs<TId>(name, value, this.Id));
+        }
+
+        public void Disqualify(string name)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            if (this.attributes.TryGetValue(name, out var value))
+            {
+                this.attributes = this.attributes.Remove(name);
+                this.Qualified?.Invoke(this, new DisqualifiedEventArgs<TId>(name, value, this.Id));
+            }
+        }
+
+        public bool HasAttribute(string name)
+        {
+            return String.IsNullOrWhiteSpace(name)
+                ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
+                : this.attributes.ContainsKey(name);
+        }
+
         public bool TryGetValue(string name, out object value)
         {
             return String.IsNullOrWhiteSpace(name)
                 ? throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name))
-                : this.qualifications.TryGetValue(name, out value);
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, bool value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, sbyte value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, byte value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, short value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, ushort value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, int value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, uint value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, long value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, ulong value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, float value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, double value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, decimal value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, DateTime value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public IElement<TId> Qualify(string name, string value)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
-            }
-
-            this.qualifications.Qualify(name, value);
-            return this;
-        }
-
-        private void Qualifications_Disqualified(object sender, DisqualifiedEventArgs e)
-        {
-            this.Disqualified?.Invoke(this, e);
-        }
-
-        private void Qualifications_Qualified(object sender, QualifiedEventArgs e)
-        {
-            this.Qualified?.Invoke(this, e);
-        }
-
-        private void Classifications_Declassified(object sender, DeclassifiedEventArgs e)
-        {
-            this.Declassified?.Invoke(this, e);
-        }
-
-        private void Classifications_Classified(object sender, ClassifiedEventArgs e)
-        {
-            this.Classified?.Invoke(this, e);
+                : this.attributes.TryGetValue(name, out value);
         }
     }
 }

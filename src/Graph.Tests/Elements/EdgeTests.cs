@@ -5,7 +5,7 @@ namespace Graphs.Elements.Tests
 {
     public sealed class EdgeTests
     {
-        private static readonly IIdGenerator<Guid> IdGenerator = new GuidGenerator();
+        private static readonly IIdGenerator<Guid> IdGenerator = new DefaultIdGenerator();
 
         [Fact]
         public void Edge_New_Sets_Source_Target_and_Directed_False()

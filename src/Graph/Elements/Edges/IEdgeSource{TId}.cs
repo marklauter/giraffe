@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Graphs.Elements.Edges
+namespace Graphs.Elements
 {
     public interface IEdgeSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable

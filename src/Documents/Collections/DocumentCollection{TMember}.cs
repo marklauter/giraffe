@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,14 +25,14 @@ namespace Documents.Collections
         protected DocumentCollection() { }
 
         /// <inheritdoc/>
-        [Pure]
+
         public abstract int Count { get; }
 
-        [Pure]
+
         public bool IsEmpty => this.Count == 0;
 
         /// <inheritdoc/>
-        public Task AddAsync([Pure] Document<TMember> document)
+        public Task AddAsync(Document<TMember> document)
         {
             return document is null
                 ? throw new ArgumentNullException(nameof(document))
@@ -41,7 +40,7 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        public Task AddAsync([Pure] IEnumerable<Document<TMember>> documents)
+        public Task AddAsync(IEnumerable<Document<TMember>> documents)
         {
             if (documents is null)
             {
@@ -60,7 +59,7 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        [Pure]
+
         public Task<bool> ContainsAsync(string key)
         {
             return String.IsNullOrWhiteSpace(key)
@@ -69,8 +68,8 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        [Pure]
-        public Task<bool> ContainsAsync([Pure] Document<TMember> document)
+
+        public Task<bool> ContainsAsync(Document<TMember> document)
         {
             return document is null
                 ? throw new ArgumentNullException(nameof(document)) :
@@ -78,7 +77,7 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        [Pure]
+
         public Task<Document<TMember>> ReadAsync(string key)
         {
             return String.IsNullOrWhiteSpace(key)
@@ -87,7 +86,7 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        [Pure]
+
         public Task<IEnumerable<Document<TMember>>> ReadAsync(IEnumerable<string> keys)
         {
             return keys is null
@@ -112,7 +111,7 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        public Task RemoveAsync([Pure] Document<TMember> document)
+        public Task RemoveAsync(Document<TMember> document)
         {
             return document is null
                 ? throw new ArgumentNullException(nameof(document))
@@ -120,7 +119,7 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        public Task RemoveAsync([Pure] IEnumerable<Document<TMember>> documents)
+        public Task RemoveAsync(IEnumerable<Document<TMember>> documents)
         {
             return documents is null
                 ? throw new ArgumentNullException(nameof(documents))
@@ -128,7 +127,7 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        public Task UpdateAsync([Pure] Document<TMember> document)
+        public Task UpdateAsync(Document<TMember> document)
         {
             return document is null
                 ? throw new ArgumentNullException(nameof(document))
@@ -136,7 +135,7 @@ namespace Documents.Collections
         }
 
         /// <inheritdoc/>
-        public Task UpdateAsync([Pure] IEnumerable<Document<TMember>> documents)
+        public Task UpdateAsync(IEnumerable<Document<TMember>> documents)
         {
             return documents is null
                 ? throw new ArgumentNullException(nameof(documents))
@@ -151,9 +150,9 @@ namespace Documents.Collections
 
         protected abstract Task RemoveDocumentAsync(string key);
 
-        protected abstract Task WriteDocumentAsync([Pure] Document<TMember> document);
+        protected abstract Task WriteDocumentAsync(Document<TMember> document);
 
-        private async Task InternalAddAsync([Pure] Document<TMember> document)
+        private async Task InternalAddAsync(Document<TMember> document)
         {
             if (await this.ContainsAsync(document.Key))
             {
@@ -188,13 +187,13 @@ namespace Documents.Collections
             await Task.WhenAll(tasks);
         }
 
-        private async Task InternalRemoveAsync([Pure] Document<TMember> document)
+        private async Task InternalRemoveAsync(Document<TMember> document)
         {
             await this.RemoveDocumentAsync(document.Key);
             this.DocumentRemoved?.Invoke(this, new DocumentRemovedEventArgs<TMember>(document));
         }
 
-        private async Task InternalRemoveAsync([Pure] IEnumerable<Document<TMember>> documents)
+        private async Task InternalRemoveAsync(IEnumerable<Document<TMember>> documents)
         {
             var tasks = documents
                 .Select(document => this.RemoveAsync(document));
@@ -202,7 +201,7 @@ namespace Documents.Collections
             await Task.WhenAll(tasks);
         }
 
-        private async Task InternalUpdateAsync([Pure] Document<TMember> document)
+        private async Task InternalUpdateAsync(Document<TMember> document)
         {
             if (!await this.ContainsAsync(document.Key))
             {
@@ -219,7 +218,7 @@ namespace Documents.Collections
             this.DocumentUpdated?.Invoke(this, new DocumentUpdatedEventArgs<TMember>(document));
         }
 
-        private async Task InternalUpdateAsync([Pure] IEnumerable<Document<TMember>> documents)
+        private async Task InternalUpdateAsync(IEnumerable<Document<TMember>> documents)
         {
             var tasks = documents
                 .Select(document => this.UpdateAsync(document));

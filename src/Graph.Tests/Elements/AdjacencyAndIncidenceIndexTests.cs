@@ -6,7 +6,7 @@ namespace Graphs.Elements.Tests
 {
     public sealed class AdjacencyAndIncidenceIndexTests
     {
-        private static readonly IIdGenerator<Guid> IdGenerator = new GuidGenerator();
+        private static readonly IIdGenerator<Guid> IdGenerator = new DefaultIdGenerator();
 
         [Fact]
         public void Index_Empty_Returns_Empty()

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Graphs.Elements.Nodes
+namespace Graphs.Events
 {
     public interface IConnectionsEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable

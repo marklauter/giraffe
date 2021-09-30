@@ -1,43 +1,39 @@
-﻿using Graphs.Elements.Edges;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 
-namespace Graphs.Elements.Nodes
+namespace Graphs.Elements
 {
     [DebuggerDisplay("{Id}")]
     public sealed class Node<TId>
         : Element<TId>
-        , INode<TId>
         , IEquatable<Node<TId>>
         , IEqualityComparer<Node<TId>>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private readonly AdjacencyAndIncidenceIndex<TId> nodesAndEdges = AdjacencyAndIncidenceIndex<TId>.Empty;
 
-        internal static INode<TId> New(TId id)
+        internal static Node<TId> New(TId id)
         {
             return new Node<TId>(id);
         }
 
-        [Pure]
+
         public int Degree => this.nodesAndEdges.NodeCount;
 
-        [Pure]
+
         public IEnumerable<TId> Neighbors => this.nodesAndEdges.Nodes;
 
         public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.nodesAndEdges.ReferenceCountedNodes;
 
-        [Pure]
+
         public IEnumerable<TId> Edges => this.nodesAndEdges.Edges;
 
         private Node(TId id)
             : base(id)
         { }
 
-        private Node([DisallowNull, Pure] Node<TId> other)
+        private Node(Node<TId> other)
             : base(other)
         {
             this.nodesAndEdges = other.nodesAndEdges.Clone() as AdjacencyAndIncidenceIndex<TId>;
@@ -45,10 +41,10 @@ namespace Graphs.Elements.Nodes
 
         public Node(
             TId id,
-            [DisallowNull, Pure] IEnumerable<string> classifications,
-            [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications,
-            [DisallowNull, Pure] IEnumerable<KeyValuePair<TId, int>> nodes,
-            [DisallowNull, Pure] IEnumerable<TId> edges)
+            IEnumerable<string> classifications,
+            IEnumerable<KeyValuePair<string, object>> qualifications,
+            IEnumerable<KeyValuePair<TId, int>> nodes,
+            IEnumerable<TId> edges)
             : base(id, classifications, qualifications)
         {
             if (nodes is null)
@@ -64,13 +60,13 @@ namespace Graphs.Elements.Nodes
             this.nodesAndEdges = new AdjacencyAndIncidenceIndex<TId>(nodes, edges);
         }
 
-        [Pure]
+
         public override object Clone()
         {
             return new Node<TId>(this);
         }
 
-        public INode<TId> Connect([DisallowNull, Pure] IEdge<TId> edge)
+        public INode<TId> Connect(IEdge<TId> edge)
         {
             if (!this.IsIncident(edge))
             {
@@ -85,7 +81,7 @@ namespace Graphs.Elements.Nodes
             return this;
         }
 
-        public INode<TId> Disconnect([DisallowNull, Pure] IEdge<TId> edge)
+        public INode<TId> Disconnect(IEdge<TId> edge)
         {
             if (!this.IsIncident(edge))
             {
@@ -100,62 +96,62 @@ namespace Graphs.Elements.Nodes
             return this;
         }
 
-        [Pure]
+
         public bool IsAdjacent(TId targetId)
         {
             return this.nodesAndEdges.ContainsNode(targetId);
         }
 
-        [Pure]
-        public bool IsAdjacent([DisallowNull, Pure] INode<TId> node)
+
+        public bool IsAdjacent(INode<TId> node)
         {
             return node is null
                 ? throw new ArgumentNullException(nameof(node))
                 : this.IsAdjacent(node.Id);
         }
 
-        [Pure]
+
         public bool IsIncident(TId edgeId)
         {
             return this.nodesAndEdges.ContainsEdge(edgeId);
         }
 
-        [Pure]
-        public bool IsIncident([DisallowNull, Pure] IEdge<TId> edge)
+
+        public bool IsIncident(IEdge<TId> edge)
         {
             return edge is null
                 ? throw new ArgumentNullException(nameof(edge))
                 : this.Id.Equals(edge.SourceId) || this.Id.Equals(edge.TargetId) || this.IsIncident(edge.Id);
         }
 
-        [Pure]
-        public override bool Equals([Pure] object obj)
+
+        public override bool Equals(object obj)
         {
             return obj is Node<TId> node
                 && this.Equals(node);
         }
 
-        [Pure]
-        public bool Equals([Pure] Node<TId> other)
+
+        public bool Equals(Node<TId> other)
         {
             return other != null
                 && other.Id.Equals(this.Id);
         }
 
-        [Pure]
-        public bool Equals([Pure] Node<TId> x, [Pure] Node<TId> y)
+
+        public bool Equals(Node<TId> x, Node<TId> y)
         {
             return x != null && x.Equals(y);
         }
 
-        [Pure]
+
         public override int GetHashCode()
         {
             return HashCode.Combine(this.Id);
         }
 
-        [Pure]
-        public int GetHashCode([DisallowNull, Pure] Node<TId> obj)
+
+        public int GetHashCode(Node<TId> obj)
         {
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))

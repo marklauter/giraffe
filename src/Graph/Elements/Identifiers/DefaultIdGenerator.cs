@@ -2,7 +2,7 @@
 
 namespace Graphs.Elements
 {
-    public sealed class GuidGenerator
+    public sealed class DefaultIdGenerator
         : IIdGenerator<Guid>
     {
         public Guid NewId()

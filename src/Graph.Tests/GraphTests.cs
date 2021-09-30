@@ -1,7 +1,4 @@
-﻿using Documents.Collections;
-using Graphs.Data;
-using Graphs.Elements;
-using System;
+﻿using System;
 using Xunit;
 
 namespace Graphs.Tests

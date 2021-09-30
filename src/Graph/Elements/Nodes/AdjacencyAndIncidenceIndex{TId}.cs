@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 
-namespace Graphs.Elements.Nodes
+namespace Graphs.Elements
 {
     internal sealed class AdjacencyAndIncidenceIndex<TId>
         : ICloneable
@@ -18,22 +17,22 @@ namespace Graphs.Elements.Nodes
 
         public static AdjacencyAndIncidenceIndex<TId> Empty => new();
 
-        [Pure]
+
         public IEnumerable<TId> Edges => this.edges;
 
-        [Pure]
+
         public int EdgeCount => this.edges.Count;
 
-        [Pure]
+
         public bool IsEmpty => this.edges.IsEmpty;
 
-        [Pure]
+
         public IEnumerable<TId> Nodes => this.nodes.Keys;
 
-        [Pure]
+
         public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.nodes;
 
-        [Pure]
+
         public int NodeCount => this.nodes.Count;
 
         private AdjacencyAndIncidenceIndex()
@@ -75,25 +74,25 @@ namespace Graphs.Elements.Nodes
             return this;
         }
 
-        [Pure]
+
         public object Clone()
         {
             return new AdjacencyAndIncidenceIndex<TId>(this);
         }
 
-        [Pure]
+
         public bool ContainsNode(TId id)
         {
             return this.nodes.ContainsKey(id);
         }
 
-        [Pure]
+
         public bool ContainsEdge(TId id)
         {
             return this.edges.Contains(id);
         }
 
-        [Pure]
+
         public int NodeReferenceCount(TId nodeId)
         {
             return this.nodes.TryGetValue(nodeId, out var count)

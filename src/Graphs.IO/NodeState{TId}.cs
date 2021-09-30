@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 
 namespace Graphs.IO
 {
@@ -29,10 +27,10 @@ namespace Graphs.IO
         [JsonConstructor]
         internal NodeState(
             TId id,
-            [DisallowNull, Pure] IEnumerable<string> classifications,
-            [DisallowNull, Pure] IEnumerable<KeyValuePair<string, object>> qualifications,
-            [DisallowNull, Pure] IEnumerable<KeyValuePair<TId, int>> nodes,
-            [DisallowNull, Pure] IEnumerable<TId> edges)
+            IEnumerable<string> classifications,
+            IEnumerable<KeyValuePair<string, object>> qualifications,
+            IEnumerable<KeyValuePair<TId, int>> nodes,
+            IEnumerable<TId> edges)
         {
             this.node = new Node<TId>(
                 id,
@@ -42,7 +40,7 @@ namespace Graphs.IO
                 edges);
         }
 
-        public static explicit operator NodeState<TId>([DisallowNull, Pure] Node<TId> node)
+        public static explicit operator NodeState<TId>(Node<TId> node)
         {
             return new NodeState<TId>(node);
         }

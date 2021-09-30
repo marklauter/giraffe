@@ -1,11 +1,13 @@
 ﻿using System;
 
-namespace Graphs.Elements.Qualifiers
+namespace Graphs.Events
 {
-    public class QualifiedEventArgs
-        : EventArgs
+    public class QualifiedEventArgs<TId>
+        : GraphEventArgs
+        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public QualifiedEventArgs(string name, object value)
+        public QualifiedEventArgs(string name, object value, TId elementId)
+            : base()
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -14,7 +16,10 @@ namespace Graphs.Elements.Qualifiers
 
             this.Name = name;
             this.Value = value;
+            this.ElementId = elementId;
         }
+
+        public TId ElementId { get; }
 
         public string Name { get; }
 

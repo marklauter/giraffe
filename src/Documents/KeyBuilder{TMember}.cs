@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 
@@ -9,8 +8,8 @@ namespace Documents
     public static class KeyBuilder<TMember>
         where TMember : class
     {
-        [Pure]
-        public static string GetKey([Pure] TMember member)
+
+        public static string GetKey(TMember member)
         {
             return KeyProperties.Length > 0
                 ? BuildKey(member)
@@ -21,7 +20,7 @@ namespace Documents
             .Where(p => p.GetCustomAttribute<KeyAttribute>() != null)
             .ToArray();
 
-        internal static string BuildKey([Pure] TMember member)
+        internal static string BuildKey(TMember member)
         {
             var values = new object[KeyProperties.Length];
             for (var i = 0; i < values.Length; ++i)

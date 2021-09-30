@@ -9,10 +9,10 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Json_Serialize_Deserialize()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
-            var edge1 = node + Node<Guid>.New(new GuidGenerator());
-            var edge2 = node + Node<Guid>.New(new GuidGenerator());
-            var edge3 = node + Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
+            var edge1 = node + Node<Guid>.New(new DefaultIdGenerator());
+            var edge2 = node + Node<Guid>.New(new DefaultIdGenerator());
+            var edge3 = node + Node<Guid>.New(new DefaultIdGenerator());
 
             var json = JsonConvert.SerializeObject(node);
             Assert.False(String.IsNullOrWhiteSpace(json));
@@ -35,7 +35,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_New_Sets_Id()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             Assert.NotNull(node);
             Assert.NotEqual(Guid.Empty, node.Id);
         }
@@ -43,7 +43,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Clone_Copies_Values()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             var clone = node.Clone() as Node;
             Assert.True(node.Equals(clone));
             Assert.Equal(node.Id, clone.Id);
@@ -52,14 +52,14 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Equals_With_Null_Returns_False()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             Assert.False(node.Equals(null));
         }
 
         [Fact]
         public void Node_Equals_X_Y_Returns_True()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             var clone = node.Clone() as Node;
             Assert.True(node.Equals(node, clone));
         }
@@ -67,7 +67,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Equals_X_Y_With_Null_Returns_False()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             Assert.False(node.Equals(node, null));
             Assert.False(node.Equals(null, node));
         }
@@ -75,7 +75,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Equals_Obj_Returns_True()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             var clone = node.Clone() as Node;
             Assert.True(node.Equals(clone as object));
         }
@@ -84,7 +84,7 @@ namespace Graphs.Elements.Tests
         public void Node_Equals_Obj_Returns_False()
         {
             var other = String.Empty;
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             Assert.False(node.Equals(other));
 
             Assert.False(node.Equals(other));
@@ -93,16 +93,16 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Equals_Returns_False()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
-            var other = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
+            var other = Node<Guid>.New(new DefaultIdGenerator());
             Assert.False(node.Equals(other));
         }
 
         [Fact]
         public void Node_GetHashCode_Obj_Equal_GetHashCode()
         {
-            var node1 = Node<Guid>.New(new GuidGenerator());
-            var node2 = Node<Guid>.New(new GuidGenerator());
+            var node1 = Node<Guid>.New(new DefaultIdGenerator());
+            var node2 = Node<Guid>.New(new DefaultIdGenerator());
             Assert.NotEqual(node1.GetHashCode(), node2.GetHashCode());
             Assert.Equal(node1.GetHashCode(), node2.GetHashCode(node1));
         }
@@ -110,7 +110,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_GetHashCode_Obj_Throws_ArgumentNullException()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             Assert.Throws<ArgumentNullException>(() => node.GetHashCode(null));
         }
 
@@ -129,14 +129,14 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_IsAdjacent_Throws_On_Null()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             Assert.Throws<ArgumentNullException>(() => _ = node.IsAdjacent(null));
         }
 
         [Fact]
         public void Node_Degree_Increases_With_Couple()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             for (var i = 0; i < 3; ++i)
             {
                 Assert.Equal(i, node.Degree);
@@ -147,10 +147,10 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_IsAdjacent_Returns_True()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             for (var i = 0; i < 3; ++i)
             {
-                var other = Node<Guid>.New(new GuidGenerator());
+                var other = Node<Guid>.New(new DefaultIdGenerator());
                 Assert.NotNull(Edge<Guid>.Couple(node, other));
                 Assert.True(node.IsAdjacent(other));
                 Assert.True(node.IsAdjacent(other.Id));
@@ -160,16 +160,16 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_IsAdjacent_Returns_False()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             for (var i = 0; i < 3; ++i)
             {
-                var coupled = Node<Guid>.New(new GuidGenerator());
+                var coupled = Node<Guid>.New(new DefaultIdGenerator());
                 Assert.NotNull(Edge<Guid>.Couple(node, coupled));
                 Assert.True(node.IsAdjacent(coupled));
                 Assert.True(node.IsAdjacent(coupled.Id));
             }
 
-            var other = Node<Guid>.New(new GuidGenerator());
+            var other = Node<Guid>.New(new DefaultIdGenerator());
             Assert.False(node.IsAdjacent(other));
             Assert.False(node.IsAdjacent(other.Id));
         }
@@ -177,8 +177,8 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_IsIncident_Returns_True()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
-            var other = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
+            var other = Node<Guid>.New(new DefaultIdGenerator());
             var edge = node + other;
             Assert.NotEmpty(node.IncidentEdges);
             Assert.True(node.IsIncident(edge));
@@ -187,8 +187,8 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_IsIncident_Returns_False()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
-            var other = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
+            var other = Node<Guid>.New(new DefaultIdGenerator());
             var edge = node + other;
             Assert.True(node.IsIncident(edge));
 
@@ -206,10 +206,10 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_TryDecouple_Returns_True()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             for (var i = 0; i < 3; ++i)
             {
-                var other = Node<Guid>.New(new GuidGenerator());
+                var other = Node<Guid>.New(new DefaultIdGenerator());
                 var edge = Edge<Guid>.Couple(node, other);
                 Assert.NotNull(edge);
                 Assert.True(node.IsAdjacent(other));
@@ -228,8 +228,8 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Neighbors_Enumerates_Adjacent_Nodes()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
-            var other = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
+            var other = Node<Guid>.New(new DefaultIdGenerator());
             _ = Edge<Guid>.Couple(node, other);
             Assert.Contains(other.Id, node.Neighbors);
         }
@@ -237,8 +237,8 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Addition_Operator()
         {
-            var source = Node<Guid>.New(new GuidGenerator());
-            var target = Node<Guid>.New(new GuidGenerator());
+            var source = Node<Guid>.New(new DefaultIdGenerator());
+            var target = Node<Guid>.New(new DefaultIdGenerator());
             var edge = source + target;
             Assert.NotNull(edge);
             Assert.True(edge.IsDirected);
@@ -250,7 +250,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Couple_Throws_When_Edge_Is_Invalid()
         {
-            var source = Node<Guid>.New(new GuidGenerator());
+            var source = Node<Guid>.New(new DefaultIdGenerator());
             var edge = new Edge(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), true);
             Assert.Throws<InvalidOperationException>(() => source.Couple(edge));
         }
@@ -258,7 +258,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Decouple_Throws_When_Edge_Is_Invalid()
         {
-            var source = Node<Guid>.New(new GuidGenerator());
+            var source = Node<Guid>.New(new DefaultIdGenerator());
             var edge = new Edge(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), true);
             Assert.Throws<InvalidOperationException>(() => source.Decouple(edge));
         }
@@ -266,7 +266,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Node_Decouple_Works_When_Node_Is_Source_Or_Target()
         {
-            var node = Node<Guid>.New(new GuidGenerator());
+            var node = Node<Guid>.New(new DefaultIdGenerator());
             var edge = new Edge(Guid.NewGuid(), Guid.NewGuid(), node.Id, true);
             node.Couple(edge);
             Assert.True(node.IsAdjacent(edge.SourceId));
