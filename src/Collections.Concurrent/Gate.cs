@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 
-
 namespace Collections.Concurrent
 {
     public sealed class Gate

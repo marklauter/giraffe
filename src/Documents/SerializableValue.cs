@@ -39,7 +39,6 @@ namespace Documents
         [JsonProperty("value")]
         public object Value { get; }
 
-
         public object Clone()
         {
             return new SerializableValue(this);

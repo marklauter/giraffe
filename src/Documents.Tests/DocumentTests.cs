@@ -38,7 +38,6 @@ namespace Documents.Tests
             Assert.Equal(member, (Member)document);
         }
 
-
         [Fact]
         public void Document_Clone_Copies_Member()
         {

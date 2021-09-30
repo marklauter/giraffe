@@ -18,14 +18,11 @@ namespace Graphs.Elements
             return new Node<TId>(id);
         }
 
-
         public int Degree => this.nodesAndEdges.NodeCount;
-
 
         public IEnumerable<TId> Neighbors => this.nodesAndEdges.Nodes;
 
         public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.nodesAndEdges.ReferenceCountedNodes;
-
 
         public IEnumerable<TId> Edges => this.nodesAndEdges.Edges;
 
@@ -60,13 +57,12 @@ namespace Graphs.Elements
             this.nodesAndEdges = new AdjacencyAndIncidenceIndex<TId>(nodes, edges);
         }
 
-
         public override object Clone()
         {
             return new Node<TId>(this);
         }
 
-        public INode<TId> Connect(IEdge<TId> edge)
+        public Node<TId> Connect(Edge<TId> edge)
         {
             if (!this.IsIncident(edge))
             {
@@ -81,7 +77,7 @@ namespace Graphs.Elements
             return this;
         }
 
-        public INode<TId> Disconnect(IEdge<TId> edge)
+        public Node<TId> Disconnect(Edge<TId> edge)
         {
             if (!this.IsIncident(edge))
             {
@@ -96,34 +92,29 @@ namespace Graphs.Elements
             return this;
         }
 
-
         public bool IsAdjacent(TId targetId)
         {
             return this.nodesAndEdges.ContainsNode(targetId);
         }
 
-
-        public bool IsAdjacent(INode<TId> node)
+        public bool IsAdjacent(Node<TId> node)
         {
             return node is null
                 ? throw new ArgumentNullException(nameof(node))
                 : this.IsAdjacent(node.Id);
         }
 
-
         public bool IsIncident(TId edgeId)
         {
             return this.nodesAndEdges.ContainsEdge(edgeId);
         }
 
-
-        public bool IsIncident(IEdge<TId> edge)
+        public bool IsIncident(Edge<TId> edge)
         {
             return edge is null
                 ? throw new ArgumentNullException(nameof(edge))
                 : this.Id.Equals(edge.SourceId) || this.Id.Equals(edge.TargetId) || this.IsIncident(edge.Id);
         }
-
 
         public override bool Equals(object obj)
         {
@@ -131,25 +122,21 @@ namespace Graphs.Elements
                 && this.Equals(node);
         }
 
-
         public bool Equals(Node<TId> other)
         {
             return other != null
                 && other.Id.Equals(this.Id);
         }
 
-
         public bool Equals(Node<TId> x, Node<TId> y)
         {
             return x != null && x.Equals(y);
         }
 
-
         public override int GetHashCode()
         {
             return HashCode.Combine(this.Id);
         }
-
 
         public int GetHashCode(Node<TId> obj)
         {

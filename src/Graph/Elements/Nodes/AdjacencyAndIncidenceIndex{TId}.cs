@@ -17,21 +17,15 @@ namespace Graphs.Elements
 
         public static AdjacencyAndIncidenceIndex<TId> Empty => new();
 
-
         public IEnumerable<TId> Edges => this.edges;
-
 
         public int EdgeCount => this.edges.Count;
 
-
         public bool IsEmpty => this.edges.IsEmpty;
-
 
         public IEnumerable<TId> Nodes => this.nodes.Keys;
 
-
         public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.nodes;
-
 
         public int NodeCount => this.nodes.Count;
 
@@ -74,24 +68,20 @@ namespace Graphs.Elements
             return this;
         }
 
-
         public object Clone()
         {
             return new AdjacencyAndIncidenceIndex<TId>(this);
         }
-
 
         public bool ContainsNode(TId id)
         {
             return this.nodes.ContainsKey(id);
         }
 
-
         public bool ContainsEdge(TId id)
         {
             return this.edges.Contains(id);
         }
-
 
         public int NodeReferenceCount(TId nodeId)
         {

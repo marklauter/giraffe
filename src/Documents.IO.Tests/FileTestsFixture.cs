@@ -43,7 +43,6 @@ namespace Documents.IO.Tests
         }
     }
 
-
     internal sealed class ReaderFileTestsFixture
         : IDisposable
     {
@@ -83,7 +82,6 @@ namespace Documents.IO.Tests
             }
         }
     }
-
 
     internal sealed class WriterFileTestsFixture
         : IDisposable

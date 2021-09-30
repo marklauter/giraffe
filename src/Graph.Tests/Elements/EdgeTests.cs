@@ -83,7 +83,7 @@ namespace Graphs.Elements.Tests
             var target = Node<Guid>.New(IdGenerator);
             var edge = Edge<Guid>.Couple(IdGenerator, source, target);
             var clone = edge.Clone() as Edge<Guid>;
-            Assert.True(edge.Equals(clone as object));
+            Assert.True(edge.Equals(clone));
         }
 
         [Fact]

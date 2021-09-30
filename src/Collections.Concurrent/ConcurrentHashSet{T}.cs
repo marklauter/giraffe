@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace Collections.Concurrent
 {
     public sealed class ConcurrentHashSet<T>

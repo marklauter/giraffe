@@ -15,10 +15,8 @@ namespace Documents
         [JsonProperty]
         public int ETag { get; }
 
-
         [JsonProperty]
         public string Key { get; }
-
 
         [JsonProperty]
         public TMember Member { get; }
@@ -36,12 +34,10 @@ namespace Documents
             this.ETag = etag;
         }
 
-
         public object Clone()
         {
             return new Document<TMember>(this);
         }
-
 
         public bool Equals(Document<TMember> other)
         {
@@ -49,12 +45,10 @@ namespace Documents
                 && other.Key.CompareTo(this.Key) == 0;
         }
 
-
         public bool Equals(Document<TMember> x, Document<TMember> y)
         {
             return x != null && x.Equals(y);
         }
-
 
         public override bool Equals(object obj)
         {
@@ -62,12 +56,10 @@ namespace Documents
                 && this.Equals(document);
         }
 
-
         public override int GetHashCode()
         {
             return HashCode.Combine(this.Key);
         }
-
 
         public int GetHashCode(Document<TMember> obj)
         {
@@ -76,12 +68,10 @@ namespace Documents
                 : obj.GetHashCode();
         }
 
-
         public static explicit operator TMember(Document<TMember> document)
         {
             return document.Member;
         }
-
 
         public static explicit operator Document<TMember>(TMember member)
         {

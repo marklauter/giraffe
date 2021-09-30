@@ -1,6 +1,4 @@
 ﻿using Graphs.Elements;
-using Graphs.Elements.Edges;
-using Graphs.Elements.Nodes;
 using Graphs.Events;
 using System;
 using System.Threading.Tasks;
@@ -14,9 +12,9 @@ namespace Graphs
     {
         bool IsEmpty { get; }
 
-        Task<INode<TId>> NewNode();
+        Task<Node<TId>> NewNode();
 
-        Task<IEdge<TId>> Connect(INode<TId> source, INode<TId> target);
+        Task<Edge<TId>> Connect(Node<TId> source, Node<TId> target);
     }
 
     //public class Graph<TId>
@@ -82,12 +80,12 @@ namespace Graphs
     //        throw new NotImplementedException();
     //    }
 
-    //    public Task<INode<TId>> GetNodeAsync(TId id)
+    //    public Task<Node<TId>> GetNodeAsync(TId id)
     //    {
     //        throw new NotImplementedException();
     //    }
 
-    //    public Task<IEdge<TId>> GetEdgeAsync(TId id)
+    //    public Task<Edge<TId>> GetEdgeAsync(TId id)
     //    {
     //        throw new NotImplementedException();
     //    }

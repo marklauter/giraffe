@@ -8,7 +8,7 @@ using System.Linq;
 namespace Graphs.Elements
 {
     [DebuggerDisplay("{Id}")]
-    public class Element<TId>
+    public abstract class Element<TId>
         : IQualifier
         , IQualifierEventSource<TId>
         , IClassifier
@@ -37,23 +37,23 @@ namespace Graphs.Elements
         }
 
         protected Element(Element<TId> other)
+            : this(other.Id)
         {
             this.labels = other.labels;
             this.attributes = other.attributes;
         }
 
         protected Element(
+            TId id,
             IEnumerable<string> labels,
             IEnumerable<KeyValuePair<string, object>> attributes)
+            : this(id)
         {
             this.labels = labels.ToImmutableHashSet();
             this.attributes = attributes.ToImmutableDictionary();
         }
 
-        public object Clone()
-        {
-            return new Element<TId>(this);
-        }
+        public abstract object Clone();
 
         public void Classify(string label)
         {

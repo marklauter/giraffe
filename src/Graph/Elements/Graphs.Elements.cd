@@ -133,32 +133,32 @@
       <FileName>Elements\Nodes\EventSources\IConnectionsEventSource{TId}.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Graphs.Elements.INodeSource&lt;TId&gt;">
+  <Interface Name="Graphs.Elements.NodeSource&lt;TId&gt;">
     <Position X="18.5" Y="3.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
-      <FileName>Elements\Nodes\INodeSource{TId}.cs</FileName>
+      <FileName>Elements\Nodes\NodeSource{TId}.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Graphs.Elements.INode&lt;TId&gt;">
+  <Interface Name="Graphs.Elements.Node&lt;TId&gt;">
     <Position X="11.25" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAEAAAAAAAAAAAQABAAAAAAIAAAAQAAAAA=</HashCode>
-      <FileName>Elements\Nodes\INode{TId}.cs</FileName>
+      <FileName>Elements\Nodes\Node{TId}.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Graphs.Elements.IEdgeSource&lt;TId&gt;">
+  <Interface Name="Graphs.Elements.EdgeSource&lt;TId&gt;">
     <Position X="21.25" Y="3.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Elements\Edges\IEdgeSource{TId}.cs</FileName>
+      <FileName>Elements\Edges\EdgeSource{TId}.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Graphs.Elements.IEdge&lt;TId&gt;">
+  <Interface Name="Graphs.Elements.Edge&lt;TId&gt;">
     <Position X="13.5" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAgAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAABAAA=</HashCode>
-      <FileName>Elements\Edges\IEdge{TId}.cs</FileName>
+      <FileName>Elements\Edges\Edge{TId}.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Graphs.Elements.IElement&lt;TId&gt;">

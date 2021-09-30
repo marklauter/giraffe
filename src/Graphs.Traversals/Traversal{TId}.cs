@@ -1,5 +1,4 @@
 ﻿using Graphs.Elements;
-using Graphs.Elements.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +17,7 @@ namespace Graphs.Traversals
             this.source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
-        public async IAsyncEnumerable<INode<TId>> TraverseAsync(INode<TId> origin, int depth)
+        public async IAsyncEnumerable<Node<TId>> TraverseAsync(Node<TId> origin, int depth)
         {
             var visited = new HashSet<TId>(new[] { origin.Id });
             var frontier = await this.ReadFrontierAsync(origin.Neighbors);
@@ -26,7 +25,7 @@ namespace Graphs.Traversals
             var rank = 1;
             while (frontier.Any() && rank <= depth)
             {
-                var tasks = new List<Task<IEnumerable<INode<TId>>>>();
+                var tasks = new List<Task<IEnumerable<Node<TId>>>>();
                 foreach (var traversable in frontier)
                 {
                     yield return traversable;
@@ -41,8 +40,8 @@ namespace Graphs.Traversals
             }
         }
 
-        public async IAsyncEnumerable<INode<TId>> TraverseAsync(
-            INode<TId> origin, int depth, Func<INode<TId>, bool> predicate)
+        public async IAsyncEnumerable<Node<TId>> TraverseAsync(
+            Node<TId> origin, int depth, Func<Node<TId>, bool> predicate)
         {
             var visited = new HashSet<TId>(new[] { origin.Id });
             var frontier = await this.ReadFrontierAsync(origin.Neighbors);
@@ -51,7 +50,7 @@ namespace Graphs.Traversals
             var rank = 1;
             while (frontier.Any() && rank <= depth)
             {
-                var tasks = new List<Task<IEnumerable<INode<TId>>>>();
+                var tasks = new List<Task<IEnumerable<Node<TId>>>>();
                 foreach (var traversable in frontier)
                 {
                     yield return traversable;
@@ -67,15 +66,15 @@ namespace Graphs.Traversals
             }
         }
 
-        private async Task<IEnumerable<INode<TId>>> ReadFrontierAsync(IEnumerable<TId> ids)
+        private async Task<IEnumerable<Node<TId>>> ReadFrontierAsync(IEnumerable<TId> ids)
         {
             var tasks = ids.Select(id => this.source.GetNodeAsync(id)).ToArray();
             return await Task.WhenAll(tasks);
         }
 
-        private static IEnumerable<INode<TId>> Filter(
-            IEnumerable<INode<TId>> frontier,
-            Func<INode<TId>, bool> predicate)
+        private static IEnumerable<Node<TId>> Filter(
+            IEnumerable<Node<TId>> frontier,
+            Func<Node<TId>, bool> predicate)
         {
             return frontier.Where(predicate);
         }

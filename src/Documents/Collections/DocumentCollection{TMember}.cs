@@ -28,7 +28,6 @@ namespace Documents.Collections
 
         public abstract int Count { get; }
 
-
         public bool IsEmpty => this.Count == 0;
 
         /// <inheritdoc/>
