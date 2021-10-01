@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Graphs.Elements;
+using System;
 
 namespace Graphs.Events
 {
@@ -6,7 +7,7 @@ namespace Graphs.Events
         : GraphEventArgs
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public QualifiedEventArgs(string name, object value, TId elementId)
+        public QualifiedEventArgs(Element<TId> element, string name, object value)
             : base()
         {
             if (String.IsNullOrWhiteSpace(name))
@@ -14,12 +15,12 @@ namespace Graphs.Events
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
+            this.Element = element ?? throw new ArgumentNullException(nameof(element));
             this.Name = name;
             this.Value = value;
-            this.ElementId = elementId;
         }
 
-        public TId ElementId { get; }
+        public Element<TId> Element { get; }
 
         public string Name { get; }
 

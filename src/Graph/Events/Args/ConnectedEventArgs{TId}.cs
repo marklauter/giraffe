@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Graphs.Elements;
+using System;
 
 namespace Graphs.Events
 {
@@ -9,9 +10,9 @@ namespace Graphs.Events
         public ConnectedEventArgs(Node<TId> source, Node<TId> target, Edge<TId> edge)
             : base()
         {
-            this.Source = source;
-            this.Target = target;
-            this.Edge = edge;
+            this.Source = source ?? throw new ArgumentNullException(nameof(source));
+            this.Target = target ?? throw new ArgumentNullException(nameof(target));
+            this.Edge = edge ?? throw new ArgumentNullException(nameof(edge));
         }
 
         public Node<TId> Source { get; }

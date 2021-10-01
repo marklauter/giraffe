@@ -8,11 +8,11 @@ namespace Graphs.Events
         protected GraphEventArgs()
         {
             this.Timestamp = DateTime.UtcNow;
-            this.EventId = Guid.NewGuid();
+            this.Id = Guid.NewGuid();
         }
 
         public DateTime Timestamp { get; }
 
-        public Guid EventId { get; }
+        public Guid Id { get; }
     }
 }

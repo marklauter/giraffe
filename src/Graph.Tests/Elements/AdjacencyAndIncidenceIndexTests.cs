@@ -11,7 +11,7 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Index_Empty_Returns_Empty()
         {
-            var index = AdjacencyAndIncidenceIndex<Guid>.Empty;
+            var index = AdjacencyIndex<Guid>.Empty;
             Assert.True(index.IsEmpty);
         }
 
@@ -26,7 +26,7 @@ namespace Graphs.Elements.Tests
             var target2 = Node<Guid>.New(IdGenerator);
             var edge2 = new Edge<Guid>(Guid.NewGuid(), source2.Id, target2.Id, true);
 
-            var index = AdjacencyAndIncidenceIndex<Guid>.Empty;
+            var index = AdjacencyIndex<Guid>.Empty;
             Assert.Equal(0, index.EdgeCount);
             Assert.Equal(0, index.NodeCount);
 
@@ -50,7 +50,7 @@ namespace Graphs.Elements.Tests
             var target = Node<Guid>.New(IdGenerator);
             var edge = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
 
-            var index = AdjacencyAndIncidenceIndex<Guid>.Empty;
+            var index = AdjacencyIndex<Guid>.Empty;
             index.Add(edge.Id, target.Id);
 
             Assert.True(index.ContainsNode(target.Id));
@@ -68,7 +68,7 @@ namespace Graphs.Elements.Tests
             var target = Node<Guid>.New(IdGenerator);
             var edge = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
 
-            var index = AdjacencyAndIncidenceIndex<Guid>.Empty;
+            var index = AdjacencyIndex<Guid>.Empty;
             index.Add(edge.Id, target.Id);
             index.Add(edge.Id, target.Id);
 
@@ -90,7 +90,7 @@ namespace Graphs.Elements.Tests
             var edge1 = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
             var edge2 = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
 
-            var index = AdjacencyAndIncidenceIndex<Guid>.Empty
+            var index = AdjacencyIndex<Guid>.Empty
                 .Add(edge1.Id, target.Id)
                 .Add(edge2.Id, target.Id);
 
@@ -112,7 +112,7 @@ namespace Graphs.Elements.Tests
             var edge1 = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
             var edge2 = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
 
-            var index = AdjacencyAndIncidenceIndex<Guid>.Empty
+            var index = AdjacencyIndex<Guid>.Empty
                 .Add(edge1.Id, target.Id)
                 .Add(edge2.Id, target.Id);
 
@@ -132,15 +132,15 @@ namespace Graphs.Elements.Tests
         [Fact]
         public void Index_NodeReferenceCount_Returns_Zero()
         {
-            Assert.Equal(0, AdjacencyAndIncidenceIndex<Guid>.Empty
-                .NodeReferenceCount(Guid.Empty));
+            Assert.Equal(0, AdjacencyIndex<Guid>.Empty
+                .ReferenceCount(Guid.Empty));
         }
 
         [Fact]
         public void Index_Remove_Throws_When_Edge_Not_Found()
         {
             Assert.Throws<KeyNotFoundException>(() =>
-                AdjacencyAndIncidenceIndex<Guid>.Empty.Remove(Guid.Empty, Guid.Empty));
+                AdjacencyIndex<Guid>.Empty.Remove(Guid.Empty, Guid.Empty));
         }
 
         [Fact]
@@ -150,14 +150,14 @@ namespace Graphs.Elements.Tests
             var target = Node<Guid>.New(IdGenerator);
             var edge = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
 
-            var index = AdjacencyAndIncidenceIndex<Guid>.Empty;
+            var index = AdjacencyIndex<Guid>.Empty;
             index.Add(edge.Id, target.Id);
             index.Add(edge.Id, target.Id);
 
             Assert.True(index.ContainsNode(target.Id));
             Assert.True(index.ContainsEdge(edge.Id));
 
-            var clone = index.Clone() as AdjacencyAndIncidenceIndex<Guid>;
+            var clone = index.Clone() as AdjacencyIndex<Guid>;
             Assert.True(clone.ContainsNode(target.Id));
             Assert.True(clone.ContainsEdge(edge.Id));
         }
@@ -170,7 +170,7 @@ namespace Graphs.Elements.Tests
             var edge1 = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
             var edge2 = new Edge<Guid>(Guid.NewGuid(), source.Id, target.Id, true);
 
-            var index = AdjacencyAndIncidenceIndex<Guid>.Empty
+            var index = AdjacencyIndex<Guid>.Empty
                 .Add(edge1.Id, target.Id)
                 .Add(edge2.Id, target.Id);
 

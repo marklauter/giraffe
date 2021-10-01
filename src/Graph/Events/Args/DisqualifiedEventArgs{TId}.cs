@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Graphs.Elements;
+using System;
 
 namespace Graphs.Events
 {
@@ -6,8 +7,8 @@ namespace Graphs.Events
         : QualifiedEventArgs<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public DisqualifiedEventArgs(string name, object value, TId id)
-            : base(name, value, id)
+        public DisqualifiedEventArgs(Element<TId> element, string name, object value)
+            : base(element, name, value)
         {
         }
     }

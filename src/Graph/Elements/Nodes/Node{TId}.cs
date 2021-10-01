@@ -4,27 +4,30 @@ using System.Diagnostics;
 
 namespace Graphs.Elements
 {
-    [DebuggerDisplay("{Id}")]
+    [DebuggerDisplay("{Id}, Deg: {Degree}")]
     public sealed class Node<TId>
         : Element<TId>
         , IEquatable<Node<TId>>
         , IEqualityComparer<Node<TId>>
+        , ICloneable
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        private readonly AdjacencyAndIncidenceIndex<TId> nodesAndEdges = AdjacencyAndIncidenceIndex<TId>.Empty;
+        private readonly AdjacencyIndex<TId> adjacencyIndex = AdjacencyIndex<TId>.Empty;
 
-        internal static Node<TId> New(TId id)
+        internal static Node<TId> NewNode(TId id)
         {
             return new Node<TId>(id);
         }
 
-        public int Degree => this.nodesAndEdges.NodeCount;
+        public int Degree => this.adjacencyIndex.NodeCount;
 
-        public IEnumerable<TId> Neighbors => this.nodesAndEdges.Nodes;
+        public IEnumerable<TId> Edges => this.adjacencyIndex.Edges;
 
-        public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.nodesAndEdges.ReferenceCountedNodes;
+        public int EdgeCount => this.adjacencyIndex.EdgeCount;
 
-        public IEnumerable<TId> Edges => this.nodesAndEdges.Edges;
+        public IEnumerable<TId> Neighbors => this.adjacencyIndex.Nodes;
+
+        public IEnumerable<KeyValuePair<TId, int>> ReferenceCountedNodes => this.adjacencyIndex.ReferenceCountedNodes;
 
         private Node(TId id)
             : base(id)
@@ -33,28 +36,28 @@ namespace Graphs.Elements
         private Node(Node<TId> other)
             : base(other)
         {
-            this.nodesAndEdges = other.nodesAndEdges.Clone() as AdjacencyAndIncidenceIndex<TId>;
+            this.adjacencyIndex = other.adjacencyIndex.Clone() as AdjacencyIndex<TId>;
         }
 
         public Node(
             TId id,
-            IEnumerable<string> classifications,
-            IEnumerable<KeyValuePair<string, object>> qualifications,
-            IEnumerable<KeyValuePair<TId, int>> nodes,
-            IEnumerable<TId> edges)
-            : base(id, classifications, qualifications)
+            IEnumerable<string> labels,
+            IEnumerable<KeyValuePair<string, object>> attributes,
+            IEnumerable<TId> edges,
+            IEnumerable<KeyValuePair<TId, int>> nodes)
+            : base(id, labels, attributes)
         {
-            if (nodes is null)
-            {
-                throw new ArgumentNullException(nameof(nodes));
-            }
-
             if (edges is null)
             {
                 throw new ArgumentNullException(nameof(edges));
             }
 
-            this.nodesAndEdges = new AdjacencyAndIncidenceIndex<TId>(nodes, edges);
+            if (nodes is null)
+            {
+                throw new ArgumentNullException(nameof(nodes));
+            }
+
+            this.adjacencyIndex = new AdjacencyIndex<TId>(edges, nodes);
         }
 
         public override object Clone()
@@ -62,7 +65,7 @@ namespace Graphs.Elements
             return new Node<TId>(this);
         }
 
-        public Node<TId> Connect(Edge<TId> edge)
+        internal void Connect(Edge<TId> edge)
         {
             if (!this.IsIncident(edge))
             {
@@ -73,11 +76,10 @@ namespace Graphs.Elements
                 ? edge.TargetId
                 : edge.SourceId;
 
-            this.nodesAndEdges.Add(edge.Id, otherNodeId);
-            return this;
+            this.adjacencyIndex.Add(edge.Id, otherNodeId);
         }
 
-        public Node<TId> Disconnect(Edge<TId> edge)
+        internal void Disconnect(Edge<TId> edge)
         {
             if (!this.IsIncident(edge))
             {
@@ -88,13 +90,12 @@ namespace Graphs.Elements
                 ? edge.TargetId
                 : edge.SourceId;
 
-            this.nodesAndEdges.Remove(edge.Id, otherNodeId);
-            return this;
+            this.adjacencyIndex.Remove(edge.Id, otherNodeId);
         }
 
         public bool IsAdjacent(TId targetId)
         {
-            return this.nodesAndEdges.ContainsNode(targetId);
+            return this.adjacencyIndex.ContainsNode(targetId);
         }
 
         public bool IsAdjacent(Node<TId> node)
@@ -106,7 +107,7 @@ namespace Graphs.Elements
 
         public bool IsIncident(TId edgeId)
         {
-            return this.nodesAndEdges.ContainsEdge(edgeId);
+            return this.adjacencyIndex.ContainsEdge(edgeId);
         }
 
         public bool IsIncident(Edge<TId> edge)
@@ -133,16 +134,16 @@ namespace Graphs.Elements
             return x != null && x.Equals(y);
         }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(this.Id);
-        }
-
         public int GetHashCode(Node<TId> obj)
         {
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))
                 : obj.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.Id);
         }
     }
 }

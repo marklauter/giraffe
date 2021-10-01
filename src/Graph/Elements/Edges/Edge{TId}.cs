@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Graphs.Elements
 {
-    [DebuggerDisplay("({SourceId}, {TargetId}) Directed: {IsDirected}")]
+    [DebuggerDisplay("{Id}, ({SourceId}, {TargetId}) Dir: {IsDirected}")]
     public sealed class Edge<TId>
         : Element<TId>
         , IEquatable<Edge<TId>>
@@ -12,6 +12,36 @@ namespace Graphs.Elements
         , ICloneable
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
+        internal static Edge<TId> NewEdge(TId id, Node<TId> source, Node<TId> target)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            return new Edge<TId>(id, source.Id, target.Id, false);
+        }
+
+        internal static Edge<TId> NewEdge(TId id, Node<TId> source, Node<TId> target, bool isDirected)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            return new Edge<TId>(id, source.Id, target.Id, isDirected);
+        }
+
         public bool IsDirected { get; }
 
         public IEnumerable<TId> Nodes
@@ -33,6 +63,14 @@ namespace Graphs.Elements
             this.SourceId = other.SourceId;
             this.TargetId = other.TargetId;
             this.IsDirected = other.IsDirected;
+        }
+
+        private Edge(TId id, TId sourceId, TId targetId, bool isDirected)
+            : base(id)
+        {
+            this.SourceId = sourceId;
+            this.TargetId = targetId;
+            this.IsDirected = isDirected;
         }
 
         public Edge(

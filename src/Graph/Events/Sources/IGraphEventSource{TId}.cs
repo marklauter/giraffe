@@ -3,13 +3,10 @@
 namespace Graphs.Events
 {
     public interface IGraphEventSource<TId>
-        : IClassifierEventSource<TId>
-        , IQualifierEventSource<TId>
-        , IConnectionsEventSource<TId>
+        : IElementChangedEventSource<TId>
+        , IConnectionEventSource<TId>
+        , INodeEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        //todo: create event specific args classes
-        event EventHandler<EventArgs> NodeAdded;
-        event EventHandler<EventArgs> NodeRemoved;
     }
 }

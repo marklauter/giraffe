@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Graphs.Elements
 {
-    public interface NodeSource<TId>
+    public interface INodeSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        Task<Node<TId>> GetNodeAsync(TId id);
+        Task<Node<TId>> GetNodeAsync(TId nodeId);
     }
 }

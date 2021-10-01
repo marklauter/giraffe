@@ -3,11 +3,12 @@ using System;
 
 namespace Graphs.Events
 {
-    public sealed class DeclassifiedEventArgs<TId>
-        : ClassifiedEventArgs<TId>
+    public sealed class NodeRemovedEventArgs<TId>
+        : NodeAddedEventArgs<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public DeclassifiedEventArgs(Element<TId> element, string label) : base(element, label)
+        public NodeRemovedEventArgs(Node<TId> node)
+            : base(node)
         {
         }
     }

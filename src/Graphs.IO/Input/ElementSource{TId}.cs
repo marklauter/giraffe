@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Graphs.IO.Input
 {
+    // todo: Graphs.IO is the place to put the element collection implementation that uses the document colletion beind the scenes
     public sealed class ElementSource<TId>
         : IElementSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
