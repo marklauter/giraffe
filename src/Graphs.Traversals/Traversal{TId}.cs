@@ -36,7 +36,8 @@ namespace Graphs.Traversals
                 }
 
                 ++rank;
-                frontier = (await Task.WhenAll(tasks.ToArray())).SelectMany(f => f);
+                var neighbors = await Task.WhenAll(tasks.ToArray());
+                frontier = neighbors.SelectMany(f => f);
             }
         }
 
@@ -61,7 +62,8 @@ namespace Graphs.Traversals
                 }
 
                 ++rank;
-                frontier = (await Task.WhenAll(tasks.ToArray())).SelectMany(f => f);
+                var neighbors = await Task.WhenAll(tasks.ToArray());
+                frontier = neighbors.SelectMany(f => f);
                 frontier = Filter(frontier, predicate);
             }
         }
