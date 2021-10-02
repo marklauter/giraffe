@@ -32,14 +32,14 @@ namespace Graphs
         public async Task<Node<TId>> AddNodeAsync()
         {
             var node = Node<TId>.NewNode(this.idGenerator.NewId());
-            
+
             node.Classified += this.Element_Classified;
             node.Declassified += this.Element_Declassified;
             node.Qualified += this.Element_Qualified;
             node.Disqualified += this.Element_Disqualified;
-            
+
             await this.elements.AddAsync(node);
-            
+
             this.NodeAdded?.Invoke(this, new NodeAddedEventArgs<TId>(node));
 
             return node;
@@ -48,14 +48,14 @@ namespace Graphs
         public async Task<Edge<TId>> ConnectAsync(Node<TId> source, Node<TId> target)
         {
             var edge = Edge<TId>.NewEdge(this.idGenerator.NewId(), source, target);
-            
+
             edge.Classified += this.Element_Classified;
             edge.Declassified += this.Element_Declassified;
             edge.Qualified += this.Element_Qualified;
             edge.Disqualified += this.Element_Disqualified;
-            
+
             await this.elements.AddAsync(edge);
-            
+
             this.Connected?.Invoke(this, new ConnectedEventArgs<TId>(source, target, edge));
 
             return edge;

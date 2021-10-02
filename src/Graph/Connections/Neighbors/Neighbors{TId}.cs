@@ -15,11 +15,11 @@ namespace Graphs.Connections
         public event EventHandler<DisconnectedEventArgs<TId>> Disconnected;
 
         public int Count => this.neighbors.Count;
-        
+
         public TId Id { get; }
 
         public bool IsEmpty => this.neighbors.IsEmpty;
-        
+
         public int Degree => this.Count;
 
         public void Connect(TId id)
@@ -54,5 +54,5 @@ namespace Graphs.Connections
                 ? count
                 : 0;
         }
-   }
+    }
 }
