@@ -1,7 +1,8 @@
 ﻿using Graphs.Elements;
+using Graphs.Events;
 using System;
 
-namespace Graphs.Events
+namespace Graphs.Nodes
 {
     public class ConnectedEventArgs<TId>
         : GraphEventArgs

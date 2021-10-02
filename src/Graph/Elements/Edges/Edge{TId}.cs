@@ -18,8 +18,7 @@ namespace Graphs.Elements
             {
                 throw new ArgumentNullException(nameof(source));
             }
-
-            if (target is null)
+            else if (target is null)
             {
                 throw new ArgumentNullException(nameof(target));
             }
@@ -33,8 +32,7 @@ namespace Graphs.Elements
             {
                 throw new ArgumentNullException(nameof(source));
             }
-
-            if (target is null)
+            else if (target is null)
             {
                 throw new ArgumentNullException(nameof(target));
             }

@@ -132,22 +132,22 @@ namespace Graphs
 
         private void Element_Disqualified(object sender, DisqualifiedEventArgs<TId> e)
         {
-            this.ElementChanged?.Invoke(this, new ElementChangedEventArgs<TId>(e.Element, e));
+            this.ElementChanged?.Invoke(this, new ElementChangedEventArgs<TId>(e.ElementId, e));
         }
 
         private void Element_Qualified(object sender, QualifiedEventArgs<TId> e)
         {
-            this.ElementChanged?.Invoke(this, new ElementChangedEventArgs<TId>(e.Element, e));
+            this.ElementChanged?.Invoke(this, new ElementChangedEventArgs<TId>(e.ElementId, e));
         }
 
         private void Element_Declassified(object sender, DeclassifiedEventArgs<TId> e)
         {
-            this.ElementChanged?.Invoke(this, new ElementChangedEventArgs<TId>(e.Element, e));
+            this.ElementChanged?.Invoke(this, new ElementChangedEventArgs<TId>(e.ElementId, e));
         }
 
         private void Element_Classified(object sender, ClassifiedEventArgs<TId> e)
         {
-            this.ElementChanged?.Invoke(this, new ElementChangedEventArgs<TId>(e.Element, e));
+            this.ElementChanged?.Invoke(this, new ElementChangedEventArgs<TId>(e.ElementId, e));
         }
     }
 }

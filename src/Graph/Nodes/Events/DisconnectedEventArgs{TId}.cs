@@ -1,7 +1,7 @@
 ﻿using Graphs.Elements;
 using System;
 
-namespace Graphs.Events
+namespace Graphs.Nodes
 {
     public sealed class DisconnectedEventArgs<TId>
         : ConnectedEventArgs<TId>

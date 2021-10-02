@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Graphs.Elements
+namespace Graphs.Identifiers
 {
-    public interface IElementSource<TId>
-        : INodeSource<TId>
-        , IEdgeSource<TId>
+    public interface IIdGenerator<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
+        TId NewId();
     }
 }

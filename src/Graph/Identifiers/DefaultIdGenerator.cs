@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Graphs.Elements
+namespace Graphs.Identifiers
 {
     public sealed class DefaultIdGenerator
         : IIdGenerator<Guid>

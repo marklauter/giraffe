@@ -1,5 +1,4 @@
-﻿using Graphs.Events;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -9,9 +8,9 @@ namespace Graphs.Elements
 {
     [DebuggerDisplay("{Id}")]
     public abstract class Element<TId>
-        : IQualifier
+        : IQualifiable
         , IQualifierEventSource<TId>
-        , IClassifier
+        , IClassifiable
         , IClassifierEventSource<TId>
         , ICloneable
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable

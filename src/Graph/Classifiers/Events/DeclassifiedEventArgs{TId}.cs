@@ -1,13 +1,12 @@
-﻿using Graphs.Elements;
-using System;
+﻿using System;
 
-namespace Graphs.Events
+namespace Graphs.Classifiers
 {
     public sealed class DeclassifiedEventArgs<TId>
         : ClassifiedEventArgs<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public DeclassifiedEventArgs(Element<TId> element, string label) : base(element, label)
+        public DeclassifiedEventArgs(TId elementId, string label) : base(elementId, label)
         {
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Graphs.Elements
+namespace Graphs.Nodes
 {
     internal sealed class AdjacencyIndex<TId>
         : ICloneable

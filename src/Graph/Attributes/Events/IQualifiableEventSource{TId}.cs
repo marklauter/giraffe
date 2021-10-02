@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Graphs.Events
+namespace Graphs.Attributes
 {
-    public interface IQualifierEventSource<TId>
+    public interface IQualifiableEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         event EventHandler<QualifiedEventArgs<TId>> Qualified;

@@ -1,13 +1,13 @@
-﻿using Graphs.Elements;
+﻿using Graphs.Events;
 using System;
 
-namespace Graphs.Events
+namespace Graphs.Classifiers
 {
     public class ClassifiedEventArgs<TId>
         : GraphEventArgs
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public ClassifiedEventArgs(Element<TId> element, string label)
+        public ClassifiedEventArgs(TId elementId, string label)
             : base()
         {
             if (String.IsNullOrWhiteSpace(label))
@@ -15,11 +15,11 @@ namespace Graphs.Events
                 throw new ArgumentException($"'{nameof(label)}' cannot be null or whitespace.", nameof(label));
             }
 
-            this.Element = element ?? throw new ArgumentNullException(nameof(element));
+            this.ElementId = elementId;
             this.Label = label;
         }
 
-        public Element<TId> Element { get; }
+        public TId ElementId { get; }
 
         public string Label { get; }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Graphs.Elements
+namespace Graphs.Nodes
 {
     [DebuggerDisplay("{Id}, Deg: {Degree}")]
     public sealed class Node<TId>
