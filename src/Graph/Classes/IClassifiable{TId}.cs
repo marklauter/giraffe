@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Graphs.Classifiers
+namespace Graphs.Classes
 {
     public interface IClassifiable<TId>
         : IIdentifiable<TId>

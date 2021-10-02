@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Graphs.Classifiers
+namespace Graphs.Classes
 {
     public sealed partial class ClassifiedElement<TId>
         : IEnumerable<string>

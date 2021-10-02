@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Graphs.Classifiers
+namespace Graphs.Classes
 {
     public sealed class DeclassifiedEventArgs<TId>
         : ClassifiedEventArgs<TId>

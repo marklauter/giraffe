@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Graphs.Classifiers
+namespace Graphs.Classes
 {
     public sealed partial class ClassifiedElement<TId>
         : IEquatable<ClassifiedElement<TId>>

@@ -1,7 +1,7 @@
 ﻿using Graphs.Events;
 using System;
 
-namespace Graphs.Classifiers
+namespace Graphs.Classes
 {
     public class ClassifiedEventArgs<TId>
         : GraphEventArgs

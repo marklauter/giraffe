@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Graphs.Classifiers
+namespace Graphs.Classes
 {
     public interface IClassifierEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable

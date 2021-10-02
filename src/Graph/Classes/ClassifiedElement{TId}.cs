@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Graphs.Classifiers
+namespace Graphs.Classes
 {
     [DebuggerDisplay("{Id}")]
     public sealed partial class ClassifiedElement<TId>
