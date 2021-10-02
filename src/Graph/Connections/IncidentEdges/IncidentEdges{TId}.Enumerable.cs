@@ -10,10 +10,7 @@ namespace Graphs.Connections
     {
         public IEnumerator<TId> GetEnumerator()
         {
-            foreach (var id in this.edges)
-            {
-                yield return id;
-            }
+            return ((IEnumerable<TId>)this.edges).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

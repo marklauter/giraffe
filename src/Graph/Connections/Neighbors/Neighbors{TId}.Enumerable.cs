@@ -5,20 +5,17 @@ using System.Collections.Generic;
 namespace Graphs.Connections
 {
     public sealed partial class Neighbors<TId>
-        : IEnumerable<TId>
-    where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
+        : IEnumerable<KeyValuePair<TId, int>>
+        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public IEnumerator<TId> GetEnumerator()
+        public IEnumerator<KeyValuePair<TId, int>> GetEnumerator()
         {
-            foreach (var id in this.neighbors.Keys)
-            {
-                yield return id;
-            }
+            return ((IEnumerable<KeyValuePair<TId, int>>)this.neighbors).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return ((IEnumerable)this.neighbors).GetEnumerator();
         }
     }
 }

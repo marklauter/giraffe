@@ -4,7 +4,7 @@ using System;
 namespace Graphs.Connections
 {
     public interface INeighborsCollection<TId>
-        : IElementCollection<Neighbors<TId>, TId>
+        : IComponentCollection<INeighbors<TId>, TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
     }

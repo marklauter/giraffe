@@ -1,10 +1,10 @@
 ﻿using Graphs.Collections;
 using System;
 
-namespace Graphs.Classes
+namespace Graphs.Attributes
 {
-    public interface IClassifiedElementCollection<TId>
-        : IElementCollection<ClassifiedElement<TId>, TId>
+    public interface IQualifiableComponentCollection<TId>
+        : IComponentCollection<IQualifiable<TId>, TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
     }

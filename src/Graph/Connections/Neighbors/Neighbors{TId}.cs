@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Graphs.Connections
 {
     public sealed partial class Neighbors<TId>
-        : IAdjacencyList<TId>
-        , IConnectable<TId>
+        : INeighbors<TId>
+        , IAdjacencyList<TId>
         , IConnectionEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
@@ -16,11 +17,13 @@ namespace Graphs.Connections
 
         public int Count => this.neighbors.Count;
 
+        public int Degree => this.Count;
+
         public TId Id { get; }
 
-        public bool IsEmpty => this.neighbors.IsEmpty;
+        public IEnumerable<TId> Ids => this.neighbors.Keys;
 
-        public int Degree => this.Count;
+        public bool IsEmpty => this.neighbors.IsEmpty;
 
         public void Connect(TId id)
         {

@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Graphs.Attributes
 {
     [DebuggerDisplay("{Id}")]
-    public sealed partial class QualifiedElement<TId>
+    public sealed partial class Qualifiable<TId>
         : IQualifiable<TId>
         , IQualifiableEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable

@@ -2,31 +2,31 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Graphs.Classes
+namespace Graphs.Attributes
 {
-    public sealed partial class ClassifiedElement<TId>
-        : IEquatable<ClassifiedElement<TId>>
-        , IEqualityComparer<ClassifiedElement<TId>>
+    public sealed partial class Qualifiable<TId>
+        : IEquatable<Qualifiable<TId>>
+        , IEqualityComparer<Qualifiable<TId>>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public bool Equals(ClassifiedElement<TId> other)
+        public bool Equals(Qualifiable<TId> other)
         {
             return other != null
                 && other.Id.Equals(this.Id);
         }
 
-        public bool Equals(ClassifiedElement<TId> x, ClassifiedElement<TId> y)
+        public bool Equals(Qualifiable<TId> x, Qualifiable<TId> y)
         {
             return x != null && x.Equals(y);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is ClassifiedElement<TId> element
+            return obj is Qualifiable<TId> element
                 && this.Equals(element);
         }
 
-        public int GetHashCode([DisallowNull] ClassifiedElement<TId> obj)
+        public int GetHashCode([DisallowNull] Qualifiable<TId> obj)
         {
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))

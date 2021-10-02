@@ -7,9 +7,9 @@ using System.Linq;
 namespace Graphs.Classes
 {
     [DebuggerDisplay("{Id}")]
-    public sealed partial class ClassifiedElement<TId>
+    public sealed partial class Classifiable<TId>
         : IClassifiable<TId>
-        , IClassifierEventSource<TId>
+        , IClassifiableEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private ImmutableHashSet<string> labels = ImmutableHashSet<string>.Empty;

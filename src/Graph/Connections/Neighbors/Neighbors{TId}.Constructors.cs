@@ -5,8 +5,8 @@ using System.Collections.Immutable;
 namespace Graphs.Connections
 {
     public sealed partial class Neighbors<TId>
-           : ICloneable
-           where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
+        : ICloneable
+        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         public Neighbors(TId id)
         {

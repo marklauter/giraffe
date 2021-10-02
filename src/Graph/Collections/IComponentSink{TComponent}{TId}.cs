@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace Graphs.Collections
 {
-    public interface IElementSink<TElement, TId>
-        where TElement : IIdentifiable<TId>
+    public interface IComponentSink<TComponent, TId>
+        where TComponent : IIdentifiable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        Task AddAsync(TElement element);
+        Task AddAsync(TComponent element);
 
         Task RemoveAsync(TId elementId);
     }

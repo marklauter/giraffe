@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace Graphs.Collections
 {
-    public interface IElementSource<TElement, TId>
-        where TElement : IIdentifiable<TId>
+    public interface IComponentSource<TComponent, TId>
+        where TComponent : IIdentifiable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        Task<TElement> RetrieveAsync(TId id);
+        Task<TComponent> RetrieveAsync(TId id);
     }
 }

@@ -4,27 +4,27 @@ using System.Collections.Immutable;
 
 namespace Graphs.Classes
 {
-    public sealed partial class ClassifiedElement<TId>
+    public sealed partial class Classifiable<TId>
         : ICloneable
     {
-        public ClassifiedElement(TId id)
+        public Classifiable(TId id)
         {
             this.Id = id;
         }
 
-        public ClassifiedElement(IEnumerable<string> labels)
+        public Classifiable(IEnumerable<string> labels)
         {
             this.labels = labels.ToImmutableHashSet();
         }
 
-        private ClassifiedElement(ClassifiedElement<TId> other)
+        private Classifiable(Classifiable<TId> other)
         {
             this.labels = other.labels;
         }
 
         public object Clone()
         {
-            return new ClassifiedElement<TId>(this);
+            return new Classifiable<TId>(this);
         }
     }
 }
