@@ -1,5 +1,6 @@
 ﻿using Graphs.Identifiers;
 using System;
+using System.Threading.Tasks;
 
 namespace Graphs.Collections
 {
@@ -7,6 +8,6 @@ namespace Graphs.Collections
         where TElement : IIdentifiable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        TElement this[TId id] { get; }
+        Task<TElement> RetrieveAsync(TId id);
     }
 }

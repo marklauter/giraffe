@@ -1,13 +1,13 @@
-﻿using Graphs.Elements;
-using System;
+﻿using System;
 
-namespace Graphs.Nodes
+namespace Graphs.Connections
 {
     public sealed class DisconnectedEventArgs<TId>
         : ConnectedEventArgs<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public DisconnectedEventArgs(Node<TId> source, Node<TId> target, Edge<TId> edge) : base(source, target, edge)
+        public DisconnectedEventArgs(TId sourceId, TId targetId)
+            : base(sourceId, targetId)
         {
         }
     }

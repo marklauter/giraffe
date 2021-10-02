@@ -6,7 +6,6 @@ namespace Graphs.Nodes
 {
     [DebuggerDisplay("{Id}, Deg: {Degree}")]
     public sealed class Node<TId>
-        : Element<TId>
         , IEquatable<Node<TId>>
         , IEqualityComparer<Node<TId>>
         , ICloneable
