@@ -1,10 +1,10 @@
 ﻿using Graphs.Collections;
 using System;
 
-namespace Graphs.Connections
+namespace Graphs.Nodes
 {
-    public interface INeighborsCollection<TId>
-        : IComponentCollection<INeighbors<TId>, TId>
+    public interface INodeCollection<TId>
+        : IComponentCollection<Node<TId>, TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
     }

@@ -12,12 +12,14 @@ namespace Graphs.Attributes
             this.Id = id;
         }
 
-        public Qualifiable(IEnumerable<KeyValuePair<string, object>> attributes)
+        public Qualifiable(TId id, IEnumerable<KeyValuePair<string, object>> attributes)
+            : this(id)
         {
             this.attributes = attributes.ToImmutableDictionary();
         }
 
         private Qualifiable(Qualifiable<TId> other)
+            : this(other.Id)
         {
             this.attributes = other.attributes;
         }

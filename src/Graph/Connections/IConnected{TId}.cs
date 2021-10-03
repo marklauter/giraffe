@@ -2,13 +2,13 @@
 
 namespace Graphs.Connections
 {
-    public interface IAdjacencyList<TId>
+    public interface IConnected<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        int Degree { get; }
+        int Count { get; }
 
-        bool IsAdjacent(TId nodeId);
+        bool IsEmpty { get; }
 
-        int ReferenceCount(TId nodeId);
+        bool IsConnected(TId id);
     }
 }

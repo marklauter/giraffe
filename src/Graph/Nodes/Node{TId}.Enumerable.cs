@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Graphs.Connections
+namespace Graphs.Nodes
 {
-    public sealed partial class Neighbors<TId>
+    public sealed partial class Node<TId>
         : IEnumerable<KeyValuePair<TId, int>>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {

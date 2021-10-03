@@ -12,12 +12,14 @@ namespace Graphs.Classes
             this.Id = id;
         }
 
-        public Classifiable(IEnumerable<string> labels)
+        public Classifiable(TId id, IEnumerable<string> labels)
+            : this(id)
         {
             this.labels = labels.ToImmutableHashSet();
         }
 
         private Classifiable(Classifiable<TId> other)
+            : this(other.Id)
         {
             this.labels = other.labels;
         }

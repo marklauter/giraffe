@@ -4,8 +4,7 @@ using System.Collections.Immutable;
 namespace Graphs.Connections
 {
     public sealed partial class IncidentEdges<TId>
-        : IConnectable<TId>
-        , IConnectionEventSource<TId>
+        : IIncidentEdges<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private ImmutableHashSet<TId> edges = ImmutableHashSet<TId>.Empty;

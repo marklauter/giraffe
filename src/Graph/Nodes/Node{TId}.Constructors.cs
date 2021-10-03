@@ -2,30 +2,32 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Graphs.Connections
+namespace Graphs.Nodes
 {
-    public sealed partial class Neighbors<TId>
+    public sealed partial class Node<TId>
         : ICloneable
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public Neighbors(TId id)
+        public Node(TId id)
         {
             this.Id = id;
         }
 
-        public Neighbors(IEnumerable<KeyValuePair<TId, int>> neighbors)
+        public Node(TId id, IEnumerable<KeyValuePair<TId, int>> neighbors)
+            : this(id)
         {
             this.neighbors = neighbors.ToImmutableDictionary();
         }
 
-        private Neighbors(Neighbors<TId> other)
+        private Node(Node<TId> other)
+            : this(other.Id)
         {
             this.neighbors = other.neighbors;
         }
 
         public object Clone()
         {
-            return new Neighbors<TId>(this);
+            return new Node<TId>(this);
         }
     }
 }
