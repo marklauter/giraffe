@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Graphs.Connections;
+using System;
 using System.Collections.Immutable;
 
-namespace Graphs.Connections
+namespace Graphs.Edges
 {
     public sealed partial class IncidentEdges<TId>
         : IIncidentEdges<TId>

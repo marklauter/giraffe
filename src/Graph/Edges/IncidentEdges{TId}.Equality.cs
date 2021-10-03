@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Graphs.Connections
+namespace Graphs.Edges
 {
     public sealed partial class IncidentEdges<TId>
         : IEquatable<IncidentEdges<TId>>

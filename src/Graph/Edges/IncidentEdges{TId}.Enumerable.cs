@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Graphs.Connections
+namespace Graphs.Edges
 {
     public sealed partial class IncidentEdges<TId>
         : IEnumerable<TId>

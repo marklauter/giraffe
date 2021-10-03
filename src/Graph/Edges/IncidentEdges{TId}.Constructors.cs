@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Graphs.Connections
+namespace Graphs.Edges
 {
     public sealed partial class IncidentEdges<TId>
         : ICloneable

@@ -4,7 +4,6 @@ using System.Diagnostics;
 
 namespace Graphs.Edges
 {
-
     [DebuggerDisplay("{Id}, ({SourceId}, {TargetId}) Dir: {IsDirected}")]
     public sealed partial class Edge<TId>
         : IEdge<TId>

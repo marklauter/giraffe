@@ -1,8 +1,9 @@
-﻿using Graphs.Identifiers;
+﻿using Graphs.Connections;
+using Graphs.Identifiers;
 using System;
 using System.Collections.Generic;
 
-namespace Graphs.Connections
+namespace Graphs.Edges
 {
     public interface IIncidentEdges<TId>
         : IIdentifiable<TId>
