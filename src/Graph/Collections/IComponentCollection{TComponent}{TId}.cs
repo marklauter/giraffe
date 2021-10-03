@@ -8,7 +8,7 @@ namespace Graphs.Collections
         : IComponentSource<TComponent, TId>
         , IComponentSink<TComponent, TId>
         , IEnumerable<TComponent>
-        where TComponent : IIdentifiable<TId>
+        where TComponent : IIdentifiable<TId>, ICloneable
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
     }

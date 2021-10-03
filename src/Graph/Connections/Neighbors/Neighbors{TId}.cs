@@ -19,6 +19,9 @@ namespace Graphs.Connections
 
         public int Degree => this.Count;
 
+        /// <summary>
+        /// Node Id
+        /// </summary>
         public TId Id { get; }
 
         public IEnumerable<TId> Ids => this.neighbors.Keys;

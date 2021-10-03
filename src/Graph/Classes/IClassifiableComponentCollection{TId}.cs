@@ -4,7 +4,7 @@ using System;
 namespace Graphs.Classes
 {
     public interface IClassifiedElementCollection<TId>
-        : IComponentCollection<IClassifiable<TId>, TId>
+        : IComponentCollection<Classifiable<TId>, TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
     }

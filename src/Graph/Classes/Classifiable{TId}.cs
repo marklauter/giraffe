@@ -9,7 +9,6 @@ namespace Graphs.Classes
     [DebuggerDisplay("{Id}")]
     public sealed partial class Classifiable<TId>
         : IClassifiable<TId>
-        , IClassifiableEventSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private ImmutableHashSet<string> labels = ImmutableHashSet<string>.Empty;
@@ -17,6 +16,9 @@ namespace Graphs.Classes
         public event EventHandler<ClassifiedEventArgs<TId>> Classified;
         public event EventHandler<DeclassifiedEventArgs<TId>> Declassified;
 
+        /// <summary>
+        /// Element Id
+        /// </summary>
         public TId Id { get; }
 
         public void Classify(string label)

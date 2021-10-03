@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 
@@ -7,7 +8,7 @@ namespace Graphs.Attributes
     [DebuggerDisplay("{Id}")]
     public sealed partial class Qualifiable<TId>
         : IQualifiable<TId>
-        , IQualifiableEventSource<TId>
+        , IEnumerable<KeyValuePair<string, object>>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private ImmutableDictionary<string, object> attributes = ImmutableDictionary<string, object>.Empty;
@@ -15,6 +16,9 @@ namespace Graphs.Attributes
         public event EventHandler<QualifiedEventArgs<TId>> Qualified;
         public event EventHandler<DisqualifiedEventArgs<TId>> Disqualified;
 
+        /// <summary>
+        /// Element Id
+        /// </summary>
         public TId Id { get; }
 
         public void Disqualify(string name)

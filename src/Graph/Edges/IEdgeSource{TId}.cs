@@ -1,11 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Graphs.Collections;
+using System;
 
-namespace Graphs.Elements
+namespace Graphs.Edges
 {
     public interface IEdgeSource<TId>
+        : IComponentSource<IEdge<TId>, TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        Task<Edge<TId>> GetEdgeAsync(TId edgeId);
+
     }
 }

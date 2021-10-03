@@ -15,6 +15,9 @@ namespace Graphs.Connections
 
         public int Count => this.edges.Count;
 
+        /// <summary>
+        /// Node Id
+        /// </summary>
         public TId Id { get; }
 
         public bool IsEmpty => this.edges.IsEmpty;

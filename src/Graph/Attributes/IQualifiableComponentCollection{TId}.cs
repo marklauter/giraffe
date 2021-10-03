@@ -4,7 +4,7 @@ using System;
 namespace Graphs.Attributes
 {
     public interface IQualifiableComponentCollection<TId>
-        : IComponentCollection<IQualifiable<TId>, TId>
+        : IComponentCollection<Qualifiable<TId>, TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
     }
