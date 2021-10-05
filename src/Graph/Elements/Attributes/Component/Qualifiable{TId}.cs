@@ -8,13 +8,14 @@ namespace Graphs.Attributes
     [DebuggerDisplay("{Id}")]
     public sealed partial class Qualifiable<TId>
         : IQualifiable<TId>
-        , IEnumerable<KeyValuePair<string, object>>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private ImmutableDictionary<string, object> attributes = ImmutableDictionary<string, object>.Empty;
 
         public event EventHandler<QualifiedEventArgs<TId>> Qualified;
         public event EventHandler<DisqualifiedEventArgs<TId>> Disqualified;
+
+        public IEnumerable<KeyValuePair<string, object>> Attributes => this.attributes;
 
         /// <summary>
         /// Element Id

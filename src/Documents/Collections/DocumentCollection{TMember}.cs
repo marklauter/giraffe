@@ -207,11 +207,12 @@ namespace Documents.Collections
                 throw new KeyNotFoundException(document.Key);
             }
 
-            var original = await this.ReadAsync(document.Key);
-            if (original.ETag != document.ETag)
-            {
-                throw new ETagMismatchException($"key: {document.Key}, expected: {original.ETag}, actual: {document.ETag}");
-            }
+            // todo: rethink etags
+            //var original = await this.ReadAsync(document.Key);
+            //if (original.ETag != document.ETag)
+            //{
+            //    throw new ETagMismatchException($"key: {document.Key}, expected: {original.ETag}, actual: {document.ETag}");
+            //}
 
             await this.WriteDocumentAsync(document);
             this.DocumentUpdated?.Invoke(this, new DocumentUpdatedEventArgs<TMember>(document));

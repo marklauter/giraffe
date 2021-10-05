@@ -8,8 +8,8 @@ namespace Graphs.IO
         where TComponent : IIdentifiable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        Task WriteAsync(TComponent element);
-
         Task RemoveAsync(TId elementId);
+
+        Task WriteAsync(TComponent component);
     }
 }

@@ -6,16 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FAC24469-F178-48D8-8914-D90B386BD226}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Concurrent.Collections.README.md = Concurrent.Collections.README.md
-		Documents.Cache.README.md = Documents.Cache.README.md
-		Documents.Collections.IO.README.md = Documents.Collections.IO.README.md
-		Documents.Collections.README.md = Documents.Collections.README.md
-		Documents.IO.README.md = Documents.IO.README.md
-		Documents.README.md = Documents.README.md
-		Documents.Repository.README.md = Documents.Repository.README.md
-		Graph.CodeMap.dgml = Graph.CodeMap.dgml
-		Graphs.Elements.README.md = Graphs.Elements.README.md
-		Graphs.READMME.md = Graphs.READMME.md
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
@@ -36,10 +26,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.Tests", "Documents.Tests\Documents.Tests.csproj", "{2AD3C5A6-2FC3-4750-8EEB-21B5CB97B650}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.Collections.IO.Tests", "Documents.Collections.IO.Tests\Documents.Collections.IO.Tests.csproj", "{B1327941-A68C-4206-89E0-FA3F71BD56F4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Collections.Concurrent", "Collections.Concurrent\Collections.Concurrent.csproj", "{64685A1D-D421-47F8-B4BA-6ED82DAB2368}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Collections.Concurrent.Tests", "Collections.Concurrent.Tests\Collections.Concurrent.Tests.csproj", "{2BC8AD7C-B6A7-40A4-97AB-F7DB6F74C88F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.Cache.Tests", "Documents.Cache.Tests\Documents.Cache.Tests.csproj", "{AC25BB0E-D01B-4456-B456-A185AB3FCCA5}"
 EndProject
@@ -107,14 +93,6 @@ Global
 		{B1327941-A68C-4206-89E0-FA3F71BD56F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1327941-A68C-4206-89E0-FA3F71BD56F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1327941-A68C-4206-89E0-FA3F71BD56F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64685A1D-D421-47F8-B4BA-6ED82DAB2368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64685A1D-D421-47F8-B4BA-6ED82DAB2368}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64685A1D-D421-47F8-B4BA-6ED82DAB2368}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64685A1D-D421-47F8-B4BA-6ED82DAB2368}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2BC8AD7C-B6A7-40A4-97AB-F7DB6F74C88F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BC8AD7C-B6A7-40A4-97AB-F7DB6F74C88F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2BC8AD7C-B6A7-40A4-97AB-F7DB6F74C88F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2BC8AD7C-B6A7-40A4-97AB-F7DB6F74C88F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC25BB0E-D01B-4456-B456-A185AB3FCCA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC25BB0E-D01B-4456-B456-A185AB3FCCA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC25BB0E-D01B-4456-B456-A185AB3FCCA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -160,8 +138,6 @@ Global
 		{20A4A0CC-26D2-4BC8-AA5D-103A0FAC4C40} = {C107A507-2A99-4563-B49D-F4C336493C95}
 		{2AD3C5A6-2FC3-4750-8EEB-21B5CB97B650} = {2C954826-1EE8-48C1-9BF9-0FD66D200E61}
 		{B1327941-A68C-4206-89E0-FA3F71BD56F4} = {2C954826-1EE8-48C1-9BF9-0FD66D200E61}
-		{64685A1D-D421-47F8-B4BA-6ED82DAB2368} = {88364EE2-0105-4F27-9BA7-E859AB8DB9AA}
-		{2BC8AD7C-B6A7-40A4-97AB-F7DB6F74C88F} = {52C42F4B-7BEE-449F-B0D7-CAD7E6D2562D}
 		{AC25BB0E-D01B-4456-B456-A185AB3FCCA5} = {2C954826-1EE8-48C1-9BF9-0FD66D200E61}
 		{7694F3BB-19DD-4DC5-8852-2AEF027D374C} = {52C42F4B-7BEE-449F-B0D7-CAD7E6D2562D}
 		{443E3D97-A70B-455F-A0E0-E4AD7EFD4BB4} = {C107A507-2A99-4563-B49D-F4C336493C95}

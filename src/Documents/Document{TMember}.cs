@@ -11,7 +11,6 @@ namespace Documents
         , IEqualityComparer<Document<TMember>>
         where TMember : class
     {
-
         [JsonProperty]
         public int ETag { get; }
 
