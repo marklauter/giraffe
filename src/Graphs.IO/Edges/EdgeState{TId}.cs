@@ -8,6 +8,18 @@ namespace Graphs.IO
     public class EdgeState<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
+        [JsonProperty]
+        public TId Id { get; }
+
+        [JsonProperty]
+        public bool IsDirected { get; }
+
+        [JsonProperty]
+        public TId SourceId { get; }
+
+        [JsonProperty]
+        public TId TargetId { get; }
+
         [JsonConstructor]
         public EdgeState(TId id, TId sourceId, TId targetId, bool isDirected)
         {
@@ -24,17 +36,5 @@ namespace Graphs.IO
             this.TargetId = edge.TargetId;
             this.IsDirected = edge.IsDirected;
         }
-
-        [JsonProperty]
-        public TId Id { get; }
-
-        [JsonProperty]
-        public bool IsDirected { get; }
-
-        [JsonProperty]
-        public TId SourceId { get; }
-
-        [JsonProperty]
-        public TId TargetId { get; }
     }
 }

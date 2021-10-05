@@ -1,36 +1,29 @@
 ﻿using Graphs.Attributes;
+using Newtonsoft.Json;
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Graphs.IO
 {
-    public sealed class DocumentQualifiedSink<TId>
-        : IQualifiedSink<TId>
-        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
-    {
-        public Task RemoveAsync(TId elementId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task WriteAsync(IQualified<TId> component)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public sealed class DocumentQualifiableSource<TId>
-        : IQualifiableSource<TId>
-        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
-    {
-        public Task<IQualifiable<TId>> ReadAsync(TId id)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
+    [JsonObject]
     public sealed class QualifiedState<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
+        [JsonProperty]
+        public TId Id { get; }
+
+        [JsonProperty]
+        public IEnumerable<KeyValuePair<string, object>> Attributes { get; }
+
+        [JsonConstructor]
+        public QualifiedState(IEnumerable<KeyValuePair<string, object>> attributes)
+        {
+            this.Attributes = attributes ?? throw new ArgumentNullException(nameof(attributes));
+        }
+
+        public QualifiedState(IQualified<TId> component)
+        {
+            this.Attributes = component.Attributes;
+        }
     }
 }
