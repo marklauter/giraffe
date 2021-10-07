@@ -3,8 +3,8 @@ using System;
 
 namespace Graphs.Adjacency
 {
-    public interface IAdjancencyListSink<TId>
-        : IComponentSink<IAdjancencyList<TId>, TId>
+    public interface IAdjacencyListSink<TId>
+        : IComponentSink<IAdjacencyList<TId>, TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
     }

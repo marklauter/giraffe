@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Graphs.Adjacency
 {
-    public interface IAdjancencyList<TId>
+    public interface IAdjacencyList<TId>
         : IConnected<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {

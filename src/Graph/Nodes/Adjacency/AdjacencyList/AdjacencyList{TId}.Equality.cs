@@ -4,29 +4,29 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Graphs.Adjacency
 {
-    public sealed partial class AdjancencyList<TId>
-        : IEquatable<AdjancencyList<TId>>
-        , IEqualityComparer<AdjancencyList<TId>>
+    public sealed partial class AdjacencyList<TId>
+        : IEquatable<AdjacencyList<TId>>
+        , IEqualityComparer<AdjacencyList<TId>>
        where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
-        public bool Equals(AdjancencyList<TId> other)
+        public bool Equals(AdjacencyList<TId> other)
         {
             return other != null
                 && other.Id.Equals(this.Id);
         }
 
-        public bool Equals(AdjancencyList<TId> x, AdjancencyList<TId> y)
+        public bool Equals(AdjacencyList<TId> x, AdjacencyList<TId> y)
         {
             return x != null && x.Equals(y);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is AdjancencyList<TId> element
+            return obj is AdjacencyList<TId> element
                 && this.Equals(element);
         }
 
-        public int GetHashCode([DisallowNull] AdjancencyList<TId> obj)
+        public int GetHashCode([DisallowNull] AdjacencyList<TId> obj)
         {
             return obj is null
                 ? throw new ArgumentNullException(nameof(obj))

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Graphs.IO.Output
 {
     public sealed class DocumentAdjacencyListSink<TId>
-        : IAdjancencyListSink<TId>
+        : IAdjacencyListSink<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private readonly IDocumentCollection<AdjacencyListState<TId>> collection;
@@ -22,7 +22,7 @@ namespace Graphs.IO.Output
             return this.collection.RemoveAsync(KeyBuilder.GetKey(elementId));
         }
 
-        public async Task WriteAsync(IAdjancencyList<TId> component)
+        public async Task WriteAsync(IAdjacencyList<TId> component)
         {
             var state = new AdjacencyListState<TId>(component);
             var document = (Document<AdjacencyListState<TId>>)state;

@@ -3,8 +3,8 @@ using System;
 
 namespace Graphs.Adjacency
 {
-    public interface IMutableAdjancencyList<TId>
-        : IAdjancencyList<TId>
+    public interface IMutableAdjacencyList<TId>
+        : IAdjacencyList<TId>
         , IConnectable<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {

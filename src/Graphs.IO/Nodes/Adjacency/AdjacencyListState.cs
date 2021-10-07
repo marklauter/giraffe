@@ -26,7 +26,7 @@ namespace Graphs.IO
             this.ReferenceCountedNeighbors = referenceCountedNeighbors ?? throw new ArgumentNullException(nameof(referenceCountedNeighbors));
         }
 
-        public AdjacencyListState(IAdjancencyList<TId> component)
+        public AdjacencyListState(IAdjacencyList<TId> component)
             : this(component.Id, component.ReferenceCountedNeighbors)
         {
         }

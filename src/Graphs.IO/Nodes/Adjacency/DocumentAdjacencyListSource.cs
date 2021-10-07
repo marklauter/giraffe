@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Graphs.IO.Input
 {
     public sealed class DocumentAdjacencyListSource<TId>
-        : IAdjancencyListSource<TId>
+        : IAdjacencyListSource<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private readonly IDocumentCollection<AdjacencyListState<TId>> collection;
@@ -17,11 +17,11 @@ namespace Graphs.IO.Input
             this.collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
 
-        public async Task<IMutableAdjancencyList<TId>> ReadAsync(TId id)
+        public async Task<IMutableAdjacencyList<TId>> ReadAsync(TId id)
         {
             var document = await this.collection.ReadAsync(KeyBuilder.GetKey(id));
             var state = document.Member;
-            return new AdjancencyList<TId>(state.Id, state.ReferenceCountedNeighbors);
+            return new AdjacencyList<TId>(state.Id, state.ReferenceCountedNeighbors);
         }
     }
 }

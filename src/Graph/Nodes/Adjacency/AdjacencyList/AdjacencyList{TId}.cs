@@ -7,8 +7,8 @@ using System.Diagnostics;
 namespace Graphs.Adjacency
 {
     [DebuggerDisplay("{Id}, Deg: {Degree}")]
-    public sealed partial class AdjancencyList<TId>
-        : IMutableAdjancencyList<TId>
+    public sealed partial class AdjacencyList<TId>
+        : IMutableAdjacencyList<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
         private ImmutableDictionary<TId, int> neighbors = ImmutableDictionary<TId, int>.Empty;
