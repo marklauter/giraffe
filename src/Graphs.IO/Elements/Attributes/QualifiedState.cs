@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Graphs.IO
 {
@@ -9,21 +10,25 @@ namespace Graphs.IO
     public sealed class QualifiedState<TId>
         where TId : struct, IComparable, IComparable<TId>, IEquatable<TId>, IFormattable
     {
+        [Key]
+        [Required]
         [JsonProperty]
         public TId Id { get; }
 
+        [Required]
         [JsonProperty]
         public IEnumerable<KeyValuePair<string, object>> Attributes { get; }
 
         [JsonConstructor]
-        public QualifiedState(IEnumerable<KeyValuePair<string, object>> attributes)
+        public QualifiedState(TId id, IEnumerable<KeyValuePair<string, object>> attributes)
         {
+            this.Id = id;
             this.Attributes = attributes ?? throw new ArgumentNullException(nameof(attributes));
         }
 
         public QualifiedState(IQualified<TId> component)
+            : this(component.Id, component.Attributes)
         {
-            this.Attributes = component.Attributes;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Graphs.IO;
 using System;
 
-namespace Graphs.Nodes
+namespace Graphs.Adjacency
 {
     public interface IAdjancencyListSource<TId>
         : IComponentSource<IMutableAdjancencyList<TId>, TId>

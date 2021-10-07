@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Graphs.Nodes
+namespace Graphs.Adjacency
 {
     public sealed partial class AdjancencyList<TId>
         : IEquatable<AdjancencyList<TId>>

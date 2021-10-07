@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 
-namespace Graphs.Nodes
+namespace Graphs.Adjacency
 {
     [DebuggerDisplay("{Id}, Deg: {Degree}")]
     public sealed partial class AdjancencyList<TId>

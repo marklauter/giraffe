@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Graphs.Nodes
+namespace Graphs.Adjacency
 {
     public interface IAdjancencyList<TId>
         : IConnected<TId>

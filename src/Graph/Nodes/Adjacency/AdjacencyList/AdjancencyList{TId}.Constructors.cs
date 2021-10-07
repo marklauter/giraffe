@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace Graphs.Nodes
+namespace Graphs.Adjacency
 {
     public sealed partial class AdjancencyList<TId>
         : ICloneable
