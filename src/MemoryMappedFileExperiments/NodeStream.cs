@@ -6,49 +6,79 @@ namespace MemoryMappedFileExperiments
 {
     public struct NodeStream : IDisposable
     {
-        private readonly BinaryWriter nodeWriter;
-        private readonly BinaryReader nodeReader;
-        private readonly Stream nodes;
+        private readonly BinaryWriter writer;
+        private readonly BinaryReader reader;
+        private readonly Stream stream;
+
+        public const long DefaultFirstEdgeOffset = -1;
+        public const int DefaultDegree = 0;
 
         public NodeStream(Stream nodes)
         {
-            this.nodes = nodes;
-            this.nodeWriter = new BinaryWriter(nodes, Encoding.UTF8, true);
-            this.nodeReader = new BinaryReader(nodes, Encoding.UTF8, true);
+            this.stream = nodes;
+            this.writer = new BinaryWriter(nodes, Encoding.UTF8, true);
+            this.reader = new BinaryReader(nodes, Encoding.UTF8, true);
         }
 
-        public long Add()
+        public NodeRecord Add()
         {
-            var offset = this.nodes.Length;
-            this.Write(offset, new NodeRecord(0, -1));
-            return offset;
+            var node = new NodeRecord(
+                this.stream.Length, 
+                DefaultFirstEdgeOffset, 
+                false, 
+                DefaultDegree);
+            this.Write(node);
+            return node;
         }
 
-        public void Write(long offset, NodeRecord node)
+        public void Remove(long nodeOffset)
         {
-            _ = this.nodes.Seek(offset, SeekOrigin.Begin);
-            this.nodeWriter.Write(node.FirstEdgeOffset);
-            this.nodeWriter.Write(node.Degree);
+            var offset = nodeOffset + sizeof(long);
+            _ = this.stream.Seek(offset, SeekOrigin.Begin);
+            this.writer.Write(true);
         }
 
-        public NodeRecord Read(long offset)
+        public NodeRecord Read(long nodeOffset)
         {
-            _ = this.nodes.Seek(offset, SeekOrigin.Begin);
-            var firstNeighbor = this.nodeReader.ReadInt64();
-            var degree = this.nodeReader.ReadInt32();
-            return new NodeRecord(degree, firstNeighbor);
+            _ = this.stream.Seek(nodeOffset, SeekOrigin.Begin);
+            var firstEdgeOffset = this.reader.ReadInt64();
+            var isDeleted = this.reader.ReadBoolean();
+            var degree = this.reader.ReadInt32();
+            return new NodeRecord(nodeOffset, firstEdgeOffset, isDeleted, degree);
+        }
+
+        public long ReadFirstEdgeOffset(long nodeOffset)
+        {
+            _ = this.stream.Seek(nodeOffset, SeekOrigin.Begin);
+            return this.reader.ReadInt64(); 
+        }
+
+        public void Write(NodeRecord node)
+        {
+            _ = this.stream.Seek(node.Offset, SeekOrigin.Begin);
+            this.writer.Write(node.FirstEdgeOffset);
+            this.writer.Write(node.IsDeleted);
+            this.writer.Write(node.Degree);
+        }
+
+        public void WriteDegree(long nodeOffset, int degree)
+        {
+            var offset = nodeOffset + sizeof(long) + sizeof(bool);
+            _ = this.stream.Seek(offset, SeekOrigin.Begin);
+            this.writer.Write(degree);
+        }
+
+        public void WriteFirstEdgeOffset(long nodeOffset, long edgeOffset)
+        {
+            _ = this.stream.Seek(nodeOffset, SeekOrigin.Begin);
+            this.writer.Write(edgeOffset);
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            this.writer.Dispose();
+            this.reader.Dispose();
         }
-
-        //private long ReadFirstEdgeOffset(long node)
-        //{
-        //    _ = this.nodes.Seek(node, SeekOrigin.Begin);
-        //    return this.nodeReader.ReadInt64();
-        //}
     }
 }
 
