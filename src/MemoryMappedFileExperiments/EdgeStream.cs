@@ -1,15 +1,19 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MemoryMappedFileExperiments
 {
-    public struct EdgeStream : IDisposable
+    public class EdgeStream : IDisposable
     {
         private readonly BinaryWriter writer;
         private readonly BinaryReader reader;
         private readonly Stream stream;
         private readonly NodeStream nodes;
+        private readonly long recordSize;
+        private EdgeRecord current;
+        private long offset;
 
         private const long DefaultNextRecordOffset = -1;
 
@@ -19,7 +23,21 @@ namespace MemoryMappedFileExperiments
             this.nodes = nodes;
             this.writer = new BinaryWriter(edges, Encoding.UTF8, true);
             this.reader = new BinaryReader(edges, Encoding.UTF8, true);
+            this.recordSize = Marshal.SizeOf(typeof(EdgeRecord));
         }
+
+        public void Reset()
+        {
+            this.offset = 0L;
+        }
+
+        public void MoveNext()
+        {
+            this.offset += this.recordSize;
+            this.current = this.Read(this.offset);
+        }
+
+        public ref readonly EdgeRecord Current() => ref this.current;
 
         public void Connect(long node1, long node2)
         {
@@ -83,7 +101,7 @@ namespace MemoryMappedFileExperiments
         private void DeleteEdge(long source, long target)
         {
             var nextEdgeOffset = this.nodes.ReadFirstEdgeOffset(source);
-            while (DefaultNextRecordOffset != nextEdgeOffset 
+            while (DefaultNextRecordOffset != nextEdgeOffset
                 && this.ReadTarget(nextEdgeOffset) != target)
             {
                 nextEdgeOffset = this.ReadNextRecordOffset(nextEdgeOffset);

@@ -3,9 +3,9 @@
 namespace MemoryMappedFileExperiments
 {
     [DebuggerDisplay("{Offset}, {Degree}, Deleted {IsDeleted}, => {FirstEdgeOffset}")]
-    public struct Node
+    public readonly struct MemoryMappedNode
     {
-        internal Node(
+        internal MemoryMappedNode(
             long firstEdgeOffset,
             bool isDeleted,
             int degree)
@@ -16,22 +16,22 @@ namespace MemoryMappedFileExperiments
         }
 
         // offset 0
-        public long FirstEdgeOffset { get; }
+        public readonly long FirstEdgeOffset;
 
         // offset sizeof(long)
-        public bool IsDeleted { get; }
+        public readonly bool IsDeleted;
 
         // offset sizeof(long) + sizeof(bool)
-        public int Degree { get; }
+        public readonly int Degree;
     }
 
     [DebuggerDisplay("{Offset}, {Degree}, Deleted {IsDeleted}, => {FirstEdgeOffset}")]
-    public struct NodeRecord
+    public readonly struct NodeRecord
     {
         internal NodeRecord(
             long offset,
             long firstEdgeOffset,
-            bool isDeleted, 
+            bool isDeleted,
             int degree)
         {
             this.Offset = offset;
@@ -40,16 +40,16 @@ namespace MemoryMappedFileExperiments
             this.FirstEdgeOffset = firstEdgeOffset;
         }
 
-        public long Offset { get; }
+        public readonly long Offset;
 
         // offset 0
-        public long FirstEdgeOffset { get; }
+        public readonly long FirstEdgeOffset;
 
         // offset sizeof(long)
-        public bool IsDeleted { get; }
+        public readonly bool IsDeleted;
 
         // offset sizeof(long) + sizeof(bool)
-        public int Degree { get; }
+        public readonly int Degree;
     }
 }
 

@@ -3,7 +3,7 @@
 namespace MemoryMappedFileExperiments
 {
     [DebuggerDisplay("{Offset}, ({Source}, {Target}), Deleted {IsDeleted}, => {NextRecordOffset}")]
-    public struct EdgeRecord
+    public readonly struct EdgeRecord
     {
         public EdgeRecord(
             long offset,
@@ -19,19 +19,19 @@ namespace MemoryMappedFileExperiments
             this.Target = target;
         }
 
-        public long Offset { get; }
+        public readonly long Offset;
 
         // offset 0
-        public long NextRecordOffset { get; }
+        public readonly long NextRecordOffset;
 
         // offset sizeof(long)
-        public bool IsDeleted{ get; }
+        public readonly bool IsDeleted;
 
         // offset sizeof(long) + sizeof(bool)
-        public long Source { get; }
+        public readonly long Source;
 
         // offset 2 * sizeof(long) + sizeof(bool) 
-        public long Target { get; }
+        public readonly long Target;
     }
 }
 

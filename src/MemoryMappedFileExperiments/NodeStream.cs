@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MemoryMappedFileExperiments
 {
-    public struct NodeStream : IDisposable
+    public class NodeStream : IDisposable
     {
         private readonly BinaryWriter writer;
         private readonly BinaryReader reader;
@@ -81,4 +81,3 @@ namespace MemoryMappedFileExperiments
         }
     }
 }
-
