@@ -9,6 +9,16 @@ namespace MemoryMappedFileExperiments
 {
     internal class Program
     {
+        /*
+        figured out that everything is a linked list in files
+        1. can create a binary hash list of the guids and certain offsets in a file 
+        2. new items are "inserted" in order
+        3. binary traverse when an ID is used for access
+        4. edges can be modeled as they are in this stream experiment - an interspersed linked list
+        4.a node primary key data contains offset of first edge in list
+        5. node primary key looks like guid, next offset, prev offset, first label offset, first edge offset, first property offset
+         */
+
         private static void Main(string[] args)
         {
             using var mmNodeFile = MemoryMappedFile
@@ -24,6 +34,7 @@ namespace MemoryMappedFileExperiments
             // https://github.com/GoldenCrystal/MemoryLookupBenchmark/blob/master/MemoryLookupBenchmark/MemoryMappedFileMemory.cs
             // https://gist.github.com/GrabYourPitchforks/8efb15abbd90bc5b128f64981766e834#:~:text=Memory%3CT%3E%20is%20the%20basic%20type%20that%20represents%20a,and%20System.String%20%28in%20the%20case%20of%20ReadOnlyMemory%3Cchar%3E%20%29.
             // https://gist.github.com/GrabYourPitchforks/4c3e1935fd4d9fa2831dbfcab35dffc6
+            // https://docs.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines
             using var nodeAccessor = mmNodeFile.CreateViewAccessor(0, 1024 * 1024);
 
             var memoryOwner = 
@@ -39,7 +50,7 @@ namespace MemoryMappedFileExperiments
             }
 
 
-            var nodeSpan = new Span<NodeRecord>()
+            var nodeSpan = new Span<NodeRecord>();
 
             //using var nodeMemoryStream = new MemoryStream();
             //using var edgeMemoryStream = new MemoryStream();
