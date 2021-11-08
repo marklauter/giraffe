@@ -57,7 +57,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Events", "Events", "{EC4CCD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Experiments", "Experiments", "{7DEC9D23-2540-4EB2-8FF6-73B1B4664029}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryMappedFileExperiments", "MemoryMappedFileExperiments\MemoryMappedFileExperiments.csproj", "{9A94B9D8-AEA9-42D1-81A0-24E4803F626A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoryMappedFileExperiments", "MemoryMappedFileExperiments\MemoryMappedFileExperiments.csproj", "{9A94B9D8-AEA9-42D1-81A0-24E4803F626A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Indexes", "Indexes", "{A3A5D652-BD4B-4596-B382-8CF37F898D92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +163,7 @@ Global
 		{EC4CCD07-7503-432B-AF00-95ABCE5C9062} = {88364EE2-0105-4F27-9BA7-E859AB8DB9AA}
 		{7DEC9D23-2540-4EB2-8FF6-73B1B4664029} = {52C42F4B-7BEE-449F-B0D7-CAD7E6D2562D}
 		{9A94B9D8-AEA9-42D1-81A0-24E4803F626A} = {7DEC9D23-2540-4EB2-8FF6-73B1B4664029}
+		{A3A5D652-BD4B-4596-B382-8CF37F898D92} = {88364EE2-0105-4F27-9BA7-E859AB8DB9AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF74DDB4-21CF-4E68-BC2E-F79540A7FDF4}
