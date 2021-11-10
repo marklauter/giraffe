@@ -32,7 +32,7 @@ namespace Graphs.Adjacency
         {
             var referenceCount = this.NeighborReferenceCount(id) + 1;
             this.neighbors = this.neighbors.SetItem(id, referenceCount);
-            
+
             this.Connected?.Invoke(this, new ConnectedEventArgs<TId>(this.Id, id));
         }
 
@@ -42,7 +42,7 @@ namespace Graphs.Adjacency
             this.neighbors = referenceCount == 0
                 ? this.neighbors.Remove(id)
                 : this.neighbors.SetItem(id, referenceCount);
-            
+
             this.Disconnected?.Invoke(this, new DisconnectedEventArgs<TId>(this.Id, id));
         }
 

@@ -23,9 +23,9 @@ namespace MemoryMappedFileExperiments
         public NodeRecord Add()
         {
             var node = new NodeRecord(
-                this.stream.Length, 
-                DefaultFirstEdgeOffset, 
-                false, 
+                this.stream.Length,
+                DefaultFirstEdgeOffset,
+                false,
                 DefaultDegree);
             this.Write(node);
             return node;
@@ -50,7 +50,7 @@ namespace MemoryMappedFileExperiments
         public long ReadFirstEdgeOffset(long nodeOffset)
         {
             _ = this.stream.Seek(nodeOffset, SeekOrigin.Begin);
-            return this.reader.ReadInt64(); 
+            return this.reader.ReadInt64();
         }
 
         public void Write(NodeRecord node)

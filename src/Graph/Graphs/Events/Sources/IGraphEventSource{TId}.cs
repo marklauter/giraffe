@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Graphs.Events
+﻿namespace Graphs.Events
 {
     //public interface IGraphEventSource<TId>
     //    : IElementChangedEventSource<TId>

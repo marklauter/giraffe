@@ -12,9 +12,9 @@ namespace Graphs.Edges
         IEnumerable<TId> Endpoints { get; }
 
         bool IsDirected { get; }
-        
+
         TId SourceId { get; }
-        
+
         TId TargetId { get; }
 
         bool IsIncident(TId nodeId);

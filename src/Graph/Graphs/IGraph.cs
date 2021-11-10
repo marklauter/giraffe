@@ -1,8 +1,4 @@
-﻿using Graphs.Events;
-using System;
-using System.Threading.Tasks;
-
-namespace Graphs
+﻿namespace Graphs
 {
     //public interface IGraph<TId>
     //    : IElementSource<TId>

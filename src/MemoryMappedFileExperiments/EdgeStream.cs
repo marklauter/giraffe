@@ -37,7 +37,10 @@ namespace MemoryMappedFileExperiments
             this.current = this.Read(this.offset);
         }
 
-        public ref readonly EdgeRecord Current() => ref this.current;
+        public ref readonly EdgeRecord Current()
+        {
+            return ref this.current;
+        }
 
         public void Connect(long node1, long node2)
         {

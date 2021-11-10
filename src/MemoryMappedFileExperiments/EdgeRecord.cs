@@ -7,9 +7,9 @@ namespace MemoryMappedFileExperiments
     {
         public EdgeRecord(
             long offset,
-            long nextRecordOffset, 
-            bool isDeleted, 
-            long source, 
+            long nextRecordOffset,
+            bool isDeleted,
+            long source,
             long target)
         {
             this.Offset = offset;
