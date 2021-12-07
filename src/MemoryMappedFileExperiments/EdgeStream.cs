@@ -5,6 +5,7 @@ using System.Text;
 
 namespace MemoryMappedFileExperiments
 {
+
     public class EdgeStream : IDisposable
     {
         private readonly BinaryWriter writer;
